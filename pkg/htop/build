@@ -1,0 +1,16 @@
+version=3.5.3
+release=1
+description="interactive process viewer"
+depends="terminfo"
+makedepends="ncurses"
+source="https://github.com/htop-dev/htop/releases/download/$version/htop-$version.tar.xz"
+sha256=a8b164386494cb85bb255a415a3f5f80afe7a0c4491da5d113b3a0f951087e65
+
+build() {
+    ./configure --prefix=/usr --enable-static --enable-unicode \
+        --disable-sensors --disable-capabilities --disable-hwloc
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+    rm -rf "$pkg/usr/share/applications" "$pkg/usr/share/icons" \
+           "$pkg/usr/share/pixmaps"
+}

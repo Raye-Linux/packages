@@ -13,8 +13,17 @@ Everything is built static against musl.
 | ca-certificates | the CA bundle TLS checks servers against |
 | git | version control, https remotes through curl |
 | gh | GitHub from the command line |
+| bash | the GNU shell, at `/bin/bash` for scripts that want it |
+| nano | text editor, syntax colours on |
+| htop | interactive process viewer |
+| tmux | terminal multiplexer: panes, windows, detachable sessions |
+| ncdu | what's using your disk, interactively |
+| rsync | fast copies, locally or over ssh |
+| jq | JSON on the command line |
+| tree | directory listings as a tree |
+| terminfo | terminal descriptions (console, serial, xterm, kitty, tmux...) |
 
-`zlib` and `openssl` are build-only: curl and git link them in, they
+`zlib`, `openssl`, `ncurses` and `libevent` are build-only: curl and git link them in, they
 are never installed on their own.
 
 The built repo is published as the `repo` release of this repository,

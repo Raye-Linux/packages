@@ -1,0 +1,15 @@
+version=1.8.2
+release=1
+description="JSON on the command line"
+depends=""
+source="https://github.com/jqlang/jq/releases/download/jq-$version/jq-$version.tar.gz"
+sha256=71b8d6e8f5fe81f6c6d0d110e3892251f6ce76ed095abd315e26e6e1193af3af
+
+# without oniguruma: everything but the regex functions
+build() {
+    ./configure --prefix=/usr --disable-shared --enable-static \
+        --enable-all-static --without-oniguruma --disable-docs \
+        --disable-maintainer-mode
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}
