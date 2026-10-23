@@ -8,10 +8,19 @@
 # package already sitting in OUTDIR at the recipe's version is left
 # alone, so rerunning only builds what changed.
 #
-# A recipe is pkg/<name>/build, a shell file that sets version, release,
-# description, depends, source and sha256, and has a build() function.
-# build() runs inside the unpacked source with $pkg as the install root,
-# $files pointing at the recipe's directory and $JOBS for make.
+# A recipe is pkg/<name>/build, a shell file that sets
+#
+#   version, release, description
+#   depends       what it needs at runtime (other packages)
+#   makedepends   what it needs to build: packages, or build-only libs
+#   source        a URL. Tarballs get unpacked, anything else is copied
+#   sha256        of that source
+#   buildonly=1   a library other recipes link against, never packaged
+#
+# and has a build() function. build() runs inside the unpacked source
+# with $pkg as the install root, $files pointing at the recipe's
+# directory, $stage holding everything built so far (headers, static
+# libs, .pc files) and $JOBS for make.
 
 set -e
 
@@ -22,32 +31,57 @@ out=$(cd "$1" && pwd)
 shift
 
 work=${WORK:-$top/work}
+stage=$work/stage
 export JOBS="${JOBS:-$(nproc)}"
 : "${CC:?point CC at a musl compiler, e.g. CC=/path/to/musl-gcc}"
 export CC
 
 # everything here is static: there is no musl dynamic loader on the
-# system, so a dynamically linked binary wouldn't even start
-export LDFLAGS="-static${LDFLAGS:+ $LDFLAGS}"
+# system, so a dynamically linked binary wouldn't even start. And
+# whatever earlier recipes built is there to link against.
+export LDFLAGS="-static -L$stage/usr/lib${LDFLAGS:+ $LDFLAGS}"
+export CPPFLAGS="-I$stage/usr/include${CPPFLAGS:+ $CPPFLAGS}"
+export PKG_CONFIG_LIBDIR=$stage/usr/lib/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=$stage
 
 msg() { printf '\033[1;35m=>\033[m %s\n' "$*"; }
 die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
 
 load() {
-    unset version release description depends source sha256
+    unset version release description depends makedepends source \
+          sha256 buildonly
     [ -f "$top/pkg/$1/build" ] || die "no recipe for $1"
     . "$top/pkg/$1/build"
 }
 
+staged() {
+    [ -f "$stage/.built/$1" ]
+}
+
+# build_pkg NAME [stage]
+#
+# Build NAME unless the repo already has it at this version. With
+# "stage" it's being built for another recipe to link against, and what
+# matters is that its files are in $stage.
 build_pkg() (
     name=$1
     load "$name"
-    file=$out/$name-$version-$release.tar.xz
+    id=$name-$version-$release
+    file=$out/$id.tar.xz
 
-    if [ -f "$file" ]; then
-        msg "$name $version-$release is up to date"
+    pack=1
+    { [ -n "$buildonly" ] || [ -f "$file" ]; } && pack=
+    need_stage=
+    [ "$2" = stage ] && ! staged "$id" && need_stage=1
+
+    if [ -z "$pack" ] && [ -z "$need_stage" ]; then
+        [ "$2" = stage ] || msg "$name $version-$release is up to date"
         exit 0
     fi
+
+    for dep in $makedepends; do
+        build_pkg "$dep" stage
+    done
 
     src=$work/src/$name/${source##*/}
     mkdir -p "${src%/*}"
@@ -62,7 +96,10 @@ build_pkg() (
     dir=$work/$name
     rm -rf "$dir"
     mkdir -p "$dir/src" "$dir/pkg"
-    tar -xf "$src" -C "$dir/src" --strip-components=1
+    case $src in
+        *.tar.*|*.tgz) tar -xf "$src" -C "$dir/src" --strip-components=1 ;;
+        *)             cp "$src" "$dir/src/" ;;
+    esac
 
     msg "building $name $version"
     pkg=$dir/pkg
@@ -80,10 +117,21 @@ build_pkg() (
     fi
     [ -n "$(ls -A "$pkg")" ] || die "$name built but installed nothing"
 
+    # headers, static libs and all, for whatever builds against it next
+    mkdir -p "$stage/.built"
+    cp -a "$pkg/." "$stage/"
+    : > "$stage/.built/$id"
+
+    if [ -n "$buildonly" ]; then
+        msg "$name $version is ready to build against"
+        exit 0
+    fi
+    [ -n "$pack" ] || exit 0
+
     # no man(1) on the system to read these with, and nothing links
-    # against the static libs
+    # against the static libs at runtime
     rm -rf "$pkg/usr/share/man" "$pkg/usr/share/info" "$pkg/usr/share/doc" \
-           "$pkg/usr/include" "$pkg/usr/lib/pkgconfig"
+           "$pkg/usr/share/aclocal" "$pkg/usr/include" "$pkg/usr/lib/pkgconfig"
     find "$pkg" \( -name '*.a' -o -name '*.la' \) -delete
     find "$pkg" -type f -perm -u+x -exec strip --strip-all {} + 2>/dev/null || :
     find "$pkg" -mindepth 1 -depth -type d -empty -delete
