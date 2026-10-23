@@ -1,0 +1,36 @@
+// fastfetch defaults on Raye Linux.
+// Copy to ~/.config/fastfetch/config.jsonc to make it your own.
+{
+    "logo": {
+        "type": "file",
+        "source": "/usr/share/fastfetch/logos/raye.txt",
+        "color": { "1": "magenta", "2": "light_magenta" },
+        "padding": { "top": 1, "left": 2, "right": 4 }
+    },
+    "display": {
+        "separator": "  ",
+        "color": { "keys": "magenta", "title": "light_magenta" }
+    },
+    "modules": [
+        "title",
+        "separator",
+        "os",
+        "kernel",
+        "uptime",
+        {
+            // fastfetch doesn't know rpk, so count its database by hand
+            "type": "command",
+            "key": "Packages",
+            "text": "echo \"$(ls /var/db/rpk | wc -l) (rpk)\""
+        },
+        "shell",
+        "terminal",
+        "cpu",
+        "gpu",
+        "memory",
+        "disk",
+        "localip",
+        "break",
+        "colors"
+    ]
+}

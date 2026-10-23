@@ -1,0 +1,32 @@
+version=2026.94
+release=1
+description="small ssh server and client"
+depends=""
+source="https://matt.ucc.asn.au/dropbear/releases/dropbear-$version.tar.bz2"
+sha256=e098034a843699200c8c977a991fff73159735bf795d5f72ef672c41a6b1ae81
+
+progs="dropbear dbclient dropbearkey scp"
+
+# --disable-harden: the hardening flags make PIE binaries, and a static
+# PIE against musl-gcc won't even run configure's test program
+build() {
+    ./configure \
+        --prefix=/usr \
+        --enable-static \
+        --disable-harden \
+        --disable-zlib \
+        --disable-lastlog \
+        --disable-utmp \
+        --disable-utmpx \
+        --disable-wtmp \
+        --disable-wtmpx \
+        --disable-pututline \
+        --disable-pututxline
+
+    make -j"$JOBS" PROGRAMS="$progs"
+    make PROGRAMS="$progs" DESTDIR="$pkg" install
+
+    # nobody types dbclient
+    ln -s dbclient "$pkg/usr/bin/ssh"
+    install -Dm755 "$files/rc" "$pkg/etc/rc.d/dropbear"
+}

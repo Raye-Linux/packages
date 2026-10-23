@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# dropbear, the ssh server. Host keys are generated the first time
+# someone connects (-R), so there's nothing to set up beforehand.
+
+pidfile=/run/dropbear.pid
+
+case $1 in
+    start)
+        mkdir -p /etc/dropbear
+        dropbear -R -P "$pidfile"
+        ;;
+    stop)
+        [ -f "$pidfile" ] && kill "$(cat "$pidfile")"
+        ;;
+    *)
+        echo "usage: $0 start|stop" >&2
+        exit 1
+        ;;
+esac

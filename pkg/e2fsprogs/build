@@ -1,0 +1,34 @@
+version=1.47.4
+release=1
+description="ext2/3/4 tools: mkfs.ext4, e2fsck, tune2fs, resize2fs"
+depends=""
+source="https://mirrors.edge.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v$version/e2fsprogs-$version.tar.xz"
+sha256=fd5bf388cbdbe006a3d3b318d983b2948382440acc85a87f1e7d108653e8db0b
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --sbindir=/usr/sbin \
+        --sysconfdir=/etc \
+        --disable-shared \
+        --disable-elf-shlibs \
+        --disable-nls \
+        --disable-fsck \
+        --disable-uuidd \
+        --disable-fuse2fs \
+        --disable-debugfs \
+        --disable-imager \
+        --disable-defrag \
+        --disable-e2initrd-helper \
+        --without-libarchive \
+        --without-udev-rules-dir \
+        --without-crond-dir \
+        --without-systemd-unit-dir
+
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+
+    # e2scrub wants lvm and bash, neither of which we have
+    rm -rf "$pkg"/usr/sbin/e2scrub* "$pkg/etc/e2scrub.conf" \
+           "$pkg/usr/libexec" "$pkg/usr/lib/e2fsprogs"
+}

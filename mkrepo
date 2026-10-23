@@ -1,0 +1,125 @@
+#!/bin/sh
+#
+# mkrepo - build the recipes under pkg/ into a binary repo for rpk
+#
+# usage: mkrepo OUTDIR [name ...]
+#
+# CC has to be a musl compiler (mklive hands over its musl-gcc). A
+# package already sitting in OUTDIR at the recipe's version is left
+# alone, so rerunning only builds what changed.
+#
+# A recipe is pkg/<name>/build, a shell file that sets version, release,
+# description, depends, source and sha256, and has a build() function.
+# build() runs inside the unpacked source with $pkg as the install root,
+# $files pointing at the recipe's directory and $JOBS for make.
+
+set -e
+
+top=$(cd "$(dirname "$0")" && pwd)
+[ "$1" ] || { echo "usage: mkrepo OUTDIR [name ...]" >&2; exit 1; }
+mkdir -p "$1"
+out=$(cd "$1" && pwd)
+shift
+
+work=${WORK:-$top/work}
+export JOBS="${JOBS:-$(nproc)}"
+: "${CC:?point CC at a musl compiler, e.g. CC=/path/to/musl-gcc}"
+export CC
+
+# everything here is static: there is no musl dynamic loader on the
+# system, so a dynamically linked binary wouldn't even start
+export LDFLAGS="-static${LDFLAGS:+ $LDFLAGS}"
+
+msg() { printf '\033[1;35m=>\033[m %s\n' "$*"; }
+die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
+
+load() {
+    unset version release description depends source sha256
+    [ -f "$top/pkg/$1/build" ] || die "no recipe for $1"
+    . "$top/pkg/$1/build"
+}
+
+build_pkg() (
+    name=$1
+    load "$name"
+    file=$out/$name-$version-$release.tar.xz
+
+    if [ -f "$file" ]; then
+        msg "$name $version-$release is up to date"
+        exit 0
+    fi
+
+    src=$work/src/$name/${source##*/}
+    mkdir -p "${src%/*}"
+    if [ ! -f "$src" ]; then
+        msg "fetching $name $version"
+        curl -fL --retry 3 -o "$src.part" "$source"
+        mv "$src.part" "$src"
+    fi
+    echo "$sha256  $src" | sha256sum -c --status - ||
+        die "bad checksum for ${src##*/}"
+
+    dir=$work/$name
+    rm -rf "$dir"
+    mkdir -p "$dir/src" "$dir/pkg"
+    tar -xf "$src" -C "$dir/src" --strip-components=1
+
+    msg "building $name $version"
+    pkg=$dir/pkg
+    files=$top/pkg/$name
+    cd "$dir/src"
+    # not "if ! (build)": set -e is switched off inside an if condition,
+    # and a recipe has to stop at the first thing that fails
+    set +e
+    (set -e; build) > "$dir/build.log" 2>&1
+    status=$?
+    set -e
+    if [ "$status" -ne 0 ]; then
+        tail -n 40 "$dir/build.log"
+        die "$name didn't build, the whole log is in $dir/build.log"
+    fi
+    [ -n "$(ls -A "$pkg")" ] || die "$name built but installed nothing"
+
+    # no man(1) on the system to read these with, and nothing links
+    # against the static libs
+    rm -rf "$pkg/usr/share/man" "$pkg/usr/share/info" "$pkg/usr/share/doc" \
+           "$pkg/usr/include" "$pkg/usr/lib/pkgconfig"
+    find "$pkg" \( -name '*.a' -o -name '*.la' \) -delete
+    find "$pkg" -type f -perm -u+x -exec strip --strip-all {} + 2>/dev/null || :
+    find "$pkg" -mindepth 1 -depth -type d -empty -delete
+
+    # there's no dynamic loader on raye, a dynamic binary can't even start
+    dyn=$(find "$pkg" -type f -exec file {} + | grep 'dynamically linked' |
+        cut -d: -f1 | sed "s|^$pkg||") || :
+    [ -z "$dyn" ] || die "$name has dynamically linked binaries:
+$dyn"
+
+    cd "$pkg"
+    find . -mindepth 1 | sed 's|^\./||' | sort > "$dir/list"
+    rm -f "$out/$name"-[0-9]*.tar.xz
+    tar --numeric-owner --owner=0 --group=0 --no-recursion \
+        -cJf "$file.part" -T "$dir/list"
+    mv "$file.part" "$file"
+    msg "$name: $(du -h "$file" | cut -f1)"
+)
+
+[ "$#" -gt 0 ] || set -- $(ls "$top/pkg")
+
+for name do
+    build_pkg "$name"
+done
+
+: > "$out/INDEX.part"
+for d in "$top"/pkg/*/; do
+    name=${d%/}
+    name=${name##*/}
+    load "$name"
+    file=$name-$version-$release.tar.xz
+    [ -f "$out/$file" ] || continue
+
+    sum=$(sha256sum "$out/$file" | cut -d' ' -f1)
+    printf '%s|%s|%s|%s|%s\n' "$name" "$version-$release" "$sum" \
+        "$depends" "$description" >> "$out/INDEX.part"
+done
+mv "$out/INDEX.part" "$out/INDEX"
+msg "$(wc -l < "$out/INDEX") packages in $out"

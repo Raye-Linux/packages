@@ -1,0 +1,48 @@
+version=2.42.4
+release=1
+description="fdisk and sfdisk with gpt, lsblk, wipefs"
+depends=""
+source="https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${version%.*}/util-linux-$version.tar.xz"
+sha256=fbd62a100ab7bb8746ba0661255c3c48185b1e9021507c624da01fbc696330ec
+
+# Only the disk tools. fdisks=check rather than yes: "yes" forces cfdisk
+# too, which needs ncurses; "check" builds fdisk and sfdisk and skips it. Busybox covers mount, blkid and friends well
+# enough, and the rest of util-linux can come later as its own thing.
+build() {
+    ./configure \
+        --prefix=/usr \
+        --bindir=/usr/bin \
+        --sbindir=/usr/sbin \
+        --disable-shared \
+        --enable-static \
+        --disable-all-programs \
+        --enable-libuuid \
+        --enable-libblkid \
+        --enable-libmount \
+        --enable-libfdisk \
+        --enable-libsmartcols \
+        --enable-fdisks=check \
+        --enable-lsblk \
+        --enable-wipefs \
+        --disable-nls \
+        --disable-asciidoc \
+        --disable-poman \
+        --without-ncurses \
+        --without-ncursesw \
+        --without-tinfo \
+        --without-readline \
+        --without-systemd \
+        --without-udev \
+        --without-python \
+        --without-libmagic \
+        --without-cap-ng \
+        --without-econf
+
+    # libtool quietly drops -static when it links programs, it wants its
+    # own spelling of it
+    make -j"$JOBS" LDFLAGS=-all-static
+    make DESTDIR="$pkg" LDFLAGS=-all-static install
+
+    # the shell completions and the like are of no use here
+    rm -rf "$pkg/usr/share"
+}
