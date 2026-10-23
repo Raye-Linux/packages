@@ -1,0 +1,21 @@
+version=6.6
+release=1
+description="terminal descriptions: console, serial, xterm, kitty, tmux..."
+depends=""
+source="https://mirrors.kernel.org/gnu/ncurses/ncurses-$version.tar.gz"
+sha256=355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11
+
+# Just the descriptions people actually log in with, compiled by the
+# tic from this same ncurses, not the whole 3000-entry database.
+terms="linux vt100 vt102 vt220 ansi dumb xterm xterm-256color xterm-kitty
+screen screen-256color tmux tmux-256color alacritty foot rxvt-unicode-256color"
+
+build() {
+    ./configure --without-shared --without-cxx-binding --without-ada \
+        --without-manpages --without-tests --enable-widec
+    make -j"$JOBS"
+
+    mkdir -p "$pkg/usr/share/terminfo"
+    ./progs/tic -x -o "$pkg/usr/share/terminfo" \
+        -e "$(echo $terms | tr ' ' ,)" misc/terminfo.src
+}

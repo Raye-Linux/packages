@@ -1,0 +1,31 @@
+version=6.6
+release=1
+description="terminal library, for building against"
+source="https://mirrors.kernel.org/gnu/ncurses/ncurses-$version.tar.gz"
+sha256=355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11
+buildonly=1
+
+# Wide-character, static, headers straight in /usr/include. Programs
+# that ask for plain -lncurses get pointed at the wide one.
+build() {
+    ./configure \
+        --prefix=/usr \
+        --without-shared --with-normal \
+        --without-debug --without-cxx --without-cxx-binding --without-ada \
+        --without-manpages --without-tests --without-progs \
+        --enable-widec --enable-overwrite \
+        --enable-pc-files --with-pkg-config-libdir=/usr/lib/pkgconfig \
+        --with-terminfo-dirs=/usr/share/terminfo \
+        --with-default-terminfo-dir=/usr/share/terminfo \
+        --disable-db-install
+
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+
+    for l in ncurses form panel menu; do
+        ln -s "lib${l}w.a" "$pkg/usr/lib/lib$l.a"
+        ln -s "${l}w.pc" "$pkg/usr/lib/pkgconfig/$l.pc"
+    done
+    ln -s libncursesw.a "$pkg/usr/lib/libtinfo.a"
+    ln -s libncursesw.a "$pkg/usr/lib/libcurses.a"
+}
