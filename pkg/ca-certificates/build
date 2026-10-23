@@ -1,0 +1,12 @@
+version=2026.10.20
+release=1
+description="the CA certificates TLS checks servers against"
+depends=""
+source="https://curl.se/ca/cacert-$(echo $version | tr . -).pem"
+sha256=796f1389bfea13c0ed78f663b765baaff54a508e5483786bd6ece73c5e3e3cbe
+
+# Mozilla's bundle, as curl's maintainers extract it.
+build() {
+    install -Dm644 "${source##*/}" "$pkg/etc/ssl/certs/ca-certificates.crt"
+    ln -s certs/ca-certificates.crt "$pkg/etc/ssl/cert.pem"
+}

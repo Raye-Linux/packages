@@ -1,0 +1,31 @@
+version=8.23.0
+release=1
+description="downloads over https and friends, the real way"
+depends="ca-certificates"
+makedepends="openssl zlib"
+source="https://curl.se/download/curl-$version.tar.xz"
+sha256=8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5
+
+build() {
+    ./configure \
+        --prefix=/usr \
+        --disable-shared \
+        --enable-static \
+        --with-openssl \
+        --with-zlib \
+        --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
+        --without-libpsl \
+        --without-brotli \
+        --without-zstd \
+        --without-nghttp2 \
+        --without-libidn2 \
+        --without-libssh2 \
+        --disable-ldap \
+        --disable-ldaps \
+        --disable-manual \
+        --disable-docs
+
+    # libtool drops -static when it links programs (see util-linux)
+    make -j"$JOBS" LDFLAGS="$LDFLAGS -all-static"
+    make DESTDIR="$pkg" LDFLAGS="$LDFLAGS -all-static" install
+}

@@ -9,6 +9,16 @@ Everything is built static against musl.
 | e2fsprogs | mkfs.ext4, e2fsck, tune2fs, resize2fs |
 | util-linux | fdisk and sfdisk with GPT, lsblk, wipefs |
 | fastfetch | system info, with the Raye eye as its logo |
+| curl | downloads over https (OpenSSL), what raye-update uses |
+| ca-certificates | the CA bundle TLS checks servers against |
+| git | version control, https remotes through curl |
+| gh | GitHub from the command line |
+
+`zlib` and `openssl` are build-only: curl and git link them in, they
+are never installed on their own.
+
+The built repo is published as the `repo` release of this repository,
+which is where `raye-update` fetches from.
 
 ## Building
 
@@ -42,7 +52,9 @@ build() {
 }
 ```
 
-`build()` runs inside the unpacked source. `$pkg` is where to install,
+`build()` runs inside the unpacked source. `makedepends` lists what it
+needs to build (including `buildonly=1` libraries), and `$stage` holds
+their headers and static libraries. `$pkg` is where to install,
 `$files` is the recipe's own directory (for service scripts and such)
 and `$JOBS` is the make job count. Afterwards mkrepo strips the
 binaries, drops man pages, headers and static libraries, and packs what
