@@ -1,6 +1,7 @@
 #!/bin/sh
 #
-# wpa_supplicant on every wireless interface, and dhcp on top of it.
+# wpa_supplicant on every wireless interface, and dhcp on top of it once
+# it's connected.
 #
 # The networks are in /etc/wpa_supplicant.conf. Add one with
 #   wpa_passphrase "network name" "password" >> /etc/wpa_supplicant.conf
@@ -8,6 +9,7 @@
 # part of the package, so an upgrade never touches it.
 
 conf=/etc/wpa_supplicant.conf
+action=/usr/libexec/wpa_supplicant/dhcp
 
 wireless() {
     for dev in /sys/class/net/*; do
@@ -28,16 +30,22 @@ case $1 in
             )
         fi
         for dev in $(wireless); do
-            ip link set "$dev" up
+            # the radio can be blocked: a Wi-Fi key, or a BIOS that turns
+            # Wi-Fi off while a cable is plugged in. The link can't come up
+            # then, and udhcpc on a link that's down never comes back, so
+            # dhcp waits for wpa_cli to say we're connected instead.
+            # wpa_supplicant brings the link up itself once it's unblocked
+            ip link set "$dev" up 2>/dev/null ||
+                echo "$dev: radio blocked (rfkill), it'll connect once it's unblocked"
             wpa_supplicant -B -s -i "$dev" -c "$conf" -P "/run/wpa_supplicant.$dev.pid"
-            # in the background it keeps trying, so it gets a lease as
-            # soon as the association is up
-            udhcpc -b -t 2 -T 1 -A 3 -i "$dev" -p "/run/udhcpc.$dev.pid" >/dev/null 2>&1
+            wpa_cli -B -i "$dev" -p /run/wpa_supplicant -a "$action" \
+                -P "/run/wpa_cli.$dev.pid"
         done
         ;;
     stop)
         for dev in $(wireless); do
-            for p in "/run/udhcpc.$dev.pid" "/run/wpa_supplicant.$dev.pid"; do
+            for p in "/run/wpa_cli.$dev.pid" "/run/udhcpc.$dev.pid" \
+                     "/run/wpa_supplicant.$dev.pid"; do
                 [ -f "$p" ] && kill "$(cat "$p")" 2>/dev/null
             done
         done

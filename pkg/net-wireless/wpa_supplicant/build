@@ -1,5 +1,5 @@
 version=2.12
-release=2
+release=3
 description="Wi-Fi: WPA2, WPA3 and enterprise networks"
 depends=""
 makedepends="dev-libs/libnl dev-libs/openssl"
@@ -19,4 +19,5 @@ build() {
     CFLAGS="-O2 $CPPFLAGS" make -j"$JOBS"
     make DESTDIR="$pkg" BINDIR=/usr/sbin install
     install -Dm755 "$files/rc" "$pkg/etc/rc.d/wpa_supplicant"
+    install -Dm755 "$files/dhcp" "$pkg/usr/libexec/wpa_supplicant/dhcp"
 }

@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# wpa_cli runs this each time an interface connects or drops: a fresh
+# lease when it's connected (a new network can mean a new subnet), and
+# no udhcpc left behind when it's not.
+
+dev=$1
+pid=/run/udhcpc.$dev.pid
+
+stop() {
+    [ -f "$pid" ] && kill "$(cat "$pid")" 2>/dev/null
+    rm -f "$pid"
+}
+
+case $2 in
+    CONNECTED)
+        stop
+        udhcpc -b -t 3 -T 2 -A 3 -i "$dev" -p "$pid" >/dev/null 2>&1
+        ;;
+    DISCONNECTED)
+        stop
+        ;;
+esac
