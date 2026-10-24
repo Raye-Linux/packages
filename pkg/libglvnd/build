@@ -1,0 +1,12 @@
+version=1.7.0
+release=1
+description="the GL dispatch libraries: libOpenGL, libEGL, libGLESv2"
+depends="musl"
+dynamic=1
+source="git+https://gitlab.freedesktop.org/glvnd/libglvnd.git#faa23f21fc677af5792825dc30cb1ccef4bf33a6"
+
+# EGL and GLES only, there's no X for GLX to talk to
+build() {
+    meson_build -Dx11=disabled -Dglx=disabled -Degl=true -Dgles1=false \
+        -Dgles2=true -Dheaders=true
+}

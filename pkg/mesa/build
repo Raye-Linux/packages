@@ -1,8 +1,8 @@
 version=26.2.5
 release=1
 description="OpenGL, GLES and EGL: Intel's iris, and softpipe for everything else"
-depends="musl gcc-libs libdrm expat zlib wayland"
-makedepends="libdrm expat zlib wayland wayland-protocols"
+depends="musl gcc-libs libglvnd libdrm expat zlib wayland"
+makedepends="libglvnd libdrm expat zlib wayland wayland-protocols"
 dynamic=1
 source="https://archive.mesa3d.org/mesa-$version.tar.xz"
 sha256=794b3d1729075dae7ebd47c7283b7ca0cdb5dec668f7f11cc0a5d82f6138a0a5
@@ -38,6 +38,7 @@ build() {
         -Dgles2=enabled \
         -Dopengl=true \
         -Dglx=disabled \
+        -Dglvnd=enabled \
         -Dllvm=disabled \
         -Dmesa-clc=system \
         -Dintel-rt=disabled \
