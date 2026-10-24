@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# hyprland-share-picker without Qt: click the monitor you want to share,
+# Escape shares nothing. Whole outputs only, picking a window or a
+# region is what the real picker adds.
+
+out=$(slurp -o -f '%o') || exit 1
+printf '[SELECTION]/screen:%s\n' "$out"
