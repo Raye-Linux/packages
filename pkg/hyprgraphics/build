@@ -1,0 +1,12 @@
+version=0.5.1
+release=1
+description="image loading and drawing for the hyprwm tools"
+depends="musl gcc-libs hyprutils pixman cairo pango libdrm libglvnd libjpeg-turbo libwebp file libpng librsvg"
+makedepends="hyprutils pixman cairo pango libdrm libglvnd mesa libjpeg-turbo libwebp file libpng librsvg"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprgraphics#482d4b7ec36ffdaf3573086aa586b178fd5404be"
+
+# no JPEG XL or HEIF, both optional and both big
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

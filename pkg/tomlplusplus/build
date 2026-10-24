@@ -1,0 +1,10 @@
+version=3.4.0
+release=1
+description="TOML for C++, headers only, for building hyprcursor"
+source="git+https://github.com/marzer/tomlplusplus#30172438cee64926dc41fdd9c11fb3ba5b2ba9de"
+buildonly=1
+dynamic=1
+
+build() {
+    meson_build -Dcompile_library=false -Dbuild_tests=false -Dbuild_examples=false
+}
