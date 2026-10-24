@@ -76,7 +76,7 @@ the INDEX, which is what `rpk profile` reads.
 
 | profile | what for |
 |---|---|
-| minimal | busybox, rpk, the kernel and curl: base.tar on the live image |
+| minimal | busybox, rpk, the kernel, curl and sudo: base.tar on the live image |
 | desktop/hyprland | minimal and the Hyprland desktop, with Raye's defaults |
 | toolchain | minimal, gcc, binutils, make and pkgconf, to build recipes on raye |
 

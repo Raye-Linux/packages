@@ -1,1 +1,1 @@
-the base system: busybox, rpk, the kernel and curl
+the base system: busybox, rpk, the kernel, curl and sudo
