@@ -22,10 +22,20 @@ Built against musl, and static unless a recipe says otherwise.
 | jq | JSON on the command line |
 | tree | directory listings as a tree |
 | terminfo | terminal descriptions (console, serial, xterm, kitty, tmux...) |
-| zlib | compression library, shared, for the dynamically linked packages |
+| hyprland | the Hyprland compositor, `hyprctl` with it |
+| foot | a fast, light wayland terminal |
+| mesa | OpenGL, GLES and EGL: Intel's iris, softpipe for anything else |
+| eudev | udevd, so the compositor knows what the input devices are |
+| seatd | lets the video group at the GPU and input without root |
+| font-dejavu | one font family that covers most scripts, mono included |
 
-`openssl`, `ncurses` and `libevent` are build-only: curl, git and tmux
-link them in, they are never installed on their own.
+Everything under Hyprland is dynamically linked: glib, cairo, pango,
+wayland, libinput, the hyprwm libraries and so on, each its own package.
+`rpk install hyprland foot` brings them in.
+
+`openssl`, `ncurses`, `readline` and `libevent` are build-only, along
+with headers-only things like `wayland-protocols`: whatever needs them
+links them in or compiles them in, they are never installed on their own.
 
 The built repo is published as the `repo` release of this repository,
 which is where `raye-update` fetches from.
@@ -42,7 +52,8 @@ CC=/path/to/x86_64-linux-musl-gcc ./mkrepo repo/ dropbear   # just one
 
 `CXX` defaults to the `g++` next to `CC`. Dynamically linked packages
 also need `musl` and `gcc-libs` in the repo directory, the live build
-puts them there.
+puts them there. The desktop packages need more on the build machine
+than the rest, the live repo's README has the list.
 
 Normally you don't call it yourself, `./mklive packages` in
 [Raye-Linux/live](https://github.com/Raye-Linux/live) does.
