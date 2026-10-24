@@ -1,0 +1,22 @@
+version=1.58.2
+release=1
+description="text layout"
+depends="musl glib harfbuzz fribidi fontconfig freetype cairo"
+makedepends="glib harfbuzz fribidi fontconfig freetype cairo"
+dynamic=1
+source="https://download.gnome.org/sources/pango/${version%.*}/pango-$version.tar.xz"
+sha256=342385b6ca3b7c73455d7c80a13b7dbe4489e00bc3bd4c5bd6ed4dce421e374a
+
+build() {
+    meson_build \
+        -Dintrospection=disabled \
+        -Dfontconfig=enabled \
+        -Dfreetype=enabled \
+        -Dcairo=enabled \
+        -Dxft=disabled \
+        -Dlibthai=disabled \
+        -Ddocumentation=false \
+        -Dman-pages=false \
+        -Dbuild-testsuite=false \
+        -Dbuild-examples=false
+}

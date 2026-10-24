@@ -1,0 +1,19 @@
+version=2.18.3
+release=1
+description="finds fonts and picks one for you"
+depends="musl freetype expat"
+makedepends="freetype expat"
+dynamic=1
+source="https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/$version/fontconfig-$version.tar.xz"
+sha256=4f7b554a38cdf78c033f666c8871f3749e14a094f65a07f630c91ed0b43d35e3
+
+# the cache gets built on the system the first time something asks,
+# running fc-cache here would mean running a musl binary at install
+build() {
+    meson_build \
+        -Ddoc=disabled \
+        -Dtests=disabled \
+        -Dnls=disabled \
+        -Dcache-build=disabled \
+        -Dtools=enabled
+}

@@ -1,0 +1,12 @@
+version=2.37
+release=1
+description="the DejaVu fonts: one set that covers most scripts, mono included"
+depends=""
+source="https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_$(echo $version | tr . _)/dejavu-fonts-ttf-$version.tar.bz2"
+sha256=fa9ca4d13871dd122f61258a80d01751d603b4d3ee14095d65453b4e846e17d7
+
+# without one font nothing graphical can show a single letter
+build() {
+    install -d "$pkg/usr/share/fonts/dejavu"
+    install -m644 ttf/*.ttf "$pkg/usr/share/fonts/dejavu/"
+}
