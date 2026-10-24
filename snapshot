@@ -9,17 +9,19 @@
 # the lot the way rpk will. OUTDIR is then a static repo: any web server
 # can serve it as it is, and its URL works as REPO= for rpk.
 #
-# Name OUTDIR after the snapshot (mirror/snapshot-2026-10-24) and the
-# folder it's in is a mirror for raye-update: snapshot writes
-# latest/SNAPSHOT next to it, naming this one as the current snapshot.
-# Serve that folder (nginx with root pointing at it is enough), and
-# older snapshots can stay in it.
+# OUTDIR is named after the snapshot: snapshot-<release>-<date>, the
+# release being the first number of the Raye version it's for (0 for
+# 0.0.x, 1 for 1.x): mirror/snapshot-0-2026-10-24. The folder it's in is
+# then a mirror for raye-update: snapshot writes latest-<release>/SNAPSHOT
+# next to it, naming this one as that release's current snapshot. Serve
+# that folder (nginx with root pointing at it is enough); older snapshots
+# and other releases' can stay in it.
 #
-# -r TAG also publishes it as a pre-release of Raye-Linux/packages with
-# that tag (snapshot-2026-10-24, say), using the gh command. One release
+# -r TAG also publishes it as a pre-release of Raye-Linux/packages tagged
+# TAG, which has to be OUTDIR's name, using the gh command. One release
 # per snapshot, the files the same ones as in OUTDIR, and the release
-# called latest gets a SNAPSHOT naming TAG: that's how systems updating
-# from GitHub find it.
+# called latest-<release> gets a SNAPSHOT naming TAG: that's how systems
+# updating from GitHub find it.
 #
 # KEY is an ed25519 private key. To make one, and the public half that
 # goes in /etc/rpk/keys on every system that should trust it:
@@ -41,6 +43,16 @@ fi
 [ "$#" -eq 3 ] || { sed -n '/^# usage/,/^#$/p' "$0" | sed -e '$d' -e 's/^# //'; exit 1; }
 repo=$1 key=$2 out=$3
 
+snap=${out%/}
+snap=${snap##*/}
+case $snap in
+    snapshot-[0-9]*-?*) ;;
+    *) die "name OUTDIR snapshot-<release>-<date>, like snapshot-0-2026-10-24" ;;
+esac
+release=${snap#snapshot-}
+release=${release%%-*}
+case $release in *[!0-9]*) die "the release in $snap has to be a number" ;; esac
+[ -z "$tag" ] || [ "$tag" = "$snap" ] || die "-r $tag, but OUTDIR is $snap: they have to be the same"
 [ -s "$repo/INDEX" ] || die "no INDEX in $repo"
 [ -f "$repo/PROFILES" ] || die "no PROFILES in $repo"
 [ -s "$key" ] || die "no key at $key"
@@ -68,15 +80,13 @@ done
 (cd "$out" && sha256sum INDEX INDEX.sig PROFILES PROFILES.sig ./*.tar.xz |
     sed 's| \./| |' > SHA256SUMS)
 
-# the mirror's pointer to its current snapshot
-name=${out%/}
-name=${name##*/}
-mkdir -p "$out/../latest"
-echo "$name" > "$out/../latest/SNAPSHOT"
+# the mirror's pointer to this release's current snapshot
+mkdir -p "$out/../latest-$release"
+echo "$snap" > "$out/../latest-$release/SNAPSHOT"
 
 msg "$(wc -l < "$out/INDEX") packages in $out, $(du -sh "$out" | cut -f1)"
 msg "key.pub is the public half, for /etc/rpk/keys"
-msg "$(cd "$out/.." && pwd)/latest/SNAPSHOT says $name"
+msg "$(cd "$out/.." && pwd)/latest-$release/SNAPSHOT says $snap"
 
 [ -n "$tag" ] || exit 0
 command -v gh >/dev/null || die "publishing needs gh, the GitHub command line tool"
@@ -86,12 +96,13 @@ gh release create "$tag" --repo Raye-Linux/packages --prerelease \
     --notes "Built packages, $(wc -l < "$out/INDEX") of them. REPO=https://github.com/Raye-Linux/packages/releases/download/$tag" \
     "$out"/*
 
-# and point latest at it, once the files are all there
+# and point latest-<release> at it, once the files are all there
 up=$(mktemp -d)
 echo "$tag" > "$up/SNAPSHOT"
-gh release view latest --repo Raye-Linux/packages > /dev/null 2>&1 ||
-    gh release create latest --repo Raye-Linux/packages --prerelease \
-        --title latest --notes "SNAPSHOT names the current snapshot, for raye-update."
-gh release upload latest "$up/SNAPSHOT" --repo Raye-Linux/packages --clobber
+gh release view "latest-$release" --repo Raye-Linux/packages > /dev/null 2>&1 ||
+    gh release create "latest-$release" --repo Raye-Linux/packages --prerelease \
+        --title "latest-$release" \
+        --notes "SNAPSHOT names release $release's current snapshot, for raye-update."
+gh release upload "latest-$release" "$up/SNAPSHOT" --repo Raye-Linux/packages --clobber
 rm -r "$up"
-msg "latest/SNAPSHOT on GitHub says $tag"
+msg "latest-$release/SNAPSHOT on GitHub says $tag"

@@ -85,26 +85,32 @@ the INDEX, which is what `rpk profile` reads.
 `snapshot` takes a built repo and an ed25519 key, and makes a signed
 copy of it in a new directory named after the snapshot: the INDEX and
 PROFILES with their signatures, the tarballs and a `SHA256SUMS`. That
-directory is a repo as it stands, for any web server. Next to it,
-`latest/SNAPSHOT` gets the snapshot's name, which makes the folder
-around it a mirror: what `raye-update` asks first is
-`<mirror>/latest/SNAPSHOT`, then it fetches `<mirror>/<snapshot>/INDEX`
-and the rest.
+directory is a repo as it stands, for any web server.
 
-With `-r snapshot-YYYY-MM-DD` the snapshot also goes up as a pre-release
-here, through the `gh` tool, and the pre-release called `latest` gets a
-new `SNAPSHOT` naming it. GitHub is then a mirror with the same layout,
+Snapshots belong to a release, the first number of the Raye version
+they're for (0 for every 0.0.x, 1 for every 1.x), and are named
+`snapshot-<release>-<date>`. Next to the new directory,
+`latest-<release>/SNAPSHOT` gets the snapshot's name, which makes the
+folder around it a mirror: what `raye-update` asks first is
+`<mirror>/latest-<release>/SNAPSHOT` for its system's release, then it
+fetches `<mirror>/<snapshot>/INDEX` and the rest. A system stays on its
+release until `RELEASE=` in its `/etc/rpk.conf` moves it.
+
+With `-r snapshot-<release>-<date>` the snapshot also goes up as a
+pre-release here, through the `gh` tool, and the pre-release called
+`latest-<release>` gets a new `SNAPSHOT` naming it. GitHub is then a mirror with the same layout,
 at `https://github.com/Raye-Linux/packages/releases/download`, and every
 system finds the new snapshot on its next `raye-update`, with nothing
 to edit.
 
 ```sh
 openssl genpkey -algorithm ed25519 -out raye.key    # once
-./snapshot -r snapshot-2026-10-24 ../live/build/repo raye.key mirror/snapshot-2026-10-24
+./snapshot -r snapshot-0-2026-10-24 ../live/build/repo raye.key mirror/snapshot-0-2026-10-24
 ```
 
 For a mirror of your own, serve `mirror/` as it is, nginx with `root`
-pointing at it is enough, and keep the older snapshots in it or not.
+pointing at it is enough, and keep the older snapshots and other
+releases' in it or not.
 Systems ask the mirrors in `MIRRORS=` in their `/etc/rpk.conf` first,
 then the ones in `/usr/share/raye/mirrors`, which raye-base installs
 (from live's `rootfs/base`), so adding a mirror there reaches everyone
