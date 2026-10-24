@@ -6,7 +6,9 @@
 #
 # CC and CXX have to be a musl toolchain (mklive hands over the one it
 # builds). A package already sitting in OUTDIR at the recipe's version
-# is left alone, so rerunning only builds what changed.
+# is left alone, so rerunning only builds what changed. The names given
+# (all recipes if none) get built along with everything they need, each
+# after what it depends on.
 #
 # A recipe is pkg/<name>/build, a shell file that sets
 #
@@ -416,10 +418,33 @@ $lib
     msg "$name: $(du -h "$file" | cut -f1)"
 )
 
+# edges NAME...: "dependency name" lines for tsort, for NAME and all it
+# needs at build time or after. musl and gcc-libs aren't recipes, the
+# toolchain makes them
+edges() {
+    for n do
+        case " $visited " in *" $n "*) continue ;; esac
+        visited="$visited $n"
+        [ -f "$top/pkg/$n/build" ] || continue
+        load "$n"
+        echo "$n $n"
+        needs="$depends $makedepends"
+        for d in $needs; do
+            [ -f "$top/pkg/$d/build" ] && echo "$d $n"
+        done
+        # shellcheck disable=SC2086
+        edges $needs
+    done
+}
+
 tools
 [ "$#" -gt 0 ] || set -- $(ls "$top/pkg")
 
-for name do
+visited=
+edges "$@" > "$work/edges"
+order=$(tsort "$work/edges") || die "the recipes depend on each other in a circle"
+
+for name in $order; do
     build_pkg "$name"
 done
 
