@@ -24,8 +24,11 @@ INSTALL_SYMLINKS = YesPlease
 CURL_LDFLAGS = -lcurl -lssl -lcrypto -lz
 CFG
 
-    make -j"$JOBS" CC="$CC" CPPFLAGS="$CPPFLAGS" LDFLAGS="$LDFLAGS" all
-    make CC="$CC" CPPFLAGS="$CPPFLAGS" LDFLAGS="$LDFLAGS" \
+    # the stage goes after git's own headers, not before: libarchive's
+    # archive.h would otherwise stand in for git's
+    cpp="-idirafter $stage/usr/include"
+    make -j"$JOBS" CC="$CC" CPPFLAGS="$cpp" LDFLAGS="$LDFLAGS" all
+    make CC="$CC" CPPFLAGS="$cpp" LDFLAGS="$LDFLAGS" \
         DESTDIR="$pkg" install
 
     rm -rf "$pkg/usr/share/gitweb" "$pkg/usr/share/git-gui" \
