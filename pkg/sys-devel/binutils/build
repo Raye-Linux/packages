@@ -1,0 +1,25 @@
+version=2.47
+release=1
+description="the assembler, the linker and the tools around them"
+depends=""
+source="https://ftp.gnu.org/gnu/binutils/binutils-$version.tar.xz"
+sha256=154ab23b60070e8f27013c22977f1129425d67d1e8acd6e13010e617811e4cff
+
+# For compiling on raye itself, the same version the build uses. Static,
+# so no plugins (they're loaded with dlopen): no LTO through the linker.
+# libtool drops a plain -static and needs -all-static, which the
+# compiler itself doesn't take: configure everything first, and only
+# then hand it over for the links. zlib is the bundled one, so there's
+# no libz.so to need
+build() {
+    ./configure --host="$TARGET" --target="$TARGET" --prefix=/usr \
+        --disable-nls --disable-werror --disable-multilib --disable-plugins \
+        --disable-shared --enable-static \
+        --disable-gprofng --disable-gdb --disable-gdbserver --disable-sim \
+        --enable-deterministic-archives --without-system-zlib --without-zstd
+    make -j"$JOBS" configure-host
+    make -j"$JOBS" LDFLAGS="$LDFLAGS -all-static"
+    make DESTDIR="$pkg" install
+    # libbfd and friends are for building gdb and the like against
+    rm -rf "$pkg/usr/lib"
+}

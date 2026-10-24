@@ -1,0 +1,10 @@
+# What it takes to build packages from their recipes on raye itself
+# (SOURCE=build in /etc/rpk.conf): the compiler and its tools, and what
+# mkrepo runs as it goes.
+sys-devel/gcc
+sys-devel/binutils
+dev-build/make
+dev-util/pkgconf
+app-arch/xz
+sys-apps/file
+dev-vcs/git

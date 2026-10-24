@@ -1,0 +1,59 @@
+version=16.2.0
+release=1
+description="gcc, C and C++ compilers that run on raye"
+depends="sys-libs/musl sys-libs/gcc-libs sys-devel/binutils sys-libs/musl-dev sys-kernel/linux-headers"
+makedepends="dev-libs/gmp dev-libs/mpfr dev-libs/mpc"
+dynamic=1
+source="https://ftp.gnu.org/gnu/gcc/gcc-$version/gcc-$version.tar.xz"
+sha256=e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e
+
+# The compiler the build itself uses, made again to run on raye (built
+# here, running there, making code for there), with the same options.
+# The libraries it compiles for raye (libgcc, libstdc++) come from the
+# cross compiler, which gcc goes looking for by its triplet. No LTO:
+# binutils is static and can't load gcc's linker plugin. gcc's own
+# generators run during the build, so they're compiled with the build
+# machine's cc, and without the stage's flags.
+build() {
+    export PATH="${CC%/*}:$PATH"
+    mkdir _build
+    cd _build
+    CC_FOR_BUILD=cc CXX_FOR_BUILD=c++ CFLAGS_FOR_BUILD=-O2 CXXFLAGS_FOR_BUILD=-O2 \
+    CPPFLAGS_FOR_BUILD= LDFLAGS_FOR_BUILD= \
+    ../configure --build="$(CC=cc ../config.guess)" --host="$TARGET" --target="$TARGET" \
+        --prefix=/usr \
+        --with-gmp="$stage/usr" --with-mpfr="$stage/usr" --with-mpc="$stage/usr" \
+        --enable-languages=c,c++ \
+        --enable-shared \
+        --enable-threads=posix \
+        --enable-tls \
+        --enable-initfini-array \
+        --enable-libstdcxx-time=rt \
+        --disable-bootstrap \
+        --disable-multilib \
+        --disable-nls \
+        --disable-werror \
+        --disable-lto \
+        --disable-plugin \
+        --disable-libsanitizer \
+        --disable-libssp \
+        --disable-gnu-indirect-function
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+
+    # gcc puts its runtime in lib64, raye keeps libraries in lib. A link
+    # keeps the paths gcc compiled in working
+    if [ -d "$pkg/usr/lib64" ]; then
+        cp -a "$pkg/usr/lib64/." "$pkg/usr/lib/"
+        rm -rf "$pkg/usr/lib64"
+    fi
+    ln -s lib "$pkg/usr/lib64"
+    # the runtime itself is gcc-libs' (the same version), only the
+    # compile-time half is this package's
+    rm -f "$pkg"/usr/lib/libgcc_s.so.1 "$pkg"/usr/lib/libstdc++.so.6* \
+        "$pkg"/usr/lib/libatomic.so.1*
+    rm -f "$pkg"/usr/lib/libstdc++.so.*-gdb.py
+    # cc and c++, the names most build systems try first
+    ln -s gcc "$pkg/usr/bin/cc"
+    ln -sf g++ "$pkg/usr/bin/c++"
+}

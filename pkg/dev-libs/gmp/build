@@ -1,0 +1,14 @@
+version=6.3.0
+release=1
+description="arbitrary precision arithmetic, for gcc"
+buildonly=1
+source="https://ftp.gnu.org/gnu/gmp/gmp-$version.tar.xz"
+sha256=a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898
+
+# gcc links it in; nothing else wants it. Its configure checks are
+# written in pre-C23 C, which gcc 16 no longer takes by default
+build() {
+    CFLAGS="-O2 -std=gnu17" ./configure --host="$TARGET" --prefix=/usr --disable-shared --enable-static
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

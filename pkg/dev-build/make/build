@@ -1,0 +1,15 @@
+version=4.4.1
+release=1
+description="GNU make"
+source="https://ftp.gnu.org/gnu/make/make-$version.tar.gz"
+sha256=dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3
+
+# upstream only signs its releases, the sum is from the checked tarball.
+# Its bundled gnulib still declares getenv () the old way, which C23
+# (gcc 16's default) reads as taking no arguments
+build() {
+    CFLAGS="-O2 -std=gnu17" ./configure --host="$TARGET" --prefix=/usr \
+        --disable-nls --without-guile
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

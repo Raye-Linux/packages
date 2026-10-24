@@ -1,0 +1,12 @@
+version=3.0.10
+release=1
+description="pkgconf, the pkg-config that build systems ask about libraries"
+depends="sys-libs/musl"
+dynamic=1
+source="git+https://github.com/pkgconf/pkgconf#511e6e6b8c82367e75d02edb56ad98da766e06b6"
+
+# no checksum or signature upstream, so the release tag's commit pins it
+build() {
+    meson_build
+    ln -s pkgconf "$pkg/usr/bin/pkg-config"
+}
