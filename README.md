@@ -50,8 +50,25 @@ wayland, libinput, the hyprwm libraries and so on, each its own package.
 with headers-only things like `wayland-protocols`: whatever needs them
 links them in or compiles them in, they are never installed on their own.
 
-The built repo is published as the `repo` release of this repository,
-which is where `raye-update` fetches from.
+The built repo is published as snapshots, pre-releases of this
+repository named after the day they were built, and that's where
+`raye-update` fetches from.
+
+## Publishing
+
+`snapshot` takes a built repo and an ed25519 key, and makes a signed
+copy of it in a new directory: the INDEX, `INDEX.sig`, the tarballs and
+a `SHA256SUMS`. That directory is a repo as it stands, for any web
+server. With `-r snapshot-YYYY-MM-DD` it also goes up as a pre-release
+here, one per snapshot, through the `gh` tool.
+
+```sh
+openssl genpkey -algorithm ed25519 -out raye.key    # once
+./snapshot -r snapshot-2026-10-24 ../live/build/repo raye.key out/
+```
+
+Systems trust the key once `raye.pub` (the public half, also left in
+the directory as `key.pub`) is in their `/etc/rpk/keys`.
 
 ## Building
 
