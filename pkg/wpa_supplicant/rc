@@ -17,8 +17,15 @@ wireless() {
 
 case $1 in
     start)
-        if [ ! -f "$conf" ]; then
-            (umask 077; printf 'ctrl_interface=/run/wpa_supplicant\nupdate_config=1\n' > "$conf")
+        # wpa_cli needs these two at the top. A file that started with
+        # wpa_passphrase >> doesn't have them
+        if ! grep -q '^ctrl_interface=' "$conf" 2>/dev/null; then
+            (
+                umask 077
+                printf 'ctrl_interface=/run/wpa_supplicant\nupdate_config=1\n\n' > "$conf.new"
+                cat "$conf" >> "$conf.new" 2>/dev/null
+                mv "$conf.new" "$conf"
+            )
         fi
         for dev in $(wireless); do
             ip link set "$dev" up

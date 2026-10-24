@@ -1,5 +1,5 @@
 version=2.12
-release=1
+release=2
 description="Wi-Fi: WPA2, WPA3 and enterprise networks"
 depends=""
 makedepends="libnl openssl"
