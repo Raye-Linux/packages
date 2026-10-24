@@ -1,0 +1,19 @@
+version=2.0.0
+release=1
+description="rofi, the launcher and menu, on wayland"
+depends="musl glib cairo pango gdk-pixbuf libxkbcommon wayland"
+makedepends="glib cairo pango gdk-pixbuf libxkbcommon wayland wayland-protocols"
+dynamic=1
+source="https://github.com/davatorium/rofi/releases/download/$version/rofi-$version.tar.xz"
+sha256=6a55ee27f189ef9a1435cea329b146805b5dc830d8abc7a08c50a971521a8d8d
+
+# a small helper it runs during the build is linked against GLib for the
+# build machine, so native lookups go to the build machine's pkg-config
+# here (it needs GLib's headers), not to the stage
+build() {
+    host_pc=$(env -u PKG_CONFIG_LIBDIR pkg-config --variable pc_path pkg-config)
+    printf "[properties]\npkg_config_libdir = ['%s']\nsys_root = '/'\n" \
+        "$(echo "$host_pc" | sed "s/:/', '/g")" > host.ini
+    meson_build --native-file host.ini \
+        -Dwayland=enabled -Dxcb=disabled -Dcheck=disabled -Dimdkit=false
+}
