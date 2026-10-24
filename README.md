@@ -56,11 +56,35 @@ The built repo is published as snapshots, pre-releases of this
 repository named after the day they were built, and that's where
 `raye-update` fetches from.
 
+## Categories
+
+Recipes are sorted the Gentoo way, `pkg/<category>/<name>/`, with
+Gentoo's category names wherever one fits: `sys-libs/musl`,
+`dev-libs/glib`, `media-libs/mesa`, `gui-wm/hyprland`,
+`net-wireless/wpa_supplicant`. Dependencies are written with the full
+name. On the command line, mkrepo and rpk take the name alone too, when
+only one category has it. `raye/` is the one category of Raye's own,
+for packages that are mostly Raye's configuration (`raye/desktop`, the
+defaults the desktop profile comes with).
+
+## Profiles
+
+`profiles/` has what a system can be made into, one directory each:
+`packages` (one per line, full names), `parent` (the profile it builds
+on, if any) and `description`. mkrepo turns them into `PROFILES` next to
+the INDEX, which is what `rpk profile` reads.
+
+| profile | what for |
+|---|---|
+| minimal | busybox, rpk, the kernel and curl: base.tar on the live image |
+| desktop/hyprland | minimal and the Hyprland desktop, with Raye's defaults |
+| toolchain | minimal, gcc, binutils, make and pkgconf, to build recipes on raye |
+
 ## Publishing
 
 `snapshot` takes a built repo and an ed25519 key, and makes a signed
-copy of it in a new directory: the INDEX, `INDEX.sig`, the tarballs and
-a `SHA256SUMS`. That directory is a repo as it stands, for any web
+copy of it in a new directory: the INDEX and PROFILES with their
+signatures, the tarballs and a `SHA256SUMS`. That directory is a repo as it stands, for any web
 server. With `-r snapshot-YYYY-MM-DD` it also goes up as a pre-release
 here, one per snapshot, through the `gh` tool.
 
@@ -80,11 +104,19 @@ toolchain, which the live build already makes:
 ```sh
 CC=/path/to/x86_64-linux-musl-gcc ./mkrepo repo/            # everything
 CC=/path/to/x86_64-linux-musl-gcc ./mkrepo repo/ dropbear   # just one
+./mkrepo -p repo/                                           # INDEX and PROFILES only
 ```
 
-`CXX` defaults to the `g++` next to `CC`. Dynamically linked packages
-also need `musl` and `gcc-libs` in the repo directory, the live build
-puts them there. The desktop packages need more on the build machine
+Whatever is asked for gets built along with everything it depends on,
+each package after its dependencies. A package already in the repo at
+the recipe's version is left alone. `CXX` defaults to the `g++` next to
+`CC`. Dynamically linked packages also need `sys-libs/musl` and
+`sys-libs/gcc-libs` in the repo directory, the live build puts them
+there.
+
+mkrepo runs on raye too, with the toolchain profile, and that's how
+`rpk` builds packages when `SOURCE=build`. There, recipes built with
+meson or cmake stop with a message saying which tool isn't there. The desktop packages need more on the build machine
 than the rest, the live repo's README has the list.
 
 Normally you don't call it yourself, `./mklive packages` in
@@ -92,13 +124,13 @@ Normally you don't call it yourself, `./mklive packages` in
 
 ## Writing a recipe
 
-A recipe is `pkg/<name>/build`, a shell file:
+A recipe is `pkg/<category>/<name>/build`, a shell file:
 
 ```sh
 version=1.2.3
 release=1
 description="what it is, in a few words"
-depends="other packages, space separated"
+depends="sys-libs/musl and other packages, space separated"
 source="https://example.org/thing-$version.tar.gz"
 sha256=...
 
@@ -123,9 +155,9 @@ shared libraries (anything graphical, plugins, Mesa). To their build
 systems those are cross builds, so pass `--host="$TARGET"` to configure,
 `--cross-file "$MESON_CROSS"` to meson or
 `-DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN"` to cmake. List every library
-it links in `depends` (`musl`, `gcc-libs` for C++): mkrepo reads the
-binaries and won't pack one that needs something nothing in there
-provides.
+it links in `depends` (`sys-libs/musl`, `sys-libs/gcc-libs` for C++):
+mkrepo reads the binaries and won't pack one that needs something
+nothing in there provides.
 
 Services go in `/etc/rc.d/<name>` and take `start` and `stop`.
 
