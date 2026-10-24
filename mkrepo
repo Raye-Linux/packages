@@ -33,6 +33,8 @@
 #   sha256        of that source (not for git ones, the commit pins those)
 #   buildonly=1   a library other recipes link against, never packaged
 #   dynamic=1     link against shared libraries rather than statically
+#   devel=1       keep the headers and static libraries in the package,
+#                 for the compiler, whose runtime they are
 #
 # and has a build() function. build() runs inside the unpacked source
 # with $pkg as the install root, $files pointing at the recipe's
@@ -96,7 +98,7 @@ die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
 
 load() {
     unset version release description depends makedepends source \
-          sha256 buildonly dynamic
+          sha256 buildonly dynamic devel
     [ -f "$top/pkg/$1/build" ] || die "no recipe for $1"
     . "$top/pkg/$1/build"
 }
@@ -415,13 +417,14 @@ build_pkg() (
     # no man(1) on the system to read these with, and nothing links
     # against the static libs at runtime
     rm -rf "$pkg/usr/share/man" "$pkg/usr/share/info" "$pkg/usr/share/doc" \
-           "$pkg/usr/share/aclocal" "$pkg/usr/include" "$pkg/usr/lib/pkgconfig" \
-           "$pkg/usr/share/pkgconfig" "$pkg/usr/share/gtk-doc"
+           "$pkg/usr/share/gtk-doc"
+    [ -n "$devel" ] || rm -rf "$pkg/usr/share/aclocal" "$pkg/usr/include" \
+           "$pkg/usr/lib/pkgconfig" "$pkg/usr/share/pkgconfig"
     # introspection data and Vala bindings are for building against, and
     # nothing on raye loads typelibs
     rm -rf "$pkg/usr/share/gir-1.0" "$pkg/usr/lib/girepository-1.0" \
            "$pkg/usr/share/vala" "$pkg/usr/share/vala-0.56"
-    find "$pkg" -name '*.a' -delete
+    [ -n "$devel" ] || find "$pkg" -name '*.a' -delete
     # libraries keep the symbols other things link against
     find "$pkg" -type f -name '*.so*' -exec strip --strip-unneeded {} + 2>/dev/null || :
     find "$pkg" -type f -perm -u+x ! -name '*.so*' \

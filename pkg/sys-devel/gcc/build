@@ -1,9 +1,10 @@
 version=16.2.0
-release=1
+release=2
 description="gcc, C and C++ compilers that run on raye"
 depends="sys-libs/musl sys-libs/gcc-libs sys-libs/zlib app-arch/zstd sys-devel/binutils sys-libs/musl-dev sys-kernel/linux-headers"
 makedepends="dev-libs/gmp dev-libs/mpfr dev-libs/mpc"
 dynamic=1
+devel=1
 source="https://ftp.gnu.org/gnu/gcc/gcc-$version/gcc-$version.tar.xz"
 sha256=e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e
 
@@ -11,9 +12,11 @@ sha256=e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e
 # here, running there, making code for there), with the same options.
 # The libraries it compiles for raye (libgcc, libstdc++) come from the
 # cross compiler, which gcc goes looking for by its triplet. No LTO:
-# binutils is static and can't load gcc's linker plugin. gcc's own
-# generators run during the build, so they're compiled with the build
-# machine's cc, and without the stage's flags.
+# binutils is static and can't load gcc's linker plugin. devel=1: the
+# package keeps libgcc.a, libstdc++ and its headers, which it links
+# every program with. gcc's own generators run during the build, so
+# they're compiled with the build machine's cc, and without the stage's
+# flags.
 build() {
     export PATH="${CC%/*}:$PATH"
     mkdir _build
