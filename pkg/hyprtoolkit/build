@@ -1,0 +1,11 @@
+version=0.6.0
+release=1
+description="the hyprwm GUI toolkit, hyprpaper draws with it"
+depends="musl gcc-libs aquamarine hyprgraphics hyprutils hyprlang wayland libglvnd mesa pixman libdrm libxkbcommon pango cairo iniparser abseil-cpp"
+makedepends="aquamarine hyprgraphics hyprutils hyprlang wayland wayland-protocols libglvnd mesa pixman libdrm libxkbcommon pango cairo iniparser abseil-cpp hyprwayland-scanner"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprtoolkit#f8cbaf42e1f7fdc9c7565d7be3e935f6d56c7a39"
+
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

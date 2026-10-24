@@ -1,0 +1,11 @@
+version=4.3.2
+release=1
+description="INI file parser, for hyprtoolkit"
+depends="musl"
+dynamic=1
+source="git+https://github.com/ndevilla/iniparser#4fff3f22b63819d30ad5c2e4d7c7df9ec272cffc"
+
+build() {
+    cmake_build -DBUILD_TESTING=OFF -DBUILD_DOCS=OFF -DBUILD_EXAMPLES=OFF \
+        -DBUILD_STATIC_LIBS=OFF
+}
