@@ -6,9 +6,6 @@ makedepends="hyprutils seatd libinput eudev wayland wayland-protocols pixman lib
 dynamic=1
 source="git+https://github.com/hyprwm/aquamarine#f31c47a1b9d300847d8fc3108ad959448103dfc1"
 
-# hyprwayland-scanner gets called by name, so the staged one has to be on
-# the PATH (after the build machine's own tools)
 build() {
-    export PATH="$PATH:$stage/usr/bin"
     cmake_build -DBUILD_TESTING=OFF
 }

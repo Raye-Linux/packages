@@ -274,7 +274,13 @@ build_pkg() (
         cp -a "$src/." "$dir/src/"
     else
         case $src in
-            *.tar.*|*.tgz) tar -xf "$src" -C "$dir/src" --strip-components=1 ;;
+            *.tar.*|*.tgz)
+                # some tarballs put ./ in front of everything, that's one
+                # more level to strip
+                strip=1
+                case $(tar -tf "$src" 2>/dev/null | head -n 1) in ./*) strip=2 ;; esac
+                tar -xf "$src" -C "$dir/src" --strip-components=$strip
+                ;;
             *)             cp "$src" "$dir/src/" ;;
         esac
     fi
@@ -282,6 +288,9 @@ build_pkg() (
     msg "building $name $version"
     if [ -n "$dynamic" ]; then
         export LDFLAGS="$ldflags"
+        # build tools some projects look for by name (wayland-scanner,
+        # hyprwayland-scanner), after the build machine's own
+        export PATH="$PATH:$stage/usr/bin"
     else
         export LDFLAGS="-static $ldflags"
     fi
