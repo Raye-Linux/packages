@@ -32,6 +32,14 @@ Built against musl, and static unless a recipe says otherwise.
 | pipewire | sound: PipeWire, its Pulse server and ALSA plugin |
 | wireplumber | PipeWire's session manager |
 | dbus | the message bus, and a service for the system bus |
+| flatpak | sandboxed apps from Flathub and the like (`flatpak --user`) |
+| xdg-desktop-portal | file choosers, screenshots and screen sharing for sandboxed apps, with the -hyprland and -gtk backends |
+| gtk3 | GTK 3, wayland only |
+| waybar | the status bar |
+| rofi | launcher and menus |
+| mako | notifications |
+| hyprlock, hypridle, hyprpaper | lock screen, idle daemon, wallpapers |
+| grim, slurp, wl-clipboard | screenshots, picking a region, the clipboard |
 
 Everything under Hyprland is dynamically linked: glib, cairo, pango,
 wayland, libinput, the hyprwm libraries and so on, each its own package.
