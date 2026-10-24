@@ -29,6 +29,9 @@ Built against musl, and static unless a recipe says otherwise.
 | eudev | udevd, so the compositor knows what the input devices are |
 | seatd | lets the video group at the GPU and input without root |
 | font-dejavu | one font family that covers most scripts, mono included |
+| pipewire | sound: PipeWire, its Pulse server and ALSA plugin |
+| wireplumber | PipeWire's session manager |
+| dbus | the message bus, and a service for the system bus |
 
 Everything under Hyprland is dynamically linked: glib, cairo, pango,
 wayland, libinput, the hyprwm libraries and so on, each its own package.
