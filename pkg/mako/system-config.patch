@@ -1,0 +1,28 @@
+--- a/config.c
++++ b/config.c
+@@ -774,6 +774,25 @@
+ 	}
+ 	free(config_home_fallback);
+ 
++	// nothing of the user's: the system-wide one, if there is one
++	const char *dirs = getenv("XDG_CONFIG_DIRS");
++	if (dirs == NULL || dirs[0] == '\0') {
++		dirs = "/etc/xdg";
++	}
++	while (found_path == NULL && *dirs != '\0') {
++		size_t len = strcspn(dirs, ":");
++		char *path = mako_asprintf("%.*s/mako/config", (int)len, dirs);
++		if (len > 0 && file_exists(path)) {
++			found_path = path;
++		} else {
++			free(path);
++		}
++		dirs += len;
++		if (*dirs == ':') {
++			dirs++;
++		}
++	}
++
+ 	return found_path;
+ }
+ 
