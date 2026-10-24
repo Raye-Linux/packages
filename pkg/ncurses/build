@@ -6,9 +6,10 @@ sha256=355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11
 buildonly=1
 
 # Wide-character, static, headers straight in /usr/include. Programs
-# that ask for plain -lncurses get pointed at the wide one.
+# that ask for plain -lncurses get pointed at the wide one. PIC, so it
+# links into dynamic (PIE) programs too.
 build() {
-    ./configure \
+    CFLAGS="-O2 -fPIC" ./configure \
         --prefix=/usr \
         --without-shared --with-normal \
         --without-debug --without-cxx --without-cxx-binding --without-ada \

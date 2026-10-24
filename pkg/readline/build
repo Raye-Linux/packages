@@ -7,9 +7,9 @@ sha256=fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
 buildonly=1
 
 # static, with ncurses, which is static too. Whatever uses it gets both
-# linked in and needs neither at runtime
+# linked in and needs neither at runtime. PIC for the dynamic ones
 build() {
-    ./configure --prefix=/usr --disable-shared --enable-static --with-curses
+    CFLAGS="-O2 -fPIC" ./configure --prefix=/usr --disable-shared --enable-static --with-curses
     make -j"$JOBS"
     make DESTDIR="$pkg" install
     # static, so whatever links it needs ncurses spelled out, not just
