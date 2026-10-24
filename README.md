@@ -119,6 +119,60 @@ with their next update.
 Systems trust the key once `raye.pub` (the public half, also left in
 the directory as `key.pub`) is in their `/etc/rpk/keys`.
 
+## The first snapshot of a release
+
+Nothing is published for a release until its first snapshot is, and
+until then `raye-update` says "no snapshot published for release 0
+yet". For release 0 (every 0.0.x), once:
+
+1. Build, signed with the key the ISO was built with (its public half
+   is in `/etc/rpk/keys` on every install, which only trusts it):
+
+   ```sh
+   cd live
+   RPK_KEY=raye.key ./mklive packages
+   ```
+
+2. Publish it, as a pre-release and as a mirror folder:
+
+   ```sh
+   d=snapshot-0-$(date +%F)
+   ../packages/snapshot -r $d build/repo raye.key out/mirror/$d
+   ```
+
+3. Check that GitHub has it, and copy `out/mirror` to the CDN if there's
+   one:
+
+   ```sh
+   curl -fsSL https://github.com/Raye-Linux/packages/releases/download/latest-0/SNAPSHOT
+   curl -fsSL -o /dev/null -w '%{http_code}\n' https://github.com/Raye-Linux/packages/releases/download/$d/INDEX
+   ```
+
+   The first prints `$d`, the second `200`.
+
+4. On an install from before the mirrors (its `raye-update` reads
+   `MIRROR=`, and has no `/usr/share/raye/mirrors`), update once with
+   the new rpk straight from the snapshot, as root:
+
+   ```sh
+   curl -fLo /tmp/rpk https://raw.githubusercontent.com/Raye-Linux/rpk/main/rpk
+   env RPK_REPO=https://github.com/Raye-Linux/packages/releases/download/$d sh /tmp/rpk update
+   ```
+
+   That brings raye-base (the new `raye-update` and the mirror list)
+   and the new rpk with everything else. It puts a new kernel in
+   `/boot/raye.efi` but not on the EFI partition, which is
+   raye-update's job, so copy it over the one you boot, keeping the
+   old one:
+
+   ```sh
+   cp /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTX64.EFI.old
+   cp /boot/raye.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+   ```
+
+   (or `EFI/raye/raye.efi`, wherever the install put it). From then on
+   `raye-update` is all it takes.
+
 ## Building
 
 `mkrepo` turns the recipes into a repo rpk can use. It needs a musl
