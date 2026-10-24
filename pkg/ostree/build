@@ -1,0 +1,22 @@
+version=2026.5
+release=1
+description="libostree, the content store Flatpak keeps apps and runtimes in"
+depends="musl glib curl openssl gpgme libgpg-error libarchive zlib xz"
+makedepends="glib curl openssl gpgme libgpg-error libarchive zlib xz"
+dynamic=1
+source="https://github.com/ostreedev/ostree/releases/download/v$version/libostree-$version.tar.xz"
+sha256=1829428ed2d982dc684211ff18525b57ea627056a68fa5b04f674f0ca6c9c19b
+
+# only what Flatpak uses: no booting an OS from it, so no composefs,
+# libmount or grub bits
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --sysconfdir=/etc \
+        --localstatedir=/var --disable-static \
+        --with-curl --without-soup --with-crypto=openssl --with-gpgme \
+        --with-libarchive --without-composefs --without-libmount \
+        --without-selinux --without-libsystemd --without-avahi \
+        --disable-rofiles-fuse --disable-man --disable-gtk-doc \
+        --disable-introspection
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}
