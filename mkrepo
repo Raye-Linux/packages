@@ -14,7 +14,9 @@
 #   depends       what it needs at runtime (other packages)
 #   makedepends   what it needs to build: packages, or build-only libs
 #   source        a URL. Tarballs get unpacked, anything else is copied.
-#                 git+URL#COMMIT clones URL at that commit instead
+#                 git+URL#COMMIT clones URL at that commit instead.
+#                 Left out, the recipe only installs files from its own
+#                 directory
 #   sha256        of that source (not for git ones, the commit pins those)
 #   buildonly=1   a library other recipes link against, never packaged
 #   dynamic=1     link against shared libraries rather than statically
@@ -190,6 +192,9 @@ wrap_tools() {
 # git source, its commit. Sets $src to the tarball or the checkout
 fetch() {
     case $source in
+    '')
+        src=
+        ;;
     git+*)
         url=${source#git+}
         url=${url%#*}
@@ -270,7 +275,9 @@ build_pkg() (
     dir=$work/$name
     rm -rf "$dir"
     mkdir -p "$dir/src" "$dir/pkg"
-    if [ -d "$src" ]; then
+    if [ -z "$src" ]; then
+        :
+    elif [ -d "$src" ]; then
         cp -a "$src/." "$dir/src/"
     else
         case $src in
