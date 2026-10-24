@@ -30,9 +30,12 @@
 # for configure, --cross-file "$MESON_CROSS" for meson and
 # -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN" for cmake. meson_build and
 # cmake_build do the usual setup, build and install with those, taking
-# the project's own options as arguments. Whatever they link has to come
-# from a package in depends, or from musl and gcc-libs, which mklive puts
-# in OUTDIR before it calls this.
+# the project's own options as arguments. "$RUN" PROGRAM runs something
+# just built, when a recipe has to (generating a cache, say), with
+# RUN_LIBS for libraries it needs that aren't staged yet.
+#
+# Whatever they link has to come from a package in depends, or from musl
+# and gcc-libs, which mklive puts in OUTDIR before it calls this.
 
 set -e
 
@@ -51,8 +54,11 @@ TARGET=$("$CC" -dumpmachine)
 export CC CXX TARGET
 
 # whatever earlier recipes built is there to link against. -static goes
-# in front of this for everything that isn't dynamic=1
-ldflags="-L$stage/usr/lib -Wl,-rpath-link,$stage/usr/lib${LDFLAGS:+ $LDFLAGS}"
+# in front of this for everything that isn't dynamic=1. The C++ runtime's
+# directory too: a C program linking a C++ library still has to find
+# libstdc++ behind it
+cxxlib=$(dirname "$("$CXX" -print-file-name=libstdc++.so.6)")
+ldflags="-L$stage/usr/lib -Wl,-rpath-link,$stage/usr/lib -Wl,-rpath-link,$cxxlib${LDFLAGS:+ $LDFLAGS}"
 export CPPFLAGS="-I$stage/usr/include${CPPFLAGS:+ $CPPFLAGS}"
 export PKG_CONFIG_LIBDIR=$stage/usr/lib/pkgconfig:$stage/usr/share/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$stage
@@ -78,16 +84,16 @@ staged() {
 tools() {
     mkdir -p "$work"
     ldso=$("$CC" -print-sysroot)/usr/lib/libc.so
-    cxxlib=$(dirname "$("$CXX" -print-file-name=libstdc++.so.6)")
     cat > "$work/run" <<EOF
 #!/bin/sh
 case \$(readelf -l "\$1" 2>/dev/null) in
     *'program interpreter'*)
-        exec "$ldso" --library-path "$stage/usr/lib:$cxxlib" "\$@" ;;
+        exec "$ldso" --library-path "\${RUN_LIBS:+\$RUN_LIBS:}$stage/usr/lib:$cxxlib" "\$@" ;;
 esac
 exec "\$@"
 EOF
     chmod +x "$work/run"
+    export RUN="$work/run"
 
     # shellcheck disable=SC2086
     largs=$(printf "'%s', " $ldflags | sed 's/, $//')
@@ -294,11 +300,27 @@ build_pkg() (
     fi
     [ -n "$(ls -A "$pkg")" ] || die "$name built but installed nothing"
 
+    # an install dir that came from a pkg-config variable has the stage
+    # in front of it. Put whatever landed there where it belongs
+    if [ -d "$pkg$stage" ]; then
+        cp -a "$pkg$stage/." "$pkg/"
+        top_dir=${stage#/}
+        rm -rf "${pkg:?}/${top_dir%%/*}"
+    fi
+
     # headers, libs and all, for whatever builds against it next. Not the
     # .la files: they point libtool at /usr/lib, which here is the host's
     find "$pkg" -name '*.la' -delete
-    mkdir -p "$stage/.built"
+    mkdir -p "$stage/.built" "$stage/.files"
+    # what an older build of this recipe staged goes first, or a changed
+    # recipe ends up building against its own leftovers
+    if [ -f "$stage/.files/$name" ]; then
+        while IFS= read -r f; do
+            rm -f "$stage/$f"
+        done < "$stage/.files/$name"
+    fi
     cp -a "$pkg/." "$stage/"
+    (cd "$pkg" && find . ! -type d) > "$stage/.files/$name"
     [ -z "$dynamic" ] || wrap_tools "$pkg"
     : > "$stage/.built/$id"
     # the log stays, the unpacked source is only taking up room now
