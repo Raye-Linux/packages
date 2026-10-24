@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# seatd hands the GPU and input devices to whoever runs the compositor.
+# Members of the video group get to talk to it.
+
+pidfile=/run/seatd.pid
+
+case $1 in
+    start)
+        seatd -g video > /dev/null 2>&1 &
+        echo $! > "$pidfile"
+        ;;
+    stop)
+        [ -f "$pidfile" ] && kill "$(cat "$pidfile")"
+        ;;
+    *)
+        echo "usage: $0 start|stop" >&2
+        exit 1
+        ;;
+esac

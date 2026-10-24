@@ -1,0 +1,17 @@
+version=0.9.3
+release=1
+description="seat management: lets a compositor at the GPU and input without root"
+depends="musl"
+dynamic=1
+source="git+https://github.com/kennylevinsen/seatd#daa8196e10b180b8b0caeafa8e5f860eb1bd6706"
+
+build() {
+    meson_build \
+        -Dlibseat-logind=disabled \
+        -Dlibseat-seatd=enabled \
+        -Dlibseat-builtin=enabled \
+        -Dserver=enabled \
+        -Dexamples=disabled \
+        -Dman-pages=disabled
+    install -Dm755 "$files/rc" "$pkg/etc/rc.d/seatd"
+}

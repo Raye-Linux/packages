@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# udevd, so libinput and friends get to know what the devices are. The
+# trigger replays everything the kernel found before udevd was up.
+
+case $1 in
+    start)
+        [ -f /etc/udev/hwdb.bin ] || udevadm hwdb --update
+        udevd --daemon
+        udevadm trigger --type=subsystems --action=add
+        udevadm trigger --type=devices --action=add
+        udevadm settle --timeout=10
+        ;;
+    stop)
+        udevadm control --exit
+        ;;
+    *)
+        echo "usage: $0 start|stop" >&2
+        exit 1
+        ;;
+esac

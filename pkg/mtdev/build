@@ -1,0 +1,14 @@
+version=1.1.7
+release=1
+description="multitouch protocol translation, for libinput"
+depends="musl"
+dynamic=1
+source="https://bitmath.org/code/mtdev/mtdev-$version.tar.bz2"
+sha256=a107adad2101fecac54ac7f9f0e0a0dd155d954193da55c2340c97f2ff1d814e
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+    rm -rf "$pkg/usr/bin"
+}
