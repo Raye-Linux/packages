@@ -1,0 +1,17 @@
+version=1.8.1
+release=1
+description="X.509 and CMS, for gpgsm"
+depends="musl libgpg-error"
+makedepends="libgpg-error"
+dynamic=1
+source="https://gnupg.org/ftp/gcrypt/libksba/libksba-$version.tar.bz2"
+sha256=c2f84393011827219ae117131dba8e7684c2bed0961eed11b0642c2acba440b5
+
+# these find each other through gpgrt-config rather than pkg-config,
+# so they get told where the staged ones are
+build() {
+    ./configure --host="$TARGET" --prefix=/usr \
+        --with-libgpg-error-prefix="$stage/usr" --disable-static --disable-doc
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

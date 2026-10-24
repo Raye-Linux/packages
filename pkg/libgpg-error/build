@@ -1,0 +1,15 @@
+version=1.61
+release=1
+description="error codes and messages for GnuPG and its libraries"
+depends="musl"
+dynamic=1
+source="https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-$version.tar.bz2"
+sha256=7a85413f2bc354f4f8aa832b718af122e48965e9e0eb9012ee659c13c6385c93
+
+build() {
+    # the others still look for gpg-error-config
+    ./configure --host="$TARGET" --prefix=/usr --disable-static --disable-doc \
+        --enable-install-gpg-error-config
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}
