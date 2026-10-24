@@ -1,0 +1,9 @@
+# Logging in on the first console starts the desktop. Root doesn't get
+# one, and the other consoles stay plain shells, so ctrl+alt+F2 is the
+# way around it when you want a shell or something's broken.
+#
+# exec: leaving Hyprland logs you out, and getty asks again.
+if [ "$(tty)" = /dev/tty1 ] && [ -z "$WAYLAND_DISPLAY" ] &&
+        [ "$(id -u)" != 0 ] && command -v hyprland-session >/dev/null; then
+    exec hyprland-session
+fi

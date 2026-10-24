@@ -1,0 +1,15 @@
+# Raye's notification look. ~/.config/mako/config replaces this.
+font=DejaVu Sans 11
+background-color=#1a1326f0
+text-color=#f3eaff
+border-color=#b46cff
+border-size=2
+border-radius=6
+padding=10
+margin=10
+width=360
+default-timeout=6000
+
+[urgency=high]
+border-color=#d946ef
+default-timeout=0

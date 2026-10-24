@@ -1,0 +1,47 @@
+/* Raye's colours: the console's background, the logo's violet */
+
+* {
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background: #0e0a16;
+    color: #f3eaff;
+    border-bottom: 1px solid #2a2238;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    color: #8a7fa0;
+    background: transparent;
+}
+
+#workspaces button.active {
+    color: #f3eaff;
+    box-shadow: inset 0 -2px #b46cff;
+}
+
+#workspaces button.urgent {
+    color: #d946ef;
+}
+
+#window,
+#clock,
+#language,
+#wireplumber,
+#battery {
+    padding: 0 10px;
+}
+
+#clock {
+    color: #b46cff;
+}
+
+#wireplumber.muted,
+#battery.low:not(.charging) {
+    color: #d946ef;
+}

@@ -1,0 +1,40 @@
+// Raye's default bar. Yours goes in ~/.config/waybar/ and replaces
+// this one, the style too.
+//
+// Plain text instead of icons: the only font on the system is DejaVu.
+{
+    "layer": "top",
+    "position": "top",
+    "height": 26,
+    "spacing": 4,
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["hyprland/language", "wireplumber", "battery"],
+
+    "hyprland/workspaces": {
+        "format": "{name}"
+    },
+    "hyprland/window": {
+        "max-length": 60
+    },
+    "hyprland/language": {
+        "format": "{short}"
+    },
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}",
+        "tooltip-format": "{calendar}"
+    },
+    "wireplumber": {
+        "format": "vol {volume}%",
+        "format-muted": "muted",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "scroll-step": 5
+    },
+    "battery": {
+        "format": "bat {capacity}%",
+        "format-charging": "bat {capacity}% +",
+        "states": {
+            "low": 15
+        }
+    }
+}
