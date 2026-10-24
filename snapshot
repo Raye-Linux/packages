@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# snapshot - sign a built repo and lay it out for publishing
+#
+# usage: snapshot [-r TAG] REPO KEY OUTDIR
+#
+# Copies REPO (what mkrepo or mklive built, the INDEX and its tarballs)
+# into OUTDIR, signs the INDEX with KEY and checks the lot the way rpk
+# will. OUTDIR is then a static repo: any web server can serve it as it
+# is, and its URL works as REPO= for rpk or MIRROR= for raye-update.
+#
+# -r TAG also publishes it as a pre-release of Raye-Linux/packages with
+# that tag (snapshot-2026-10-24, say), using the gh command. One release
+# per snapshot; the files are the same ones as in OUTDIR.
+#
+# KEY is an ed25519 private key. To make one, and the public half that
+# goes in /etc/rpk/keys on every system that should trust it:
+#
+#   openssl genpkey -algorithm ed25519 -out raye.key
+#   openssl pkey -in raye.key -pubout -out raye.pub
+
+set -e
+
+msg() { printf '\033[1;35m=>\033[m %s\n' "$*"; }
+die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
+
+tag=
+if [ "$1" = -r ]; then
+    tag=$2
+    shift 2
+    [ -n "$tag" ] || die "-r needs a tag"
+fi
+[ "$#" -eq 3 ] || { sed -n '/^# usage/,/^#$/p' "$0" | sed -e '$d' -e 's/^# //'; exit 1; }
+repo=$1 key=$2 out=$3
+
+[ -s "$repo/INDEX" ] || die "no INDEX in $repo"
+[ -s "$key" ] || die "no key at $key"
+mkdir -p "$out"
+[ -z "$(ls -A "$out")" ] || die "$out isn't empty"
+
+# only what the INDEX lists, each one checked on the way
+while IFS='|' read -r name ver sum _; do
+    f=$name-$ver.tar.xz
+    [ -f "$repo/$f" ] || die "the INDEX lists $f, but it isn't in $repo"
+    [ "$(sha256sum "$repo/$f" | cut -d' ' -f1)" = "$sum" ] ||
+        die "$f doesn't match its sum in the INDEX"
+    cp "$repo/$f" "$out/"
+done < "$repo/INDEX"
+cp "$repo/INDEX" "$out/INDEX"
+
+openssl pkeyutl -sign -inkey "$key" -rawin -in "$out/INDEX" -out "$out/INDEX.sig"
+openssl pkey -in "$key" -pubout -out "$out/key.pub"
+openssl pkeyutl -verify -pubin -inkey "$out/key.pub" -rawin \
+    -in "$out/INDEX" -sigfile "$out/INDEX.sig" >/dev/null ||
+    die "the signature doesn't check out against its own key"
+# a list for mirrors that want to fetch it all, or to check a copy
+(cd "$out" && sha256sum INDEX INDEX.sig ./*.tar.xz | sed 's| \./| |' > SHA256SUMS)
+
+msg "$(wc -l < "$out/INDEX") packages in $out, $(du -sh "$out" | cut -f1)"
+msg "key.pub is the public half, for /etc/rpk/keys"
+
+[ -n "$tag" ] || exit 0
+command -v gh >/dev/null || die "publishing needs gh, the GitHub command line tool"
+msg "publishing $tag"
+gh release create "$tag" --repo Raye-Linux/packages --prerelease \
+    --title "$tag" \
+    --notes "Built packages, $(wc -l < "$out/INDEX") of them. REPO= or MIRROR=https://github.com/Raye-Linux/packages/releases/download/$tag" \
+    "$out"/*
