@@ -1,0 +1,11 @@
+version=1.1.0
+release=1
+description="typed linked lists for C, header only, for building fcft and foot"
+source="https://codeberg.org/dnkl/tllist/releases/download/$version/tllist-$version.tar.gz"
+sha256=a1f0ce0dc4fcb4ce59c37202a1d914c853a8bd2d7c5d57d623b15a8dd9778767
+buildonly=1
+dynamic=1
+
+build() {
+    meson_build
+}

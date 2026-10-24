@@ -1,0 +1,18 @@
+version=1.28.0
+release=1
+description="foot, a fast and light wayland terminal"
+depends="musl fcft wayland libxkbcommon pixman fontconfig terminfo font-dejavu"
+makedepends="tllist fcft wayland wayland-protocols libxkbcommon pixman fontconfig"
+dynamic=1
+source="https://codeberg.org/dnkl/foot/releases/download/$version/foot-$version.tar.gz"
+sha256=ee73c292a4b457004b38c2df178eac025ab0b849fdd9e13253c1f8b5cf110710
+
+# the terminfo package already has foot's entry, compiled by its own tic
+build() {
+    meson_build \
+        -Ddocs=disabled \
+        -Dtests=false \
+        -Dterminfo=disabled \
+        -Dutmp-backend=none \
+        -Dgrapheme-clustering=disabled
+}
