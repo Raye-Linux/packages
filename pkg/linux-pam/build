@@ -1,0 +1,17 @@
+version=1.7.3
+release=1
+description="PAM, how hyprlock checks your password"
+depends="musl"
+dynamic=1
+source="https://github.com/linux-pam/linux-pam/releases/download/v$version/Linux-PAM-$version.tar.xz"
+sha256=2ce4765fd49df6693771ef2941f81e33d8ee14b94a81a5c7b369aa3b137b85a5
+
+# Only programs that ask for PAM use it: login and su stay busybox's.
+# unix_chkpwd is setuid so a locked screen can check a user's password
+# against /etc/shadow without being root
+build() {
+    meson_build -Ddocs=disabled -Dexamples=false -Dxtests=false \
+        -Daudit=disabled -Dlogind=disabled -Delogind=disabled -Deconf=disabled \
+        -Dselinux=disabled -Dnis=disabled -Di18n=disabled -Dpam_lastlog=disabled
+    chmod 4755 "$pkg/usr/sbin/unix_chkpwd"
+}
