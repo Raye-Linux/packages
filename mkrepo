@@ -390,9 +390,18 @@ $dyn"
                 *) bad="$bad
   ${f#$pkg} wants $interp" ;;
             esac
+            # a whole line of $have, matched with case: grep -q quits at
+            # the first match, and echo can't always take the SIGPIPE
             for lib in $(readelf -d "$f" | sed -n 's/.*(NEEDED).*\[\(.*\)\]$/\1/p'); do
-                echo "$have" | grep -qxF "$lib" || bad="$bad
-  ${f#$pkg} needs $lib"
+                case "
+$have
+" in
+                    *"
+$lib
+"*) ;;
+                    *) bad="$bad
+  ${f#$pkg} needs $lib" ;;
+                esac
             done
         done
         [ -z "$bad" ] || die "$name links against things nothing in depends has:$bad"
