@@ -1,0 +1,15 @@
+version=1.3.0
+release=1
+description="layer-shell surfaces for GTK 4 apps (bars, notifications)"
+depends="sys-libs/musl dev-libs/glib gui-libs/gtk4 dev-libs/wayland"
+makedepends="dev-libs/glib gui-libs/gtk4 dev-libs/wayland dev-libs/wayland-protocols dev-libs/glib-gir x11-libs/pango-gir media-libs/harfbuzz-gir x11-libs/gdk-pixbuf-gir dev-libs/gobject-introspection dev-lang/vala"
+dynamic=1
+source="git+https://github.com/wmww/gtk4-layer-shell#1c963c51514581c41b9bdae08cdf69171265cdda"
+
+# swaync draws its panel with it. The Vala bindings come out of the
+# introspection data, like libadwaita's
+build() {
+    PATH="$work/native/bin:$PATH" XDG_DATA_DIRS="$stage/usr/share" \
+        meson_build -Dintrospection=true -Dvapi=true -Dexamples=false \
+        -Ddocs=false -Dtests=false -Dsmoke-tests=false
+}

@@ -1,0 +1,17 @@
+version=1.4.1
+release=1
+description="Hyprland's portal backend: screenshots and screen sharing"
+depends="sys-libs/musl sys-libs/gcc-libs sys-apps/xdg-desktop-portal gui-apps/slurp dev-cpp/sdbus-c++ media-sound/pipewire x11-libs/libdrm media-libs/mesa dev-libs/wayland dev-libs/hyprlang gui-libs/hyprutils"
+makedepends="dev-cpp/sdbus-c++ media-sound/pipewire x11-libs/libdrm media-libs/mesa dev-libs/wayland dev-libs/wayland-protocols dev-libs/hyprlang gui-libs/hyprutils dev-util/hyprwayland-scanner dev-libs/hyprland-protocols sys-apps/util-linux"
+dynamic=1
+source="git+https://github.com/hyprwm/xdg-desktop-portal-hyprland#cc8e5ef8fb2acef3db488b9a33b0c48c2a4ee204"
+
+# The real hyprland-share-picker is Qt6, all of it for one dialog. A
+# small script by the same name stands in, with slurp: it shares whole
+# outputs, windows and regions need the real one
+build() {
+    sed -i -e '/add_subdirectory(hyprland-share-picker)/d' \
+        -e '/install(TARGETS hyprland-share-picker)/d' CMakeLists.txt
+    cmake_build
+    install -Dm755 "$files/picker" "$pkg/usr/bin/hyprland-share-picker"
+}

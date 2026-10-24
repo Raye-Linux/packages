@@ -1,0 +1,21 @@
+version=1
+release=3
+description="the whole Hyprland desktop in one go, with Raye's default look"
+depends="gui-wm/hyprland gui-apps/foot gui-apps/waybar gui-apps/swaync gui-apps/rofi gui-apps/hyprlock gui-apps/hypridle gui-apps/hyprpaper gui-apps/grim gui-apps/slurp gui-apps/wl-clipboard media-sound/pipewire media-sound/wireplumber net-wireless/wpa_supplicant sys-apps/xdg-desktop-portal gui-libs/xdg-desktop-portal-hyprland sys-apps/xdg-desktop-portal-gtk sys-apps/flatpak sys-auth/seatd sys-fs/eudev sys-apps/dbus media-fonts/font-dejavu x11-themes/adwaita-icon-theme"
+
+# Nothing to compile: the configs go to /etc/xdg, where every one of
+# these programs looks only after ~/.config. The bar's and swaync's are
+# in their own recipes: waybar won't start without one, and swaync only
+# takes one stylesheet from /etc/xdg.
+build() {
+    x=$pkg/etc/xdg
+    for f in hyprland hyprlock hypridle hyprpaper; do
+        install -Dm644 "$files/$f.conf" "$x/hypr/$f.conf"
+    done
+    install -Dm644 "$files/foot.ini" "$x/foot/foot.ini"
+    install -Dm644 "$files/rofi.rasi" "$x/rofi.rasi"
+    install -Dm644 "$files/gtk-3.0/settings.ini" "$x/gtk-3.0/settings.ini"
+    install -Dm644 "$files/wallpaper.png" "$pkg/usr/share/backgrounds/raye.png"
+    # zz: last of the profile snippets, it doesn't come back from exec
+    install -Dm644 "$files/profile" "$pkg/etc/profile.d/zz-desktop.sh"
+}

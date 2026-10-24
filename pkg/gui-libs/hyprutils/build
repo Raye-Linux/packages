@@ -1,0 +1,11 @@
+version=0.14.3
+release=1
+description="the C++ helpers every hyprwm project shares"
+depends="sys-libs/musl sys-libs/gcc-libs x11-libs/pixman"
+makedepends="x11-libs/pixman"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprutils#0d13d5a624eb093b600d1b2cbe448fb613c86424"
+
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

@@ -1,0 +1,17 @@
+version=1.12.1
+release=1
+description="reading and writing zip files"
+depends="sys-libs/musl sys-libs/zlib"
+makedepends="sys-libs/zlib"
+dynamic=1
+source="https://libzip.org/download/libzip-$version.tar.xz"
+sha256=c40062022a1963c80573d48f6070792297cecd7c6bffe3aefcac0d8b9bee8913
+
+build() {
+    cmake_build \
+        -DENABLE_COMMONCRYPTO=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF \
+        -DENABLE_OPENSSL=OFF -DENABLE_WINDOWS_CRYPTO=OFF \
+        -DENABLE_BZIP2=OFF -DENABLE_LZMA=OFF -DENABLE_ZSTD=OFF \
+        -DBUILD_TOOLS=OFF -DBUILD_REGRESS=OFF -DBUILD_OSSFUZZ=OFF \
+        -DBUILD_EXAMPLES=OFF -DBUILD_DOC=OFF
+}

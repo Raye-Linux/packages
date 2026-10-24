@@ -1,0 +1,11 @@
+version=0.1.8
+release=1
+description="Hyprland's idle daemon: lock, dim, suspend after a while"
+depends="sys-libs/musl sys-libs/gcc-libs dev-libs/hyprlang gui-libs/hyprutils dev-cpp/sdbus-c++ dev-libs/wayland"
+makedepends="dev-libs/hyprlang gui-libs/hyprutils dev-cpp/sdbus-c++ dev-libs/wayland dev-libs/wayland-protocols dev-libs/hyprland-protocols dev-util/hyprwayland-scanner"
+dynamic=1
+source="git+https://github.com/hyprwm/hypridle#e5c01af0842bd66617f7004568df9406111d6e80"
+
+build() {
+    cmake_build
+}

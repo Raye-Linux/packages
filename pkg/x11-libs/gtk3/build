@@ -1,0 +1,30 @@
+version=3.24.52
+release=1
+description="GTK 3, the toolkit a lot of desktop programs are written in"
+depends="sys-libs/musl dev-libs/glib x11-libs/pango x11-libs/cairo x11-libs/gdk-pixbuf app-accessibility/at-spi2-core media-libs/libepoxy dev-libs/fribidi media-libs/harfbuzz dev-libs/wayland x11-libs/libxkbcommon media-libs/fontconfig media-libs/freetype x11-misc/shared-mime-info x11-themes/hicolor-icon-theme x11-themes/adwaita-icon-theme"
+makedepends="dev-libs/glib x11-libs/pango x11-libs/cairo x11-libs/gdk-pixbuf app-accessibility/at-spi2-core media-libs/libepoxy dev-libs/fribidi media-libs/harfbuzz dev-libs/wayland dev-libs/wayland-protocols x11-libs/libxkbcommon media-libs/fontconfig media-libs/freetype"
+dynamic=1
+source="https://download.gnome.org/sources/gtk/${version%.*}/gtk-$version.tar.xz"
+sha256=80931fa472a77b9a164f6740e3c0b444fac6770054632d35a7ff9d679e5e7b9f
+
+# wayland only. Input methods built in, so there's no module cache to keep
+# up to date; printing only to files, without CUPS
+build() {
+    meson_build \
+        -Dx11_backend=false \
+        -Dwayland_backend=true \
+        -Dbroadway_backend=false \
+        -Dxinerama=no \
+        -Dcloudproviders=false \
+        -Dtracker3=false \
+        -Dprint_backends=file \
+        -Dcolord=no \
+        -Dbuiltin_immodules=yes \
+        -Dintrospection=false \
+        -Dgtk_doc=false \
+        -Dman=false \
+        -Ddemos=false \
+        -Dexamples=false \
+        -Dtests=false \
+        -Dinstalled_tests=false
+}

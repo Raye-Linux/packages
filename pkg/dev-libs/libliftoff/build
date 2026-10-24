@@ -1,0 +1,12 @@
+version=0.5.0
+release=1
+description="puts surfaces on hardware planes when it can"
+depends="sys-libs/musl x11-libs/libdrm"
+makedepends="x11-libs/libdrm"
+dynamic=1
+source="https://gitlab.freedesktop.org/emersion/libliftoff/uploads/dc6c71ca239d11777a9f6a0a14f0c903/libliftoff-$version.tar.gz"
+sha256=e29af0c9dc765916c1f192f118efffc947af6600178b04d5bccca1901246f83b
+
+build() {
+    meson_build
+}

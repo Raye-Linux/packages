@@ -1,0 +1,14 @@
+version=1.17.0
+release=1
+description="the X protocol, the modern C binding"
+depends="sys-libs/musl x11-libs/libxau"
+makedepends="x11-base/xcb-proto x11-libs/libxau x11-base/xorgproto"
+dynamic=1
+source="https://www.x.org/releases/individual/lib/libxcb-$version.tar.xz"
+sha256=599ebf9996710fea71622e6e184f3a8ad5b43d0e5fa8c4e407123c88a59a6d55
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static --without-doxygen
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

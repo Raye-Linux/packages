@@ -1,0 +1,20 @@
+version=0.5.18
+release=1
+description="the session manager for PipeWire: which device goes where"
+depends="sys-libs/musl media-sound/pipewire dev-libs/glib dev-lang/lua"
+makedepends="media-sound/pipewire dev-libs/glib dev-lang/lua"
+dynamic=1
+source="git+https://gitlab.freedesktop.org/pipewire/wireplumber.git#81606cbb32d29df20147d1b68b662c1082654d81"
+
+build() {
+    meson_build \
+        -Dsystem-lua=true \
+        -Dintrospection=disabled \
+        -Ddoc=disabled \
+        -Dsystemd=disabled \
+        -Dsystemd-system-service=false \
+        -Dsystemd-user-service=false \
+        -Delogind=disabled \
+        -Dtests=false \
+        -Ddbus-tests=false
+}

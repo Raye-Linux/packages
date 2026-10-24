@@ -1,0 +1,18 @@
+version=1.32.0
+release=1
+description="keyboards, mice and touchpads for wayland compositors"
+depends="sys-libs/musl sys-fs/eudev dev-libs/libevdev sys-libs/mtdev"
+makedepends="sys-fs/eudev dev-libs/libevdev sys-libs/mtdev"
+dynamic=1
+source="git+https://gitlab.freedesktop.org/libinput/libinput.git#5cf833b572f5a33663888da321dce0ba1abd82a2"
+
+build() {
+    meson_build \
+        -Dudev-dir=/usr/lib/udev \
+        -Dlibwacom=false \
+        -Ddebug-gui=false \
+        -Dtests=false \
+        -Dinstall-tests=false \
+        -Ddocumentation=false \
+        -Dzshcompletiondir=no
+}

@@ -1,0 +1,14 @@
+version=2.6.1
+release=1
+description="seccomp filters, what Flatpak locks its apps' system calls down with"
+depends="sys-libs/musl"
+dynamic=1
+source="https://github.com/seccomp/libseccomp/releases/download/v$version/libseccomp-$version.tar.gz"
+sha256=501f66c667225d53791b97e1d7cf85ab764c297d04881f60f38f451c4b0ee1be
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+    rm -rf "$pkg/usr/bin"
+}

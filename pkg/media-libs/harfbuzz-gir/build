@@ -1,0 +1,24 @@
+version=15.0.0
+release=1
+description="the introspection data of HarfBuzz"
+makedepends="media-libs/freetype dev-libs/glib dev-libs/glib-gir dev-libs/gobject-introspection"
+dynamic=1
+buildonly=1
+source="https://github.com/harfbuzz/harfbuzz/releases/download/$version/harfbuzz-$version.tar.xz"
+sha256=968536e9abd782f07f7954044c0c4020199fcdd39b41d221ec42d2a3be4a44df
+
+# Pango's .gir includes this one. The harfbuzz package goes without the
+# GObject layer it needs, so this is a second build of the same version
+# with it, for the .gir alone. Keep the version in step with harfbuzz.
+build() {
+    meson setup _build --cross-file "$MESON_CROSS" \
+        --native-file "$work/meson.native" \
+        -Dfreetype=enabled -Dglib=enabled -Dgobject=enabled \
+        -Dintrospection=enabled -Dcairo=disabled -Dicu=disabled \
+        -Dtests=disabled -Ddocs=disabled -Dbenchmark=disabled \
+        -Dutilities=disabled
+    meson compile -C _build -j "$JOBS"
+    DESTDIR="$PWD/_inst" meson install -C _build --no-rebuild
+    mkdir -p "$pkg/usr/share"
+    cp -a _inst/usr/share/gir-1.0 "$pkg/usr/share/"
+}

@@ -1,0 +1,22 @@
+version=5.48
+release=1
+description="libmagic: what kind of file is this"
+depends="sys-libs/musl sys-libs/zlib"
+makedepends="sys-libs/zlib"
+dynamic=1
+source="https://astron.com/pub/file/file-$version.tar.gz"
+sha256=ed14656883b23a364b4057c05595d93252da9bc473d30106519519d0da141283
+
+# the magic database gets compiled by file itself, and it has to be the
+# same version as the one being built. So one for this machine first
+build() {
+    mkdir _native
+    (cd _native && env -u CPPFLAGS -u LDFLAGS CC=gcc ../configure --disable-shared \
+        --disable-libseccomp --disable-bzlib --disable-xzlib --disable-zstdlib \
+        --disable-lzlib && make -j"$JOBS")
+    ./configure --host="$TARGET" --prefix=/usr --disable-static \
+        --disable-libseccomp --disable-bzlib --disable-xzlib --disable-zstdlib \
+        --disable-lzlib
+    make -j"$JOBS" FILE_COMPILE="$PWD/_native/src/file"
+    make DESTDIR="$pkg" install
+}

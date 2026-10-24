@@ -1,0 +1,36 @@
+version=2.56.0
+release=1
+description="version control, https remotes through curl"
+depends="net-misc/curl"
+makedepends="net-misc/curl dev-libs/openssl sys-libs/zlib"
+source="https://mirrors.edge.kernel.org/pub/software/scm/git/git-$version.tar.xz"
+sha256=26c56c296b38c0695b26fa95f475f1d01704d2d38e73465ca30b0b2f5dc789d3
+
+# No perl, python, tcl or rust toolchain on the system, so none of the
+# bits written in them (the rust parts are optional, for now). Builtins only exist inside the git binary (no git-add copies),
+# and musl's regex lacks REG_STARTEND, so git brings its own.
+build() {
+    cat > config.mak <<CFG
+prefix = /usr
+NO_GETTEXT = YesPlease
+NO_TCLTK = YesPlease
+NO_PERL = YesPlease
+NO_PYTHON = YesPlease
+NO_RUST = YesPlease
+NO_EXPAT = YesPlease
+NO_REGEX = NeedsStartEnd
+SKIP_DASHED_BUILT_INS = YesPlease
+INSTALL_SYMLINKS = YesPlease
+CURL_LDFLAGS = -lcurl -lssl -lcrypto -lz
+CFG
+
+    # the stage goes after git's own headers, not before: libarchive's
+    # archive.h would otherwise stand in for git's
+    cpp="-idirafter $stage/usr/include"
+    make -j"$JOBS" CC="$CC" CPPFLAGS="$cpp" LDFLAGS="$LDFLAGS" all
+    make CC="$CC" CPPFLAGS="$cpp" LDFLAGS="$LDFLAGS" \
+        DESTDIR="$pkg" install
+
+    rm -rf "$pkg/usr/share/gitweb" "$pkg/usr/share/git-gui" \
+           "$pkg/usr/share/gitk" "$pkg/usr/share/perl5"
+}

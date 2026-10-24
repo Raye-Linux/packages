@@ -1,0 +1,11 @@
+version=0.6.0
+release=1
+description="the hyprwm GUI toolkit, hyprpaper draws with it"
+depends="sys-libs/musl sys-libs/gcc-libs gui-libs/aquamarine gui-libs/hyprgraphics gui-libs/hyprutils dev-libs/hyprlang dev-libs/wayland media-libs/libglvnd media-libs/mesa x11-libs/pixman x11-libs/libdrm x11-libs/libxkbcommon x11-libs/pango x11-libs/cairo dev-libs/iniparser dev-cpp/abseil-cpp"
+makedepends="gui-libs/aquamarine gui-libs/hyprgraphics gui-libs/hyprutils dev-libs/hyprlang dev-libs/wayland dev-libs/wayland-protocols media-libs/libglvnd media-libs/mesa x11-libs/pixman x11-libs/libdrm x11-libs/libxkbcommon x11-libs/pango x11-libs/cairo dev-libs/iniparser dev-cpp/abseil-cpp dev-util/hyprwayland-scanner"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprtoolkit#f8cbaf42e1f7fdc9c7565d7be3e935f6d56c7a39"
+
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

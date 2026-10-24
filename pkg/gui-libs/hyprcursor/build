@@ -1,0 +1,11 @@
+version=0.1.13
+release=1
+description="Hyprland's cursor theme format"
+depends="sys-libs/musl sys-libs/gcc-libs dev-libs/hyprlang gui-libs/hyprutils dev-libs/libzip x11-libs/cairo gnome-base/librsvg"
+makedepends="dev-libs/hyprlang dev-libs/libzip x11-libs/cairo gnome-base/librsvg dev-cpp/tomlplusplus"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprcursor#44e91d467bdad8dcf8bbd2ac7cf49972540980a5"
+
+build() {
+    cmake_build
+}

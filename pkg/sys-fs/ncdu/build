@@ -1,0 +1,13 @@
+version=1.22
+release=1
+description="what's eating your disk, interactively"
+depends="sys-libs/terminfo"
+makedepends="sys-libs/ncurses"
+source="https://dev.yorhel.nl/download/ncdu-$version.tar.gz"
+sha256=0ad6c096dc04d5120581104760c01b8f4e97d4191d6c9ef79654fa3c691a176b
+
+build() {
+    ./configure --prefix=/usr --with-ncursesw
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

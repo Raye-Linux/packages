@@ -1,0 +1,15 @@
+version=0.20.8
+release=1
+description="collections for GObject, the ones Vala programs use"
+depends="sys-libs/musl dev-libs/glib"
+makedepends="dev-libs/glib dev-lang/vala"
+dynamic=1
+source="https://download.gnome.org/sources/libgee/${version%.*}/libgee-$version.tar.xz"
+sha256=189815ac143d89867193b0c52b7dc31f3aa108a15f04d6b5dca2b6adfad0b0ee
+
+build() {
+    PATH="$work/native/bin:$PATH" ./configure --host="$TARGET" --prefix=/usr \
+        --disable-static --disable-introspection
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

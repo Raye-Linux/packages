@@ -1,0 +1,11 @@
+version=0.2.1
+release=1
+description="systemd's sd-bus D-Bus library, on its own"
+depends="sys-libs/musl"
+dynamic=1
+source="git+https://git.sr.ht/~emersion/basu#684a41d68cfbb05e38aacb60a8548e21ddfbecdb"
+
+build() {
+    meson_build -Daudit=disabled -Dlibcap=disabled \
+        -Dsystem-bus-address=unix:path=/run/dbus/system_bus_socket
+}

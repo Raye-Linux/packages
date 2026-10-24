@@ -1,0 +1,12 @@
+version=0.1.9
+release=1
+description="filters what a sandboxed app may say on the session bus"
+depends="sys-libs/musl dev-libs/glib"
+makedepends="dev-libs/glib"
+dynamic=1
+source="https://github.com/flatpak/xdg-dbus-proxy/releases/download/$version/xdg-dbus-proxy-$version.tar.xz"
+sha256=5450dda586ec3bb3ca709d311e845487883faa3b09cf562608d7e84f4311dced
+
+build() {
+    meson_build -Dman=disabled -Dtests=false
+}

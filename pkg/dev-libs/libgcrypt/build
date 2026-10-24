@@ -1,0 +1,17 @@
+version=1.12.4
+release=1
+description="GnuPG's crypto library"
+depends="sys-libs/musl dev-libs/libgpg-error"
+makedepends="dev-libs/libgpg-error"
+dynamic=1
+source="https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-$version.tar.bz2"
+sha256=d77f68f48879510e79a2f65977ccc68981781ea0923e5bdffac2a193ea3d660e
+
+# these find each other through gpgrt-config rather than pkg-config,
+# so they get told where the staged ones are
+build() {
+    ./configure --host="$TARGET" --prefix=/usr \
+        --with-libgpg-error-prefix="$stage/usr" --disable-static --disable-doc
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

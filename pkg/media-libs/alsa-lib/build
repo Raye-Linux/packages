@@ -1,0 +1,14 @@
+version=1.2.16.1
+release=1
+description="ALSA, the kernel's sound interface, as a library"
+depends="sys-libs/musl media-libs/alsa-ucm-conf"
+dynamic=1
+source="https://www.alsa-project.org/files/pub/lib/alsa-lib-$version.tar.bz2"
+sha256=f740db7f488255944ffd4428416ee3390a96742856916433df468c281436480e
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static --disable-python \
+        --without-debug
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

@@ -1,0 +1,33 @@
+version=8.23.0
+release=2
+description="downloads over https and friends, the real way"
+depends="sys-libs/musl dev-libs/openssl sys-libs/zlib app-misc/ca-certificates"
+makedepends="dev-libs/openssl sys-libs/zlib"
+dynamic=1
+source="https://curl.se/download/curl-$version.tar.xz"
+sha256=8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5
+
+build() {
+    # libcurl both ways: shared for Flatpak and friends, static for git
+    ./configure \
+        --host="$TARGET" \
+        --prefix=/usr \
+        --enable-shared \
+        --enable-static \
+        --with-openssl \
+        --with-zlib \
+        --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
+        --without-libpsl \
+        --without-brotli \
+        --without-zstd \
+        --without-nghttp2 \
+        --without-libidn2 \
+        --without-libssh2 \
+        --disable-ldap \
+        --disable-ldaps \
+        --disable-manual \
+        --disable-docs
+
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

@@ -1,0 +1,13 @@
+version=2.60.7
+release=1
+description="accessibility: ATK and the bridge to screen readers, GTK3 needs it"
+depends="sys-libs/musl dev-libs/glib sys-apps/dbus dev-libs/libxml2"
+makedepends="dev-libs/glib sys-apps/dbus dev-libs/libxml2"
+dynamic=1
+source="https://download.gnome.org/sources/at-spi2-core/${version%.*}/at-spi2-core-$version.tar.xz"
+sha256=92893c8188355264ba639ca3d27943437b26ef069971ea9faa4b20de40595b9a
+
+build() {
+    meson_build -Dx11=disabled -Duse_systemd=false -Dintrospection=disabled \
+        -Ddocs=false -Dgtk2_atk_adaptor=false -Ddbus_daemon=/usr/bin/dbus-daemon
+}

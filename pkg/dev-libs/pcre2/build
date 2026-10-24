@@ -1,0 +1,15 @@
+version=10.49
+release=1
+description="Perl-style regular expressions, for glib"
+depends="sys-libs/musl"
+dynamic=1
+source="https://github.com/PCRE2Project/pcre2/releases/download/pcre2-$version/pcre2-$version.tar.bz2"
+sha256=53c156e1ba416a20da8e65395daa132da0d80e76910424caca3fcdae7831d384
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static \
+        --enable-jit --enable-pcre2-16 --enable-pcre2-32
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+    rm -f "$pkg/usr/bin/pcre2grep" "$pkg/usr/bin/pcre2test"
+}

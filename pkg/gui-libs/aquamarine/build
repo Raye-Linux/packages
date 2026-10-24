@@ -1,0 +1,11 @@
+version=0.15.1
+release=1
+description="Hyprland's rendering backend: DRM, input, sessions"
+depends="sys-libs/musl sys-libs/gcc-libs gui-libs/hyprutils sys-auth/seatd dev-libs/libinput sys-fs/eudev dev-libs/wayland x11-libs/pixman x11-libs/libdrm media-libs/libglvnd media-libs/mesa media-libs/libdisplay-info"
+makedepends="gui-libs/hyprutils sys-auth/seatd dev-libs/libinput sys-fs/eudev dev-libs/wayland dev-libs/wayland-protocols x11-libs/pixman x11-libs/libdrm media-libs/libglvnd media-libs/mesa media-libs/libdisplay-info sys-apps/hwdata dev-util/hyprwayland-scanner"
+dynamic=1
+source="git+https://github.com/hyprwm/aquamarine#f31c47a1b9d300847d8fc3108ad959448103dfc1"
+
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

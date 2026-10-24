@@ -1,0 +1,16 @@
+version=7.8.1
+release=1
+description="granite, elementary's widgets for GTK 4"
+depends="sys-libs/musl dev-libs/glib gui-libs/gtk4 dev-libs/libgee"
+makedepends="dev-libs/glib gui-libs/gtk4 dev-libs/libgee dev-lang/vala"
+dynamic=1
+source="git+https://github.com/elementary/granite#4cd5188619e65f2f2410c9af834df903f6e4f85e"
+
+# swaync wants it. valac writes its Vala bindings straight from the
+# source, so no introspection here; the stylesheets go through sassc on
+# the build machine. XDG_DATA_DIRS is how valac finds the staged .vapi
+# files (gee's)
+build() {
+    PATH="$work/native/bin:$PATH" XDG_DATA_DIRS="$stage/usr/share" \
+        meson_build -Dintrospection=false -Ddemo=false -Ddocumentation=false
+}

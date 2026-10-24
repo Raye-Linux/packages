@@ -1,0 +1,7 @@
+# What every Raye system has: the shell and its tools, rpk, the kernel,
+# and curl for fetching packages. What base.tar on the live image is.
+sys-apps/busybox
+sys-apps/rpk
+sys-kernel/linux
+sys-libs/musl
+net-misc/curl

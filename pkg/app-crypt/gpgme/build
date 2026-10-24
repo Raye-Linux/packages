@@ -1,0 +1,21 @@
+version=2.2.0
+release=1
+description="the C library programs drive gpg through"
+depends="sys-libs/musl dev-libs/libgpg-error dev-libs/libassuan app-crypt/gnupg"
+makedepends="dev-libs/libgpg-error dev-libs/libassuan"
+dynamic=1
+source="https://gnupg.org/ftp/gcrypt/gpgme/gpgme-$version.tar.bz2"
+sha256=7160e80e84dafd00d956c84891c533bb7ab16a6a54fbe1574b2f3acf0496977b
+
+# it spells some types the glibc way, musl has those names only with
+# _LARGEFILE64_SOURCE
+build() {
+    CPPFLAGS="$CPPFLAGS -D_LARGEFILE64_SOURCE" \
+    ./configure --host="$TARGET" --prefix=/usr --disable-static \
+        --with-libgpg-error-prefix="$stage/usr" \
+        --with-libassuan-prefix="$stage/usr" \
+        --disable-gpg-test --disable-gpgsm-test --disable-gpgconf-test \
+        --disable-g13-test
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

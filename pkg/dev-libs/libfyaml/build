@@ -1,0 +1,19 @@
+version=0.9.6
+release=1
+description="YAML parser, for appstream"
+depends="sys-libs/musl"
+dynamic=1
+source="https://github.com/pantoniou/libfyaml/releases/download/v$version/libfyaml-$version.tar.gz"
+sha256=a59cc3331e2eb903ec36933ad52a45888041cac31e44f553a00511131242c483
+
+build() {
+    # it finds the build machine's libclang for an optional feature otherwise
+    ./configure --host="$TARGET" --prefix=/usr --disable-static --disable-network \
+        --without-libclang
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+    rm -rf "$pkg/usr/bin"
+    # a library search that found nothing to add ends up in the .pc as
+    # its message, "none required"
+    sed -i 's/ none required//' "$pkg/usr/lib/pkgconfig/libfyaml.pc"
+}

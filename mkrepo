@@ -3,6 +3,17 @@
 # mkrepo - build the recipes under pkg/ into a binary repo for rpk
 #
 # usage: mkrepo OUTDIR [name ...]
+#        mkrepo -p OUTDIR       only write the INDEX and PROFILES
+#
+# Next to the INDEX goes PROFILES, one line for each profile under
+# profiles/ (name|parent|packages|description), which is where rpk finds
+# what a profile brings.
+#
+# Packages go by category/name, Gentoo style (gui-wm/hyprland,
+# sys-libs/musl). On the command line the name alone does when only one
+# category has it. In OUTDIR each one is a tarball with the slash turned
+# into a dot (gui-wm.hyprland-0.56.2-1.tar.xz), so the repo stays one
+# flat directory, next to an INDEX that lists them all by full name.
 #
 # CC and CXX have to be a musl toolchain (mklive hands over the one it
 # builds). A package already sitting in OUTDIR at the recipe's version
@@ -10,10 +21,10 @@
 # (all recipes if none) get built along with everything they need, each
 # after what it depends on.
 #
-# A recipe is pkg/<name>/build, a shell file that sets
+# A recipe is pkg/<category>/<name>/build, a shell file that sets
 #
 #   version, release, description
-#   depends       what it needs at runtime (other packages)
+#   depends       what it needs at runtime (other packages, by full name)
 #   makedepends   what it needs to build: packages, or build-only libs
 #   source        a URL. Tarballs get unpacked, anything else is copied.
 #                 git+URL#COMMIT clones URL at that commit instead.
@@ -44,7 +55,12 @@
 set -e
 
 top=$(cd "$(dirname "$0")" && pwd)
-[ "$1" ] || { echo "usage: mkrepo OUTDIR [name ...]" >&2; exit 1; }
+only_index=
+if [ "$1" = -p ]; then
+    only_index=1
+    shift
+fi
+[ "$1" ] || { echo "usage: mkrepo [-p] OUTDIR [name ...]" >&2; exit 1; }
 mkdir -p "$1"
 out=$(cd "$1" && pwd)
 shift
@@ -52,20 +68,28 @@ shift
 work=${WORK:-$top/work}
 stage=$work/stage
 export JOBS="${JOBS:-$(nproc)}"
-: "${CC:?point CC at a musl compiler, e.g. CC=/path/to/x86_64-linux-musl-gcc}"
-CXX=${CXX:-${CC%gcc}g++}
-TARGET=$("$CC" -dumpmachine)
-export CC CXX TARGET
+# compiler: what building takes, which writing an index doesn't
+compiler() {
+    # everything in a package belongs to root. GNU tar has to be told;
+    # busybox's (building on raye) has no such option, and runs as root
+    tarown=
+    tar --version 2>/dev/null | grep -q GNU && tarown="--owner=0 --group=0"
 
-# whatever earlier recipes built is there to link against. -static goes
-# in front of this for everything that isn't dynamic=1. The C++ runtime's
-# directory too: a C program linking a C++ library still has to find
-# libstdc++ behind it
-cxxlib=$(dirname "$("$CXX" -print-file-name=libstdc++.so.6)")
-ldflags="-L$stage/usr/lib -Wl,-rpath-link,$stage/usr/lib -Wl,-rpath-link,$cxxlib${LDFLAGS:+ $LDFLAGS}"
-export CPPFLAGS="-I$stage/usr/include${CPPFLAGS:+ $CPPFLAGS}"
-export PKG_CONFIG_LIBDIR=$stage/usr/lib/pkgconfig:$stage/usr/share/pkgconfig
-export PKG_CONFIG_SYSROOT_DIR=$stage
+    : "${CC:?point CC at a musl compiler, e.g. CC=/path/to/x86_64-linux-musl-gcc}"
+    CXX=${CXX:-${CC%gcc}g++}
+    TARGET=$("$CC" -dumpmachine)
+    export CC CXX TARGET
+
+    # whatever earlier recipes built is there to link against. -static goes
+    # in front of this for everything that isn't dynamic=1. The C++ runtime's
+    # directory too: a C program linking a C++ library still has to find
+    # libstdc++ behind it
+    cxxlib=$(dirname "$("$CXX" -print-file-name=libstdc++.so.6)")
+    ldflags="-L$stage/usr/lib -Wl,-rpath-link,$stage/usr/lib -Wl,-rpath-link,$cxxlib${LDFLAGS:+ $LDFLAGS}"
+    export CPPFLAGS="-I$stage/usr/include${CPPFLAGS:+ $CPPFLAGS}"
+    export PKG_CONFIG_LIBDIR=$stage/usr/lib/pkgconfig:$stage/usr/share/pkgconfig
+    export PKG_CONFIG_SYSROOT_DIR=$stage
+}
 
 msg() { printf '\033[1;35m=>\033[m %s\n' "$*"; }
 die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
@@ -79,6 +103,28 @@ load() {
 
 staged() {
     [ -f "$stage/.built/$1" ]
+}
+
+# tarball NAME VERSION-RELEASE: the file NAME is packed as
+tarball() {
+    printf '%s-%s.tar.xz\n' "$(printf %s "$1" | tr / .)" "$2"
+}
+
+# resolve NAME: category/name for a name given with or without its
+# category
+resolve() {
+    case $1 in
+        */*) [ -f "$top/pkg/$1/build" ] && echo "$1" || die "no recipe for $1" ;;
+        *)
+            found=$(cd "$top/pkg" && ls -d */"$1" 2>/dev/null) || :
+            case $found in
+                '') die "no recipe called $1" ;;
+                */*/*|*"
+"*) die "$1 is in more than one category: $(echo $found)" ;;
+            esac
+            echo "$found"
+            ;;
+    esac
 }
 
 # Build systems run what they build now and then (tests, little code
@@ -161,8 +207,18 @@ EOF
     export MESON_CROSS="$work/meson.cross" CMAKE_TOOLCHAIN="$work/cmake.toolchain"
 }
 
+# needs PROGRAM...: say plainly what this recipe builds with that this
+# machine doesn't have (building on raye, without meson, say)
+needs() {
+    for t do
+        command -v "$t" >/dev/null ||
+            die "$name builds with $t, which isn't on this machine"
+    done
+}
+
 # for recipes: meson_build OPTION..., cmake_build OPTION...
 meson_build() {
+    needs meson ninja
     meson setup _build --cross-file "$MESON_CROSS" \
         --native-file "$work/meson.native" "$@"
     meson compile -C _build -j "$JOBS"
@@ -170,6 +226,7 @@ meson_build() {
 }
 
 cmake_build() {
+    needs cmake ninja
     cmake -S . -B _build -G Ninja -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN" "$@"
     cmake --build _build -j "$JOBS"
     DESTDIR="$pkg" cmake --install _build
@@ -205,6 +262,7 @@ fetch() {
         if [ ! -d "$src" ]; then
             msg "cloning $name $version"
             rm -rf "$src.part"
+            mkdir -p "${src%/*}"
             git init -q "$src.part"
             git -C "$src.part" fetch -q --depth 1 "$url" "$commit"
             git -C "$src.part" checkout -q FETCH_HEAD
@@ -222,7 +280,7 @@ fetch() {
             curl -fL --retry 3 -o "$src.part" "$source"
             mv "$src.part" "$src"
         fi
-        echo "$sha256  $src" | sha256sum -c --status - ||
+        [ "$(sha256sum "$src" | cut -d' ' -f1)" = "$sha256" ] ||
             die "bad checksum for ${src##*/}"
         ;;
     esac
@@ -234,11 +292,11 @@ provides() (
     for d do
         if [ -f "$top/pkg/$d/build" ]; then
             load "$d"
-            f=$out/$d-$version-$release.tar.xz
+            f=$out/$(tarball "$d" "$version-$release")
             deps=$depends
         else
             # musl and gcc-libs, which come out of the toolchain
-            f=$(ls "$out/$d"-[0-9]*.tar.xz 2>/dev/null | tail -n 1)
+            f=$(ls "$out/$(printf %s "$d" | tr / .)"-[0-9]*.tar.xz 2>/dev/null | tail -n 1)
             deps=
         fi
         [ -f "$f" ] || die "$d isn't in $out, build it first"
@@ -257,7 +315,7 @@ build_pkg() (
     name=$1
     load "$name"
     id=$name-$version-$release
-    file=$out/$id.tar.xz
+    file=$out/$(tarball "$name" "$version-$release")
 
     pack=1
     { [ -n "$buildonly" ] || [ -f "$file" ]; } && pack=
@@ -339,7 +397,7 @@ build_pkg() (
     # headers, libs and all, for whatever builds against it next. Not the
     # .la files: they point libtool at /usr/lib, which here is the host's
     find "$pkg" -name '*.la' -delete
-    mkdir -p "$stage/.built" "$stage/.files"
+    mkdir -p "$stage/.built/${name%/*}" "$stage/.files/${name%/*}"
     cp -a "$pkg/." "$stage/"
     (cd "$pkg" && find . ! -type d) > "$stage/.files/$name"
     [ -z "$dynamic" ] || wrap_tools "$pkg"
@@ -411,9 +469,9 @@ $lib
 
     cd "$pkg"
     find . -mindepth 1 | sed 's|^\./||' | sort > "$dir/list"
-    rm -f "$out/$name"-[0-9]*.tar.xz
-    tar --numeric-owner --owner=0 --group=0 --no-recursion \
-        -cJf "$file.part" -T "$dir/list"
+    rm -f "$out/$(printf %s "$name" | tr / .)"-[0-9]*.tar.xz
+    # shellcheck disable=SC2086
+    tar --numeric-owner $tarown --no-recursion -cJf "$file.part" -T "$dir/list"
     mv "$file.part" "$file"
     msg "$name: $(du -h "$file" | cut -f1)"
 )
@@ -437,8 +495,54 @@ edges() {
     done
 }
 
+# write_index: INDEX for the tarballs in OUTDIR, PROFILES for profiles/
+write_index() {
+    : > "$out/INDEX.part"
+    for d in "$top"/pkg/*/*/; do
+        name=${d%/}
+        name=${name#"$top"/pkg/}
+        load "$name"
+        file=$(tarball "$name" "$version-$release")
+        [ -f "$out/$file" ] || continue
+
+        sum=$(sha256sum "$out/$file" | cut -d' ' -f1)
+        printf '%s|%s|%s|%s|%s\n' "$name" "$version-$release" "$sum" \
+            "$depends" "$description" >> "$out/INDEX.part"
+    done
+    mv "$out/INDEX.part" "$out/INDEX"
+
+    : > "$out/PROFILES.part"
+    if [ -d "$top/profiles" ]; then
+        (cd "$top/profiles" && find . -name packages | sed 's|^\./||; s|/packages$||' | sort) |
+            while read -r p; do
+                d=$top/profiles/$p
+                parent=$(cat "$d/parent" 2>/dev/null) || parent=
+                pkgs=$(grep -v -e '^#' -e '^[[:space:]]*$' "$d/packages" | tr '\n' ' ')
+                about=$(cat "$d/description" 2>/dev/null) || about=
+                printf '%s|%s|%s|%s\n' "$p" "$parent" "${pkgs% }" "$about"
+            done >> "$out/PROFILES.part"
+    fi
+    mv "$out/PROFILES.part" "$out/PROFILES"
+}
+
+if [ -n "$only_index" ]; then
+    write_index
+    exit 0
+fi
+
+compiler
 tools
-[ "$#" -gt 0 ] || set -- $(ls "$top/pkg")
+if [ "$#" -gt 0 ]; then
+    names=
+    for n do
+        names="$names $(resolve "$n")"
+    done
+    # shellcheck disable=SC2086
+    set -- $names
+else
+    # shellcheck disable=SC2046
+    set -- $(cd "$top/pkg" && ls -d */*)
+fi
 
 visited=
 edges "$@" > "$work/edges"
@@ -448,17 +552,5 @@ for name in $order; do
     build_pkg "$name"
 done
 
-: > "$out/INDEX.part"
-for d in "$top"/pkg/*/; do
-    name=${d%/}
-    name=${name##*/}
-    load "$name"
-    file=$name-$version-$release.tar.xz
-    [ -f "$out/$file" ] || continue
-
-    sum=$(sha256sum "$out/$file" | cut -d' ' -f1)
-    printf '%s|%s|%s|%s|%s\n' "$name" "$version-$release" "$sum" \
-        "$depends" "$description" >> "$out/INDEX.part"
-done
-mv "$out/INDEX.part" "$out/INDEX"
+write_index
 msg "$(wc -l < "$out/INDEX") packages in $out"

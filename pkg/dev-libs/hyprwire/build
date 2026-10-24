@@ -1,0 +1,11 @@
+version=0.3.1
+release=1
+description="the wire protocol hyprctl talks to Hyprland with"
+depends="sys-libs/musl sys-libs/gcc-libs gui-libs/hyprutils dev-libs/libffi"
+makedepends="gui-libs/hyprutils dev-libs/libffi dev-libs/pugixml dev-util/hyprwayland-scanner"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprwire#3e6865ce5fd9237b58f5b2ce5de18814df3baff5"
+
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

@@ -1,0 +1,12 @@
+version=1.17.0
+release=1
+description="logging for C++, for waybar"
+depends="sys-libs/musl sys-libs/gcc-libs dev-libs/fmt"
+makedepends="dev-libs/fmt"
+dynamic=1
+source="git+https://github.com/gabime/spdlog#79524ddd08a4ec981b7fea76afd08ee05f83755d"
+
+build() {
+    cmake_build -DSPDLOG_BUILD_SHARED=ON -DSPDLOG_FMT_EXTERNAL=ON \
+        -DSPDLOG_BUILD_EXAMPLE=OFF -DSPDLOG_BUILD_TESTS=OFF
+}

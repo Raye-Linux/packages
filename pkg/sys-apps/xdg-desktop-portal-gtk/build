@@ -1,0 +1,14 @@
+version=1.15.3
+release=1
+description="the GTK portal backend: file chooser, app chooser, settings"
+depends="sys-libs/musl x11-libs/gtk3 dev-libs/glib gnome-base/gsettings-desktop-schemas sys-apps/xdg-desktop-portal media-libs/fontconfig"
+makedepends="x11-libs/gtk3 dev-libs/glib gnome-base/gsettings-desktop-schemas sys-apps/xdg-desktop-portal media-libs/fontconfig"
+dynamic=1
+source="https://github.com/flatpak/xdg-desktop-portal-gtk/releases/download/$version/xdg-desktop-portal-gtk-$version.tar.xz"
+sha256=47a3743d2419a8601e691db37e85bb5fac5ae4b26842177065cd5f22ada23b37
+
+# the wallpaper portal wants gnome-desktop, Hyprland has its own anyway
+build() {
+    meson_build -Dwallpaper=disabled -Dsettings=enabled -Dappchooser=enabled \
+        -Dlockdown=disabled
+}

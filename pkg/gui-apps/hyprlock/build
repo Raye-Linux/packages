@@ -1,0 +1,15 @@
+version=0.9.6
+release=1
+description="Hyprland's screen locker"
+depends="sys-libs/musl sys-libs/gcc-libs dev-libs/hyprlang gui-libs/hyprutils gui-libs/hyprgraphics dev-cpp/sdbus-c++ sys-libs/linux-pam dev-libs/wayland media-libs/libglvnd media-libs/mesa x11-libs/libxkbcommon x11-libs/cairo x11-libs/pango x11-libs/libdrm"
+makedepends="dev-libs/hyprlang gui-libs/hyprutils gui-libs/hyprgraphics dev-cpp/sdbus-c++ sys-libs/linux-pam dev-libs/wayland dev-libs/wayland-protocols media-libs/libglvnd media-libs/mesa x11-libs/libxkbcommon x11-libs/cairo x11-libs/pango x11-libs/libdrm dev-util/hyprwayland-scanner"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprlock#b222d9b1f87e980cac379371df57913a53b99d7f"
+
+# its PAM file includes "login", which busybox's login doesn't have;
+# straight to pam_unix instead
+build() {
+    cmake_build
+    printf 'auth required pam_unix.so\naccount required pam_unix.so\n' \
+        > "$pkg/etc/pam.d/hyprlock"
+}

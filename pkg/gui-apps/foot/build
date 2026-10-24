@@ -1,0 +1,20 @@
+version=1.28.0
+release=2
+description="foot, a fast and light wayland terminal"
+depends="sys-libs/musl media-libs/fcft dev-libs/wayland x11-libs/libxkbcommon x11-libs/pixman media-libs/fontconfig sys-libs/terminfo media-fonts/font-dejavu"
+makedepends="dev-libs/tllist media-libs/fcft dev-libs/wayland dev-libs/wayland-protocols x11-libs/libxkbcommon x11-libs/pixman media-libs/fontconfig"
+dynamic=1
+source="https://codeberg.org/dnkl/foot/releases/download/$version/foot-$version.tar.gz"
+sha256=ee73c292a4b457004b38c2df178eac025ab0b849fdd9e13253c1f8b5cf110710
+
+# the terminfo package already has foot's entry, compiled by its own tic
+build() {
+    meson_build \
+        -Ddocs=disabled \
+        -Dtests=false \
+        -Dterminfo=disabled \
+        -Dutmp-backend=none \
+        -Dgrapheme-clustering=disabled
+    # all comments, and the desktop package has the one that's in use
+    rm -r "$pkg/etc"
+}

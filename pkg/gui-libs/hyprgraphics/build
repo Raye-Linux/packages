@@ -1,0 +1,12 @@
+version=0.5.1
+release=1
+description="image loading and drawing for the hyprwm tools"
+depends="sys-libs/musl sys-libs/gcc-libs gui-libs/hyprutils x11-libs/pixman x11-libs/cairo x11-libs/pango x11-libs/libdrm media-libs/libglvnd media-libs/libjpeg-turbo media-libs/libwebp sys-apps/file media-libs/libpng gnome-base/librsvg"
+makedepends="gui-libs/hyprutils x11-libs/pixman x11-libs/cairo x11-libs/pango x11-libs/libdrm media-libs/libglvnd media-libs/mesa media-libs/libjpeg-turbo media-libs/libwebp sys-apps/file media-libs/libpng gnome-base/librsvg"
+dynamic=1
+source="git+https://github.com/hyprwm/hyprgraphics#482d4b7ec36ffdaf3573086aa586b178fd5404be"
+
+# no JPEG XL or HEIF, both optional and both big
+build() {
+    cmake_build -DBUILD_TESTING=OFF
+}

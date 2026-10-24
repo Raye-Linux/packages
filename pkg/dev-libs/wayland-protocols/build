@@ -1,0 +1,12 @@
+version=1.49
+release=1
+description="wayland protocol XML, for building against"
+makedepends="dev-libs/wayland"
+source="https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/$version/downloads/wayland-protocols-$version.tar.xz"
+sha256=ec4c8f74942d6dff7ace8b4ce4764f0ef9ff618a935d974ea77edee2ad240b14
+buildonly=1
+dynamic=1
+
+build() {
+    meson_build -Dtests=false
+}

@@ -1,0 +1,26 @@
+version=0.56.18
+release=1
+description="the Vala compiler, for the build machine"
+buildonly=1
+makedepends="dev-libs/gobject-introspection"
+source="https://download.gnome.org/sources/vala/${version%.*}/vala-$version.tar.xz"
+sha256=f2affe7d40ab63db8e7b9ecc3f6bdc9c2fc7e3134c84ff2d795f482fe926a382
+
+# swaync and the libraries under it are Vala, so valac and vapigen run
+# here. This one is built natively into $work/native, next to the
+# introspection tools, rather than taken from the build machine: the
+# .gir files gi 1.86 writes need 0.56.18 or newer to read. Recipes that
+# use it put $work/native/bin first in PATH. Nothing of it gets onto raye.
+build() {
+    native=$work/native
+    # GI_GIRDIR is where vapigen looks for .gir files when nobody says,
+    # and the ones it should find are raye's, in the stage
+    env -u CPPFLAGS -u LDFLAGS -u PKG_CONFIG_LIBDIR -u PKG_CONFIG_SYSROOT_DIR \
+        CC=gcc GI_GIRDIR="$stage/usr/share/gir-1.0" \
+        ./configure --prefix="$native" --disable-valadoc
+    env -u CPPFLAGS -u LDFLAGS make -j"$JOBS"
+    env -u CPPFLAGS -u LDFLAGS make install
+    # mkrepo wants something in $pkg
+    mkdir -p "$pkg/usr/share/vala-native"
+    echo "$native/bin" > "$pkg/usr/share/vala-native/bindir"
+}

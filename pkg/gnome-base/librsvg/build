@@ -1,0 +1,42 @@
+version=2.63.4
+release=1
+description="SVG rendering, icons and cursors mostly"
+depends="sys-libs/musl sys-libs/gcc-libs dev-libs/glib x11-libs/cairo x11-libs/pango media-libs/freetype media-libs/harfbuzz dev-libs/libxml2 x11-libs/gdk-pixbuf media-libs/fontconfig"
+makedepends="dev-libs/glib x11-libs/cairo x11-libs/pango media-libs/freetype media-libs/harfbuzz dev-libs/libxml2 x11-libs/gdk-pixbuf"
+dynamic=1
+source="https://download.gnome.org/sources/librsvg/${version%.*}/librsvg-$version.tar.xz"
+sha256=31f07d9350dad3f8964fd613c31309ac160fdef13dfac59df6fd082de78d6e8f
+
+# Rust. Needs cargo and rustc on the build machine with the
+# x86_64-unknown-linux-musl target, and fetches the crates Cargo.lock
+# pins (by sha256) from crates.io. Linked through our gcc, against musl
+# as a shared library rather than rust's own static copy of it.
+build() {
+    export PATH="$HOME/.cargo/bin:$PATH"
+    export CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER="$CC"
+    export RUSTFLAGS="-C target-feature=-crt-static"
+    export PKG_CONFIG_ALLOW_CROSS=1
+    # the SVG loader finds librsvg through an uninstalled .pc in the build
+    # tree, and pkg-config puts the stage in front of that path too
+    mkdir -p "$stage${PWD%/*}"
+    ln -sfn "$PWD" "$stage$PWD"
+    meson_build \
+        -Dtriplet=x86_64-unknown-linux-musl \
+        -Dintrospection=disabled \
+        -Dvala=disabled \
+        -Dpixbuf=enabled \
+        -Dpixbuf-loader=enabled \
+        -Drsvg-convert=disabled \
+        -Davif=disabled \
+        -Ddocs=disabled \
+        -Dtests=false
+    rm "$stage$PWD"
+
+    # gdk-pixbuf's own loaders are built in, so the SVG one is all its
+    # cache has to list
+    so=$(find "$pkg" -name libpixbufloader_svg.so)
+    RUN_LIBS="$pkg/usr/lib" "$stage/usr/bin/gdk-pixbuf-query-loaders" "$so" |
+        sed "s|\"$so\"|\"/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders/libpixbufloader_svg.so\"|" \
+        > "${so%/loaders/*}/loaders.cache"
+    grep -q svg "${so%/loaders/*}/loaders.cache"
+}
