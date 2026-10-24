@@ -1,0 +1,14 @@
+version=3.2.0
+release=1
+description="JPEG images, fast"
+depends="musl"
+dynamic=1
+source="https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/$version/libjpeg-turbo-$version.tar.gz"
+sha256=6f30092cef9fb839779646608f4ee14ae3cbac989c47fa05e841b0841f09878e
+
+# the SIMD code needs nasm on the build machine. Only the classic libjpeg
+# API, which is what everything here asks for
+build() {
+    cmake_build -DENABLE_STATIC=OFF -DWITH_TURBOJPEG=OFF -DWITH_JAVA=OFF
+    rm -rf "$pkg/usr/bin"
+}
