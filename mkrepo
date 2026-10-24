@@ -4,9 +4,9 @@
 #
 # usage: mkrepo OUTDIR [name ...]
 #
-# CC has to be a musl compiler (mklive hands over its musl-gcc). A
-# package already sitting in OUTDIR at the recipe's version is left
-# alone, so rerunning only builds what changed.
+# CC and CXX have to be a musl toolchain (mklive hands over the one it
+# builds). A package already sitting in OUTDIR at the recipe's version
+# is left alone, so rerunning only builds what changed.
 #
 # A recipe is pkg/<name>/build, a shell file that sets
 #
@@ -16,11 +16,20 @@
 #   source        a URL. Tarballs get unpacked, anything else is copied
 #   sha256        of that source
 #   buildonly=1   a library other recipes link against, never packaged
+#   dynamic=1     link against shared libraries rather than statically
 #
 # and has a build() function. build() runs inside the unpacked source
 # with $pkg as the install root, $files pointing at the recipe's
-# directory, $stage holding everything built so far (headers, static
-# libs, .pc files) and $JOBS for make.
+# directory, $stage holding everything built so far (headers, libs, .pc
+# files) and $JOBS for make.
+#
+# Static is the default and most things stay that way. The dynamic ones
+# are cross builds as far as their build systems are concerned (the build
+# machine can't start a musl binary on its own), so they get --host=$TARGET
+# for configure, --cross-file "$MESON_CROSS" for meson and
+# -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN" for cmake. Whatever they link
+# has to come from a package in depends, or from musl and gcc-libs, which
+# mklive puts in OUTDIR before it calls this.
 
 set -e
 
@@ -33,15 +42,16 @@ shift
 work=${WORK:-$top/work}
 stage=$work/stage
 export JOBS="${JOBS:-$(nproc)}"
-: "${CC:?point CC at a musl compiler, e.g. CC=/path/to/musl-gcc}"
-export CC
+: "${CC:?point CC at a musl compiler, e.g. CC=/path/to/x86_64-linux-musl-gcc}"
+CXX=${CXX:-${CC%gcc}g++}
+TARGET=$("$CC" -dumpmachine)
+export CC CXX TARGET
 
-# everything here is static: there is no musl dynamic loader on the
-# system, so a dynamically linked binary wouldn't even start. And
-# whatever earlier recipes built is there to link against.
-export LDFLAGS="-static -L$stage/usr/lib${LDFLAGS:+ $LDFLAGS}"
+# whatever earlier recipes built is there to link against. -static goes
+# in front of this for everything that isn't dynamic=1
+ldflags="-L$stage/usr/lib -Wl,-rpath-link,$stage/usr/lib${LDFLAGS:+ $LDFLAGS}"
 export CPPFLAGS="-I$stage/usr/include${CPPFLAGS:+ $CPPFLAGS}"
-export PKG_CONFIG_LIBDIR=$stage/usr/lib/pkgconfig
+export PKG_CONFIG_LIBDIR=$stage/usr/lib/pkgconfig:$stage/usr/share/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$stage
 
 msg() { printf '\033[1;35m=>\033[m %s\n' "$*"; }
@@ -49,7 +59,7 @@ die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
 
 load() {
     unset version release description depends makedepends source \
-          sha256 buildonly
+          sha256 buildonly dynamic
     [ -f "$top/pkg/$1/build" ] || die "no recipe for $1"
     . "$top/pkg/$1/build"
 }
@@ -57,6 +67,98 @@ load() {
 staged() {
     [ -f "$stage/.built/$1" ]
 }
+
+# Build systems run what they build now and then (tests, little code
+# generators). Static binaries just run; dynamic ones go through musl's
+# loader, pointed at the staged libraries, since the build machine has
+# no /lib/ld-musl-* of its own.
+tools() {
+    mkdir -p "$work"
+    ldso=$("$CC" -print-sysroot)/usr/lib/libc.so
+    cxxlib=$(dirname "$("$CXX" -print-file-name=libstdc++.so.6)")
+    cat > "$work/run" <<EOF
+#!/bin/sh
+case \$(readelf -l "\$1" 2>/dev/null) in
+    *'program interpreter'*)
+        exec "$ldso" --library-path "$stage/usr/lib:$cxxlib" "\$@" ;;
+esac
+exec "\$@"
+EOF
+    chmod +x "$work/run"
+
+    # shellcheck disable=SC2086
+    largs=$(printf "'%s', " $ldflags | sed 's/, $//')
+    cat > "$work/meson.cross" <<EOF
+[binaries]
+c = '$CC'
+cpp = '$CXX'
+ar = '$("$CC" -print-prog-name=ar)'
+strip = '$("$CC" -print-prog-name=strip)'
+pkg-config = 'pkg-config'
+exe_wrapper = '$work/run'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+
+[properties]
+# same cpu as the build machine, but it still can't start these alone
+needs_exe_wrapper = true
+pkg_config_libdir = ['$stage/usr/lib/pkgconfig', '$stage/usr/share/pkgconfig']
+sys_root = '$stage'
+
+[built-in options]
+prefix = '/usr'
+libdir = 'lib'
+buildtype = 'release'
+wrap_mode = 'nodownload'
+c_args = ['-I$stage/usr/include']
+cpp_args = ['-I$stage/usr/include']
+c_link_args = [$largs]
+cpp_link_args = [$largs]
+EOF
+
+    cat > "$work/cmake.toolchain" <<EOF
+set(CMAKE_SYSTEM_NAME Linux)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
+set(CMAKE_C_COMPILER $CC)
+set(CMAKE_CXX_COMPILER $CXX)
+set(CMAKE_C_FLAGS_INIT "-I$stage/usr/include")
+set(CMAKE_CXX_FLAGS_INIT "-I$stage/usr/include")
+set(CMAKE_FIND_ROOT_PATH $stage)
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+set(CMAKE_CROSSCOMPILING_EMULATOR $work/run)
+set(CMAKE_INSTALL_PREFIX /usr CACHE PATH "")
+set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "")
+set(CMAKE_BUILD_TYPE Release CACHE STRING "")
+EOF
+    export MESON_CROSS="$work/meson.cross" CMAKE_TOOLCHAIN="$work/cmake.toolchain"
+}
+
+# provides NAME...: the file names NAME and everything it depends on
+# put on the system, going by the packages already in the repo
+provides() (
+    for d do
+        if [ -f "$top/pkg/$d/build" ]; then
+            load "$d"
+            f=$out/$d-$version-$release.tar.xz
+            deps=$depends
+        else
+            # musl and gcc-libs, which come out of the toolchain
+            f=$(ls "$out/$d"-[0-9]*.tar.xz 2>/dev/null | tail -n 1)
+            deps=
+        fi
+        [ -f "$f" ] || die "$d isn't in $out, build it first"
+        tar -tJf "$f" | sed 's|.*/||'
+        # shellcheck disable=SC2086
+        [ -z "$deps" ] || provides $deps
+    done
+)
 
 # build_pkg NAME [stage]
 #
@@ -102,6 +204,11 @@ build_pkg() (
     esac
 
     msg "building $name $version"
+    if [ -n "$dynamic" ]; then
+        export LDFLAGS="$ldflags"
+    else
+        export LDFLAGS="-static $ldflags"
+    fi
     pkg=$dir/pkg
     files=$top/pkg/$name
     cd "$dir/src"
@@ -117,7 +224,9 @@ build_pkg() (
     fi
     [ -n "$(ls -A "$pkg")" ] || die "$name built but installed nothing"
 
-    # headers, static libs and all, for whatever builds against it next
+    # headers, libs and all, for whatever builds against it next. Not the
+    # .la files: they point libtool at /usr/lib, which here is the host's
+    find "$pkg" -name '*.la' -delete
     mkdir -p "$stage/.built"
     cp -a "$pkg/." "$stage/"
     : > "$stage/.built/$id"
@@ -132,15 +241,42 @@ build_pkg() (
     # against the static libs at runtime
     rm -rf "$pkg/usr/share/man" "$pkg/usr/share/info" "$pkg/usr/share/doc" \
            "$pkg/usr/share/aclocal" "$pkg/usr/include" "$pkg/usr/lib/pkgconfig"
-    find "$pkg" \( -name '*.a' -o -name '*.la' \) -delete
-    find "$pkg" -type f -perm -u+x -exec strip --strip-all {} + 2>/dev/null || :
+    find "$pkg" -name '*.a' -delete
+    # libraries keep the symbols other things link against
+    find "$pkg" -type f -name '*.so*' -exec strip --strip-unneeded {} + 2>/dev/null || :
+    find "$pkg" -type f -perm -u+x ! -name '*.so*' \
+        -exec strip --strip-all {} + 2>/dev/null || :
     find "$pkg" -mindepth 1 -depth -type d -empty -delete
 
-    # there's no dynamic loader on raye, a dynamic binary can't even start
-    dyn=$(find "$pkg" -type f -exec file {} + | grep 'dynamically linked' |
-        cut -d: -f1 | sed "s|^$pkg||") || :
-    [ -z "$dyn" ] || die "$name has dynamically linked binaries:
+    elves=$(find "$pkg" -type f -exec file {} + | grep ': *ELF' | cut -d: -f1) || :
+    if [ -z "$dynamic" ]; then
+        # a static recipe that went dynamic by accident would only find
+        # out on a system that doesn't have its libraries
+        dyn=$(echo "$elves" | xargs -r file | grep 'dynamically linked' |
+            cut -d: -f1 | sed "s|^$pkg||") || :
+        [ -z "$dyn" ] || die "$name has dynamically linked binaries:
 $dyn"
+    elif [ -n "$elves" ]; then
+        # everything it links has to be on the system once it's
+        # installed, and the loader has to be musl's, not the build host's
+        # shellcheck disable=SC2086
+        have=$( (find "$pkg" -name '*.so*' | sed 's|.*/||'; provides $depends) |
+            sort -u)
+        bad=
+        for f in $elves; do
+            interp=$(readelf -l "$f" | sed -n 's/.*interpreter: \(.*\)]$/\1/p')
+            case $interp in
+                ''|/lib/ld-musl-x86_64.so.1) ;;
+                *) bad="$bad
+  ${f#$pkg} wants $interp" ;;
+            esac
+            for lib in $(readelf -d "$f" | sed -n 's/.*(NEEDED).*\[\(.*\)\]$/\1/p'); do
+                echo "$have" | grep -qxF "$lib" || bad="$bad
+  ${f#$pkg} needs $lib"
+            done
+        done
+        [ -z "$bad" ] || die "$name links against things nothing in depends has:$bad"
+    fi
 
     cd "$pkg"
     find . -mindepth 1 | sed 's|^\./||' | sort > "$dir/list"
@@ -151,6 +287,7 @@ $dyn"
     msg "$name: $(du -h "$file" | cut -f1)"
 )
 
+tools
 [ "$#" -gt 0 ] || set -- $(ls "$top/pkg")
 
 for name do

@@ -1,7 +1,7 @@
 # Raye Linux packages
 
 Recipes for the [rpk](https://github.com/Raye-Linux/rpk) package repo.
-Everything is built static against musl.
+Built against musl, and static unless a recipe says otherwise.
 
 | package | what for |
 |---|---|
@@ -32,12 +32,16 @@ which is where `raye-update` fetches from.
 ## Building
 
 `mkrepo` turns the recipes into a repo rpk can use. It needs a musl
-compiler, which the live build already makes:
+toolchain, which the live build already makes:
 
 ```sh
-CC=/path/to/musl-gcc ./mkrepo repo/            # everything
-CC=/path/to/musl-gcc ./mkrepo repo/ dropbear   # just one
+CC=/path/to/x86_64-linux-musl-gcc ./mkrepo repo/            # everything
+CC=/path/to/x86_64-linux-musl-gcc ./mkrepo repo/ dropbear   # just one
 ```
+
+`CXX` defaults to the `g++` next to `CC`. Dynamically linked packages
+also need `musl` and `gcc-libs` in the repo directory, the live build
+puts them there.
 
 Normally you don't call it yourself, `./mklive packages` in
 [Raye-Linux/live](https://github.com/Raye-Linux/live) does.
@@ -68,6 +72,16 @@ their headers and static libraries. `$pkg` is where to install,
 and `$JOBS` is the make job count. Afterwards mkrepo strips the
 binaries, drops man pages, headers and static libraries, and packs what
 is left. Bump `release` when the recipe changes but the version doesn't.
+
+Static stays the default, and mkrepo refuses a static recipe that comes
+out dynamically linked. `dynamic=1` is for things that really want
+shared libraries (anything graphical, plugins, Mesa). To their build
+systems those are cross builds, so pass `--host="$TARGET"` to configure,
+`--cross-file "$MESON_CROSS"` to meson or
+`-DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN"` to cmake. List every library
+it links in `depends` (`musl`, `gcc-libs` for C++): mkrepo reads the
+binaries and won't pack one that needs something nothing in there
+provides.
 
 Services go in `/etc/rc.d/<name>` and take `start` and `stop`.
 
