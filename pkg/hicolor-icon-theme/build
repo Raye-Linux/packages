@@ -1,0 +1,11 @@
+version=0.18
+release=1
+description="the fallback icon theme every other one builds on"
+depends=""
+source="https://icon-theme.freedesktop.org/releases/hicolor-icon-theme-$version.tar.xz"
+sha256=db0e50a80aa3bf64bb45cbca5cf9f75efd9348cf2ac690b907435238c3cf81d7
+
+build() {
+    meson setup _build --prefix=/usr
+    DESTDIR="$pkg" meson install -C _build
+}
