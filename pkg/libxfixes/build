@@ -1,0 +1,14 @@
+version=6.0.2
+release=1
+description="the X fixes extension, for libXcursor"
+depends="musl libx11"
+makedepends="libx11 xorgproto"
+dynamic=1
+source="https://www.x.org/releases/individual/lib/libXfixes-$version.tar.xz"
+sha256=39f115d72d9c5f8111e4684164d3d68cc1fd21f9b27ff2401b08fddfc0f409ba
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

@@ -1,0 +1,14 @@
+version=1.2.3
+release=1
+description="cursor themes, how Hyprland loads them"
+depends="musl libx11 libxrender libxfixes"
+makedepends="libx11 libxrender libxfixes xorgproto"
+dynamic=1
+source="https://www.x.org/releases/individual/lib/libXcursor-$version.tar.xz"
+sha256=fde9402dd4cfe79da71e2d96bb980afc5e6ff4f8a7d74c159e1966afb2b2c2c0
+
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}
