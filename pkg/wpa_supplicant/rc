@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# wpa_supplicant on every wireless interface, and dhcp on top of it.
+#
+# The networks are in /etc/wpa_supplicant.conf. Add one with
+#   wpa_passphrase "network name" "password" >> /etc/wpa_supplicant.conf
+# or with wpa_cli while it runs (it saves what you add). The file isn't
+# part of the package, so an upgrade never touches it.
+
+conf=/etc/wpa_supplicant.conf
+
+wireless() {
+    for dev in /sys/class/net/*; do
+        [ -d "$dev/wireless" ] && echo "${dev##*/}"
+    done
+}
+
+case $1 in
+    start)
+        if [ ! -f "$conf" ]; then
+            (umask 077; printf 'ctrl_interface=/run/wpa_supplicant\nupdate_config=1\n' > "$conf")
+        fi
+        for dev in $(wireless); do
+            ip link set "$dev" up
+            wpa_supplicant -B -s -i "$dev" -c "$conf" -P "/run/wpa_supplicant.$dev.pid"
+            # in the background it keeps trying, so it gets a lease as
+            # soon as the association is up
+            udhcpc -b -t 2 -T 1 -A 3 -i "$dev" -p "/run/udhcpc.$dev.pid" >/dev/null 2>&1
+        done
+        ;;
+    stop)
+        for dev in $(wireless); do
+            for p in "/run/udhcpc.$dev.pid" "/run/wpa_supplicant.$dev.pid"; do
+                [ -f "$p" ] && kill "$(cat "$p")" 2>/dev/null
+            done
+        done
+        ;;
+    *)
+        echo "usage: $0 start|stop" >&2
+        exit 1
+        ;;
+esac

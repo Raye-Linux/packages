@@ -1,0 +1,13 @@
+version=3.12.0
+release=1
+description="netlink library, for building wpa_supplicant"
+source="https://github.com/thom311/libnl/releases/download/libnl$(echo ${version%.0} | tr . _)_0/libnl-$version.tar.gz"
+sha256=fc51ca7196f1a3f5fdf6ffd3864b50f4f9c02333be28be4eeca057e103c0dd18
+buildonly=1
+
+build() {
+    ./configure --prefix=/usr --sysconfdir=/etc --disable-shared --enable-static \
+        --disable-cli --disable-debug
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

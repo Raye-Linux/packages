@@ -22,6 +22,7 @@ Built against musl, and static unless a recipe says otherwise.
 | jq | JSON on the command line |
 | tree | directory listings as a tree |
 | terminfo | terminal descriptions (console, serial, xterm, kitty, tmux...) |
+| wpa_supplicant | Wi-Fi: WPA2, WPA3 and enterprise, starts on every wireless interface |
 | hyprland | the Hyprland compositor, `hyprctl` with it |
 | foot | a fast, light wayland terminal |
 | mesa | OpenGL, GLES and EGL: Intel's iris, softpipe for anything else |
@@ -33,7 +34,7 @@ Everything under Hyprland is dynamically linked: glib, cairo, pango,
 wayland, libinput, the hyprwm libraries and so on, each its own package.
 `rpk install hyprland foot` brings them in.
 
-`openssl`, `ncurses`, `readline` and `libevent` are build-only, along
+`openssl`, `ncurses`, `readline`, `libnl` and `libevent` are build-only, along
 with headers-only things like `wayland-protocols`: whatever needs them
 links them in or compiles them in, they are never installed on their own.
 

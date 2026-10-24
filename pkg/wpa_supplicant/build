@@ -1,0 +1,22 @@
+version=2.12
+release=1
+description="Wi-Fi: WPA2, WPA3 and enterprise networks"
+depends=""
+makedepends="libnl openssl"
+source="https://w1.fi/releases/wpa_supplicant-$version.tar.gz"
+sha256=08e23937e16d0155e55cab2b51f51fbe10d80a1aa91c4e15442645059b737ef6
+
+# upstream's defconfig, minus WPS (PIN pairing is a known weak spot),
+# Wi-Fi Direct and the D-Bus interface (wpa_cli is how you talk to it). Static, against libnl and OpenSSL, like the rest of what
+# the base system uses to get online
+build() {
+    cd wpa_supplicant
+    sed -e 's/^CONFIG_WPS=y/#CONFIG_WPS=y/' -e 's/^CONFIG_P2P=y/#CONFIG_P2P=y/' \
+        -e 's/^CONFIG_CTRL_IFACE_DBUS/#CONFIG_CTRL_IFACE_DBUS/' \
+        -e 's/^#CONFIG_WPA_CLI_EDIT=y/CONFIG_WPA_CLI_EDIT=y/' defconfig > .config
+    # through the environment: on the command line they would replace the
+    # include paths the Makefile adds to them
+    CFLAGS="-O2 $CPPFLAGS" make -j"$JOBS"
+    make DESTDIR="$pkg" BINDIR=/usr/sbin install
+    install -Dm755 "$files/rc" "$pkg/etc/rc.d/wpa_supplicant"
+}
