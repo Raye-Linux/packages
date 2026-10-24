@@ -1,5 +1,5 @@
 version=1.28.0
-release=1
+release=2
 description="foot, a fast and light wayland terminal"
 depends="musl fcft wayland libxkbcommon pixman fontconfig terminfo font-dejavu"
 makedepends="tllist fcft wayland wayland-protocols libxkbcommon pixman fontconfig"
@@ -15,4 +15,6 @@ build() {
         -Dterminfo=disabled \
         -Dutmp-backend=none \
         -Dgrapheme-clustering=disabled
+    # all comments, and the desktop package has the one that's in use
+    rm -r "$pkg/etc"
 }

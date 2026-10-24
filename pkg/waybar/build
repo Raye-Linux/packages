@@ -1,5 +1,5 @@
 version=0.15.0
-release=1
+release=2
 description="waybar, the status bar"
 depends="musl gcc-libs gtkmm3 gtk3 gtk-layer-shell glibmm libsigc++ jsoncpp spdlog fmt libxkbcommon wayland libinput eudev libevdev pipewire wireplumber"
 makedepends="gtkmm3 gtk3 gtk-layer-shell glibmm libsigc++ jsoncpp spdlog fmt libxkbcommon wayland wayland-protocols libinput eudev libevdev pipewire wireplumber"
@@ -16,4 +16,7 @@ build() {
         -Dmpris=disabled -Dsystemd=disabled -Ddbusmenu-gtk=disabled \
         -Dmpd=disabled -Dsndio=disabled -Dlogind=disabled -Djack=disabled \
         -Dcava=disabled -Dgps=disabled -Dman-pages=disabled -Dtests=disabled
+    # upstream's sample bar wants icon fonts and modules that aren't
+    # built here. The desktop package has one that fits
+    rm -r "$pkg/etc"
 }
