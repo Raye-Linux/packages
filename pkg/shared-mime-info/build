@@ -11,4 +11,5 @@ build() {
     meson_build -Dupdate-mimedb=false -Dbuild-tools=true -Dbuild-translations=false \
         -Dbuild-tests=false -Dbuild-spec=false
     "$RUN" _build/src/update-mime-database "$pkg/usr/share/mime"
+    install -Dm755 "$files/hook" "$pkg/usr/share/rpk/hooks/shared-mime-info"
 }

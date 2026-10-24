@@ -20,4 +20,5 @@ build() {
         -Dman-pages=disabled \
         -Ddocumentation=false \
         -Dtests=false
+    install -Dm755 "$files/hook" "$pkg/usr/share/rpk/hooks/glib"
 }

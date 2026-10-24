@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# GSettings schemas and GIO modules come from all sorts of packages, and
+# GLib only reads the compiled forms.
+
+[ -d /usr/share/glib-2.0/schemas ] && glib-compile-schemas /usr/share/glib-2.0/schemas
+[ -d /usr/lib/gio/modules ] && gio-querymodules /usr/lib/gio/modules
+exit 0

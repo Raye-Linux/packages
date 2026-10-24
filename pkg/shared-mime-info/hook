@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Other packages add their own types to /usr/share/mime/packages.
+
+update-mime-database /usr/share/mime
