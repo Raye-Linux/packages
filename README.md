@@ -125,8 +125,23 @@ Nothing is published for a release until its first snapshot is, and
 until then `raye-update` says "no snapshot published for release 0
 yet". For release 0 (every 0.0.x), once:
 
-1. Build, signed with the key the ISO was built with (its public half
-   is in `/etc/rpk/keys` on every install, which only trusts it):
+0. The project key, made once and kept for good. Whoever has the
+   private half is who can publish packages every install accepts, and
+   losing it means installs can't be told about a new one. Make it
+   somewhere that stays (not a throwaway machine), and keep a copy
+   offline:
+
+   ```sh
+   umask 077
+   openssl genpkey -algorithm ed25519 -out raye.key
+   openssl pkey -in raye.key -pubout -out raye.pub
+   ```
+
+   Commit `raye.pub` (only that) as `rootfs/base/etc/rpk/keys/raye.pub`
+   in live. raye-base takes it to every install with its next update,
+   and from then on mklive won't sign with any other key.
+
+1. Build, signed with that key:
 
    ```sh
    cd live
@@ -159,8 +174,10 @@ yet". For release 0 (every 0.0.x), once:
    env RPK_REPO=https://github.com/Raye-Linux/packages/releases/download/$d sh /tmp/rpk update
    ```
 
-   That brings raye-base (the new `raye-update` and the mirror list)
-   and the new rpk with everything else. It puts a new kernel in
+   That brings raye-base (the new `raye-update`, the mirror list and
+   `raye.pub`) and the new rpk with everything else. An install without
+   a key in `/etc/rpk/keys` takes that first update on the sha256 sums
+   alone, over https; from the next one on it checks the signature. It puts a new kernel in
    `/boot/raye.efi` but not on the EFI partition, which is
    raye-update's job, so copy it over the one you boot, keeping the
    old one:
