@@ -35,6 +35,10 @@
 #   dynamic=1     link against shared libraries rather than statically
 #   devel=1       keep the headers and static libraries in the package,
 #                 for the compiler, whose runtime they are
+#   native=1      built on raye itself only, never cross: the build tools
+#                 (perl, python, cmake...) whose own builds can't be
+#                 cross-compiled sanely. mklive's stage step builds them
+#                 inside the base it made; a cross build skips them
 #
 # and has a build() function. build() runs inside the unpacked source
 # with $pkg as the install root, $files pointing at the recipe's
@@ -81,6 +85,10 @@ compiler() {
     CXX=${CXX:-${CC%gcc}g++}
     TARGET=$("$CC" -dumpmachine)
     export CC CXX TARGET
+    # on raye, the machine's own cc makes code for the same system as $CC;
+    # anywhere else it doesn't, and the build is a cross build
+    cross=1
+    [ "$(cc -dumpmachine 2>/dev/null)" = "$TARGET" ] && cross=
 
     # whatever earlier recipes built is there to link against. -static goes
     # in front of this for everything that isn't dynamic=1. The C++ runtime's
@@ -98,7 +106,7 @@ die() { printf '\033[1;31merror:\033[m %s\n' "$*" >&2; exit 1; }
 
 load() {
     unset version release description depends makedepends source \
-          sha256 buildonly dynamic devel
+          sha256 buildonly dynamic devel native
     [ -f "$top/pkg/$1/build" ] || die "no recipe for $1"
     . "$top/pkg/$1/build"
 }
@@ -317,6 +325,10 @@ provides() (
 build_pkg() (
     name=$1
     load "$name"
+    if [ -n "$native" ] && [ -n "$cross" ]; then
+        msg "$name is only built on raye itself, skipped in a cross build"
+        exit 0
+    fi
     id=$name-$version-$release
     file=$out/$(tarball "$name" "$version-$release")
 
