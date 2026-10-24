@@ -38,7 +38,9 @@ Built against musl, and static unless a recipe says otherwise.
 | gtk3 | GTK 3, wayland only |
 | waybar | the status bar |
 | rofi | launcher and menus |
-| mako | notifications |
+| swaync | notifications, and a centre to look back at them (the desktop's) |
+| mako | a plainer notification daemon, if you'd rather |
+| gtk4, libadwaita | GTK 4 and GNOME's widgets on it, wayland only, for swaync and Flatpak-less GTK 4 apps |
 | hyprlock, hypridle, hyprpaper | lock screen, idle daemon, wallpapers |
 | grim, slurp, wl-clipboard | screenshots, picking a region, the clipboard |
 
