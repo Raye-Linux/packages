@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# hyprland-session: Hyprland from a console login.
+#
+# There's no logind or systemd user session here, so this does what
+# they would: a session bus (the portals and the rest hang off it) and
+# sound, when PipeWire is installed. Then Hyprland, under its watchdog.
+# Arguments go on to Hyprland.
+
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    exec dbus-run-session -- "$0" "$@"
+fi
+
+if command -v pipewire >/dev/null; then
+    pipewire &
+    pipewire-pulse &
+    command -v wireplumber >/dev/null && wireplumber &
+fi
+
+exec start-hyprland -- "$@"
