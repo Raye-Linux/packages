@@ -8,8 +8,10 @@ pidfile=/run/dbus/pid
 case $1 in
     start)
         # dbus-daemon drops to this user, which older installs don't have
-        grep -q '^messagebus:' /etc/passwd ||
-            adduser -S -D -H -h /run/dbus -s /bin/false messagebus
+        if ! grep -q '^messagebus:' /etc/passwd; then
+            grep -q '^messagebus:' /etc/group || addgroup -S messagebus
+            adduser -S -D -H -h /run/dbus -s /bin/false -G messagebus messagebus
+        fi
         mkdir -p /run/dbus /var/lib/dbus
         dbus-uuidgen --ensure
         dbus-daemon --system
