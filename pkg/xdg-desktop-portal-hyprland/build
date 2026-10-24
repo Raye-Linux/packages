@@ -2,7 +2,7 @@ version=1.4.1
 release=1
 description="Hyprland's portal backend: screenshots and screen sharing"
 depends="musl gcc-libs xdg-desktop-portal slurp sdbus-c++ pipewire libdrm mesa wayland hyprlang hyprutils"
-makedepends="sdbus-c++ pipewire libdrm mesa wayland wayland-protocols hyprlang hyprutils hyprwayland-scanner util-linux"
+makedepends="sdbus-c++ pipewire libdrm mesa wayland wayland-protocols hyprlang hyprutils hyprwayland-scanner hyprland-protocols util-linux"
 dynamic=1
 source="git+https://github.com/hyprwm/xdg-desktop-portal-hyprland#cc8e5ef8fb2acef3db488b9a33b0c48c2a4ee204"
 
