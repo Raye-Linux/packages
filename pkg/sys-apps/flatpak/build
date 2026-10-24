@@ -1,5 +1,5 @@
 version=1.18.4
-release=1
+release=2
 description="Flatpak: sandboxed desktop apps, from Flathub and the like"
 depends="sys-libs/musl dev-libs/glib dev-util/ostree net-misc/curl app-arch/libarchive dev-libs/libxml2 dev-libs/json-glib dev-libs/appstream x11-libs/gdk-pixbuf app-crypt/gpgme sys-libs/libseccomp sys-libs/libcap app-arch/zstd sys-fs/fuse3 sys-apps/bubblewrap sys-apps/xdg-dbus-proxy dev-libs/wayland app-misc/ca-certificates"
 makedepends="dev-libs/glib dev-util/ostree net-misc/curl app-arch/libarchive dev-libs/libxml2 dev-libs/json-glib dev-libs/appstream x11-libs/gdk-pixbuf app-crypt/gpgme dev-libs/libgpg-error sys-libs/libseccomp sys-libs/libcap app-arch/zstd sys-fs/fuse3 dev-libs/wayland dev-libs/wayland-protocols"

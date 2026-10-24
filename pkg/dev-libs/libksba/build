@@ -1,5 +1,5 @@
 version=1.8.1
-release=1
+release=2
 description="X.509 and CMS, for gpgsm"
 depends="sys-libs/musl dev-libs/libgpg-error"
 makedepends="dev-libs/libgpg-error"

@@ -1,15 +1,24 @@
 version=1.61
-release=1
+release=2
 description="error codes and messages for GnuPG and its libraries"
 depends="sys-libs/musl"
 dynamic=1
 source="https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-$version.tar.bz2"
 sha256=7a85413f2bc354f4f8aa832b718af122e48965e9e0eb9012ee659c13c6385c93
 
+# The size of a lock depends on musl's pthread_mutex_t. configure works
+# it out with objdump and reads the hex size with awk, and with an awk
+# that doesn't take hex it comes out as 0: every program using it then
+# aborts with "gpgrt fatal: sizeof lock obj". libgpg-error ships the
+# right one for musl, so that's used instead, and checked
 build() {
     # the others still look for gpg-error-config
     ./configure --host="$TARGET" --prefix=/usr --disable-static --disable-doc \
         --enable-install-gpg-error-config
+    cp "src/syscfg/lock-obj-pub.${TARGET%%-*}-unknown-linux-musl.h" \
+        src/lock-obj-pub.native.h
     make -j"$JOBS"
+    grep -q '_priv\[40\]' src/gpg-error.h ||
+        { echo "gpg-error.h has the wrong lock size" >&2; exit 1; }
     make DESTDIR="$pkg" install
 }

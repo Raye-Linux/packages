@@ -1,5 +1,5 @@
 version=2.2.0
-release=1
+release=2
 description="the C library programs drive gpg through"
 depends="sys-libs/musl dev-libs/libgpg-error dev-libs/libassuan app-crypt/gnupg"
 makedepends="dev-libs/libgpg-error dev-libs/libassuan"

@@ -1,5 +1,5 @@
 version=2.5.24
-release=1
+release=2
 description="GnuPG, gpg: what Flatpak checks repository signatures with"
 depends="sys-libs/musl dev-libs/libgpg-error dev-libs/libassuan dev-libs/libgcrypt dev-libs/libksba dev-libs/npth sys-libs/zlib"
 makedepends="dev-libs/libgpg-error dev-libs/libassuan dev-libs/libgcrypt dev-libs/libksba dev-libs/npth sys-libs/zlib"

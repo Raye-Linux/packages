@@ -1,5 +1,5 @@
 version=2026.5
-release=1
+release=2
 description="libostree, the content store Flatpak keeps apps and runtimes in"
 depends="sys-libs/musl dev-libs/glib net-misc/curl dev-libs/openssl app-crypt/gpgme dev-libs/libgpg-error app-arch/libarchive sys-libs/zlib app-arch/xz"
 makedepends="dev-libs/glib net-misc/curl dev-libs/openssl app-crypt/gpgme dev-libs/libgpg-error app-arch/libarchive sys-libs/zlib app-arch/xz"
