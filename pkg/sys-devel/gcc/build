@@ -1,7 +1,7 @@
 version=16.2.0
 release=1
 description="gcc, C and C++ compilers that run on raye"
-depends="sys-libs/musl sys-libs/gcc-libs sys-devel/binutils sys-libs/musl-dev sys-kernel/linux-headers"
+depends="sys-libs/musl sys-libs/gcc-libs sys-libs/zlib app-arch/zstd sys-devel/binutils sys-libs/musl-dev sys-kernel/linux-headers"
 makedepends="dev-libs/gmp dev-libs/mpfr dev-libs/mpc"
 dynamic=1
 source="https://ftp.gnu.org/gnu/gcc/gcc-$version/gcc-$version.tar.xz"
