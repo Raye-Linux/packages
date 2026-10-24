@@ -1,0 +1,16 @@
+## Who gets to run what as whom. Edit it with visudo, which checks it
+## before saving: a broken sudoers locks everyone out of sudo.
+##
+## This file comes with the sudo package and an upgrade replaces it.
+## Rules of your own go in a file in /etc/sudoers.d instead.
+
+Defaults env_reset
+Defaults secure_path="/usr/sbin:/usr/bin:/sbin:/bin"
+
+root ALL=(ALL:ALL) ALL
+
+# users in wheel can run anything as root, with their own password:
+#   addgroup NAME wheel
+%wheel ALL=(ALL:ALL) ALL
+
+@includedir /etc/sudoers.d

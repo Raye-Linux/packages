@@ -1,0 +1,27 @@
+version=1.9.17p2
+release=1
+description="sudo: run a command as root, for users in the wheel group"
+depends="sys-libs/musl"
+source="https://www.sudo.ws/dist/sudo-$version.tar.gz"
+sha256=4a38a1ab3adb1199257edc2a7c4a2bd714665eb605b04368843b06dada2cfcfb
+
+# Static, so the sudoers policy is built in rather than loaded as a
+# plugin, and no PAM: passwords are checked against /etc/shadow, the
+# way busybox's login does. The installer wants to chown to root, which
+# an unprivileged build can't; the tarball has root as owner anyway.
+# libtool links static only when told -all-static.
+# Your own rules go in /etc/sudoers.d, which an upgrade leaves alone
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --sysconfdir=/etc \
+        --libexecdir=/usr/lib --with-rundir=/run/sudo --with-vardir=/var/db/sudo \
+        --disable-shared --enable-static-sudoers --disable-shared-libutil \
+        --without-pam --enable-zlib=no --without-sendmail --disable-nls \
+        --disable-log-server --disable-log-client \
+        --with-editor=/usr/bin/vi --with-env-editor \
+        --with-passprompt="[sudo] password for %p: "
+    make -j"$JOBS" LDFLAGS="$LDFLAGS -all-static"
+    make DESTDIR="$pkg" INSTALL_OWNER= install
+    install -m440 "$files/sudoers" "$pkg/etc/sudoers"
+    rm -f "$pkg/etc/sudoers.dist"
+    chmod 4111 "$pkg/usr/bin/sudo"
+}
