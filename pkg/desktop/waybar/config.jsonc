@@ -9,7 +9,7 @@
     "spacing": 4,
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock"],
-    "modules-right": ["hyprland/language", "wireplumber", "battery"],
+    "modules-right": ["hyprland/language", "wireplumber", "battery", "custom/notification"],
 
     "hyprland/workspaces": {
         "format": "{name}"
@@ -29,6 +29,24 @@
         "format-muted": "muted",
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
         "scroll-step": 5
+    },
+    "custom/notification": {
+        "exec": "swaync-client -swb",
+        "return-type": "json",
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "●",
+            "none": "○",
+            "dnd-notification": "dnd",
+            "dnd-none": "dnd",
+            "inhibited-notification": "●",
+            "inhibited-none": "○",
+            "dnd-inhibited-notification": "dnd",
+            "dnd-inhibited-none": "dnd"
+        },
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
     },
     "battery": {
         "format": "bat {capacity}%",

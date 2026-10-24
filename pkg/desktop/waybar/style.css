@@ -33,11 +33,17 @@ window#waybar {
 #clock,
 #language,
 #wireplumber,
-#battery {
+#battery,
+#custom-notification {
     padding: 0 10px;
 }
 
 #clock {
+    color: #b46cff;
+}
+
+#custom-notification.notification,
+#custom-notification.dnd-notification {
     color: #b46cff;
 }
 

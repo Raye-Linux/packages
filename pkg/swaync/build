@@ -1,0 +1,23 @@
+version=0.12.6
+release=1
+description="swaync, a notification daemon with a control centre"
+depends="musl glib gtk4 gtk4-layer-shell libadwaita granite libgee json-glib wayland"
+makedepends="glib gtk4 gtk4-layer-shell libadwaita granite libgee json-glib wayland wayland-protocols vala"
+dynamic=1
+source="git+https://github.com/ErikReider/SwayNotificationCenter#1043ef98ec97a27e24192a726576fce807d2ee49"
+
+# Vala, with its UI in Blueprint. blueprint-compiler and sassc run on the
+# build machine; blueprint reads the GTK and libadwaita typelibs from the
+# stage. No PulseAudio widget (there's no libpulse, sound is PipeWire),
+# no systemd unit: the session starts it, or D-Bus does on the first
+# notification.
+build() {
+    PATH="$work/native/bin:$PATH" XDG_DATA_DIRS="$stage/usr/share" \
+        GI_TYPELIB_PATH="$stage/usr/lib/girepository-1.0" \
+        meson_build -Dsystemd-service=false -Dpulse-audio=false \
+        -Dman-pages=false -Dzsh-completions=false -Dbash-completions=false \
+        -Dfish-completions=false
+    # swaync puts one stylesheet from /etc/xdg under yours, so Raye's
+    # colours go at the end of the stock one
+    cat "$files/raye.css" >> "$pkg/etc/xdg/swaync/style.css"
+}

@@ -1,0 +1,22 @@
+
+/* Raye's colours, on top of the stock look above. Your own
+ * ~/.config/swaync/style.css goes on top of this in turn. */
+:root {
+  --cc-bg: rgba(14, 10, 22, 0.94);
+  --noti-border-color: rgba(180, 108, 255, 0.35);
+  --noti-bg: 26, 19, 38;
+  --noti-bg-alpha: 0.94;
+  --noti-bg-darker: rgb(18, 12, 28);
+  --noti-bg-hover: rgb(37, 26, 54);
+  --noti-bg-focus: rgba(180, 108, 255, 0.25);
+  --noti-close-bg: rgb(42, 34, 56);
+  --noti-close-bg-hover: rgb(58, 42, 90);
+  --text-color: rgb(243, 234, 255);
+  --text-color-disabled: rgb(138, 127, 160);
+  --bg-selected: rgb(180, 108, 255);
+  --border-radius: 6px;
+}
+
+* {
+  font-family: "DejaVu Sans", sans-serif;
+}
