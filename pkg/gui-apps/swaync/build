@@ -12,8 +12,21 @@ source="git+https://github.com/ErikReider/SwayNotificationCenter#1043ef98ec97a27
 # no systemd unit: the session starts it, or D-Bus does on the first
 # notification.
 build() {
+    # blueprint wants typelibs for everything Gtk pulls in (cairo, GLib,
+    # Pango...), but the -gir packages only ship the .gir files, so
+    # compile the missing ones here
+    tl="$PWD/_typelib"
+    mkdir -p "$tl"
+    for gir in "$stage"/usr/share/gir-1.0/*.gir; do
+        name=${gir##*/}
+        name=${name%.gir}
+        [ -e "$stage/usr/lib/girepository-1.0/$name.typelib" ] && continue
+        "$work/native/bin/gi-compile-repository" \
+            --includedir="$stage/usr/share/gir-1.0" \
+            -o "$tl/$name.typelib" "$gir" 2>/dev/null || rm -f "$tl/$name.typelib"
+    done
     PATH="$work/native/bin:$PATH" XDG_DATA_DIRS="$stage/usr/share" \
-        GI_TYPELIB_PATH="$stage/usr/lib/girepository-1.0" \
+        GI_TYPELIB_PATH="$tl:$stage/usr/lib/girepository-1.0" \
         meson_build -Dsystemd-service=false -Dpulse-audio=false \
         -Dman-pages=false -Dzsh-completions=false -Dbash-completions=false \
         -Dfish-completions=false
