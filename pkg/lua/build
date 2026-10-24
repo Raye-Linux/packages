@@ -1,0 +1,39 @@
+version=5.5.1
+release=1
+description="Lua, the scripting language, as a library and an interpreter"
+depends="musl"
+dynamic=1
+source="https://www.lua.org/ftp/lua-$version.tar.gz"
+sha256=1c4b4068d67061f2a2231ad2b5422e77acea1487ea9890f6320af614f4373dce
+
+# Lua's own make only does a static library, the shared one and the .pc
+# are put together by hand, named the way others look for them (lua5.5)
+build() {
+    v=${version%.*}
+    make -C src -j"$JOBS" CC="$CC" MYCFLAGS=-fPIC linux
+    "$CC" -shared -Wl,-soname,liblua$v.so.0 -o src/liblua$v.so.0 \
+        -Wl,--whole-archive src/liblua.a -Wl,--no-whole-archive -lm
+
+    install -Dm755 src/lua "$pkg/usr/bin/lua$v"
+    install -Dm755 src/luac "$pkg/usr/bin/luac$v"
+    ln -s lua$v "$pkg/usr/bin/lua"
+    ln -s luac$v "$pkg/usr/bin/luac"
+    install -Dm755 src/liblua$v.so.0 "$pkg/usr/lib/liblua$v.so.0"
+    ln -s liblua$v.so.0 "$pkg/usr/lib/liblua$v.so"
+    install -d "$pkg/usr/include/lua$v"
+    install -m644 src/lua.h src/luaconf.h src/lualib.h src/lauxlib.h src/lua.hpp \
+        "$pkg/usr/include/lua$v/"
+    install -d "$pkg/usr/lib/pkgconfig"
+    cat > "$pkg/usr/lib/pkgconfig/lua$v.pc" <<PC
+prefix=/usr
+includedir=\${prefix}/include/lua$v
+libdir=\${prefix}/lib
+
+Name: Lua
+Description: the Lua language
+Version: $version
+Libs: -L\${libdir} -llua$v
+Libs.private: -lm
+Cflags: -I\${includedir}
+PC
+}

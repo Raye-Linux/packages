@@ -1,0 +1,10 @@
+version=2.3.5
+release=1
+description="maths expression parser"
+depends="musl gcc-libs"
+dynamic=1
+source="git+https://github.com/beltoforion/muparser#fbafd7f8774af2b53f4d2de07c57353fcfc09216"
+
+build() {
+    cmake_build -DENABLE_OPENMP=OFF -DENABLE_SAMPLES=OFF -DENABLE_WIDE_CHAR=OFF
+}

@@ -1,0 +1,12 @@
+version=7.9.1
+release=1
+description="JSON for C++, headers only, for building Hyprland"
+source="git+https://github.com/stephenberry/glaze#cadcadea26554cc4214769e358f981426e40a02a"
+buildonly=1
+dynamic=1
+
+# Hyprland wants a 7.x and fetches one itself if it can't find it
+build() {
+    cmake_build -Dglaze_DEVELOPER_MODE=OFF -Dglaze_ENABLE_FUZZING=OFF \
+        -DBUILD_TESTING=OFF
+}
