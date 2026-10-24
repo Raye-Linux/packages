@@ -13,8 +13,9 @@
 #   version, release, description
 #   depends       what it needs at runtime (other packages)
 #   makedepends   what it needs to build: packages, or build-only libs
-#   source        a URL. Tarballs get unpacked, anything else is copied
-#   sha256        of that source
+#   source        a URL. Tarballs get unpacked, anything else is copied.
+#                 git+URL#COMMIT clones URL at that commit instead
+#   sha256        of that source (not for git ones, the commit pins those)
 #   buildonly=1   a library other recipes link against, never packaged
 #   dynamic=1     link against shared libraries rather than statically
 #
@@ -27,9 +28,11 @@
 # are cross builds as far as their build systems are concerned (the build
 # machine can't start a musl binary on its own), so they get --host=$TARGET
 # for configure, --cross-file "$MESON_CROSS" for meson and
-# -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN" for cmake. Whatever they link
-# has to come from a package in depends, or from musl and gcc-libs, which
-# mklive puts in OUTDIR before it calls this.
+# -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN" for cmake. meson_build and
+# cmake_build do the usual setup, build and install with those, taking
+# the project's own options as arguments. Whatever they link has to come
+# from a package in depends, or from musl and gcc-libs, which mklive puts
+# in OUTDIR before it calls this.
 
 set -e
 
@@ -137,7 +140,79 @@ set(CMAKE_INSTALL_PREFIX /usr CACHE PATH "")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "")
 set(CMAKE_BUILD_TYPE Release CACHE STRING "")
 EOF
+    # things meson looks for "native: true" (wayland-scanner, glib's code
+    # generators, protocol XML) are the staged ones as well, run through
+    # the wrappers below
+    cat > "$work/meson.native" <<EOF
+[properties]
+pkg_config_libdir = ['$stage/usr/lib/pkgconfig', '$stage/usr/share/pkgconfig']
+sys_root = '$stage'
+EOF
     export MESON_CROSS="$work/meson.cross" CMAKE_TOOLCHAIN="$work/cmake.toolchain"
+}
+
+# for recipes: meson_build OPTION..., cmake_build OPTION...
+meson_build() {
+    meson setup _build --cross-file "$MESON_CROSS" \
+        --native-file "$work/meson.native" "$@"
+    meson compile -C _build -j "$JOBS"
+    DESTDIR="$pkg" meson install -C _build --no-rebuild
+}
+
+cmake_build() {
+    cmake -S . -B _build -G Ninja -DCMAKE_TOOLCHAIN_FILE="$CMAKE_TOOLCHAIN" "$@"
+    cmake --build _build -j "$JOBS"
+    DESTDIR="$pkg" cmake --install _build
+}
+
+# wrap_tools DIR: in the stage, swap every dynamic executable that came
+# from DIR for a script that runs it through the loader, so whatever
+# builds next can use it as a build tool (wayland-scanner and friends)
+wrap_tools() {
+    find "$1/usr/bin" "$1/usr/libexec" -type f 2>/dev/null | while read -r f; do
+        readelf -l "$f" 2>/dev/null | grep -q 'program interpreter' || continue
+        s=$stage${f#$1}
+        mkdir -p "${s%/*}/.musl"
+        mv "$s" "${s%/*}/.musl/${s##*/}"
+        printf '#!/bin/sh\nexec "%s" "%s" "$@"\n' "$work/run" \
+            "${s%/*}/.musl/${s##*/}" > "$s"
+        chmod +x "$s"
+    done
+}
+
+# fetch: get $source into $work/src, checked against $sha256 or, for a
+# git source, its commit. Sets $src to the tarball or the checkout
+fetch() {
+    case $source in
+    git+*)
+        url=${source#git+}
+        url=${url%#*}
+        commit=${source##*#}
+        src=$work/src/$name/$commit
+        if [ ! -d "$src" ]; then
+            msg "cloning $name $version"
+            rm -rf "$src.part"
+            git init -q "$src.part"
+            git -C "$src.part" fetch -q --depth 1 "$url" "$commit"
+            git -C "$src.part" checkout -q FETCH_HEAD
+            git -C "$src.part" submodule -q update --init --recursive --depth 1
+            mv "$src.part" "$src"
+        fi
+        [ "$(git -C "$src" rev-parse HEAD)" = "$commit" ] ||
+            die "$name isn't at $commit"
+        ;;
+    *)
+        src=$work/src/$name/${source##*/}
+        mkdir -p "${src%/*}"
+        if [ ! -f "$src" ]; then
+            msg "fetching $name $version"
+            curl -fL --retry 3 -o "$src.part" "$source"
+            mv "$src.part" "$src"
+        fi
+        echo "$sha256  $src" | sha256sum -c --status - ||
+            die "bad checksum for ${src##*/}"
+        ;;
+    esac
 }
 
 # provides NAME...: the file names NAME and everything it depends on
@@ -185,23 +260,18 @@ build_pkg() (
         build_pkg "$dep" stage
     done
 
-    src=$work/src/$name/${source##*/}
-    mkdir -p "${src%/*}"
-    if [ ! -f "$src" ]; then
-        msg "fetching $name $version"
-        curl -fL --retry 3 -o "$src.part" "$source"
-        mv "$src.part" "$src"
-    fi
-    echo "$sha256  $src" | sha256sum -c --status - ||
-        die "bad checksum for ${src##*/}"
-
+    fetch
     dir=$work/$name
     rm -rf "$dir"
     mkdir -p "$dir/src" "$dir/pkg"
-    case $src in
-        *.tar.*|*.tgz) tar -xf "$src" -C "$dir/src" --strip-components=1 ;;
-        *)             cp "$src" "$dir/src/" ;;
-    esac
+    if [ -d "$src" ]; then
+        cp -a "$src/." "$dir/src/"
+    else
+        case $src in
+            *.tar.*|*.tgz) tar -xf "$src" -C "$dir/src" --strip-components=1 ;;
+            *)             cp "$src" "$dir/src/" ;;
+        esac
+    fi
 
     msg "building $name $version"
     if [ -n "$dynamic" ]; then
@@ -229,7 +299,11 @@ build_pkg() (
     find "$pkg" -name '*.la' -delete
     mkdir -p "$stage/.built"
     cp -a "$pkg/." "$stage/"
+    [ -z "$dynamic" ] || wrap_tools "$pkg"
     : > "$stage/.built/$id"
+    # the log stays, the unpacked source is only taking up room now
+    cd "$work"
+    rm -rf "$dir/src"
 
     if [ -n "$buildonly" ]; then
         msg "$name $version is ready to build against"
@@ -240,7 +314,8 @@ build_pkg() (
     # no man(1) on the system to read these with, and nothing links
     # against the static libs at runtime
     rm -rf "$pkg/usr/share/man" "$pkg/usr/share/info" "$pkg/usr/share/doc" \
-           "$pkg/usr/share/aclocal" "$pkg/usr/include" "$pkg/usr/lib/pkgconfig"
+           "$pkg/usr/share/aclocal" "$pkg/usr/include" "$pkg/usr/lib/pkgconfig" \
+           "$pkg/usr/share/pkgconfig" "$pkg/usr/share/gtk-doc"
     find "$pkg" -name '*.a' -delete
     # libraries keep the symbols other things link against
     find "$pkg" -type f -name '*.so*' -exec strip --strip-unneeded {} + 2>/dev/null || :
