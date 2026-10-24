@@ -1,0 +1,19 @@
+version=4.7.2
+release=1
+description="TIFF images, for GTK 4"
+depends="musl zlib libjpeg-turbo"
+makedepends="zlib libjpeg-turbo"
+dynamic=1
+source="https://download.osgeo.org/libtiff/tiff-$version.tar.xz"
+sha256=4996f0c4f93094719b1ca5c6279b20e588773ba8a247533e486416fb662ddb88
+
+# upstream only signs its releases, the sum is from the checked tarball.
+# The plain codecs only: GTK opens the odd TIFF, nobody's scanning here
+build() {
+    ./configure --host="$TARGET" --prefix=/usr --disable-static \
+        --disable-cxx --disable-tools --disable-tests --disable-contrib \
+        --disable-docs --disable-webp --disable-zstd --disable-lzma \
+        --disable-lerc --disable-jbig --disable-libdeflate
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+}

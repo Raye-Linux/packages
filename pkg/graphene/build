@@ -1,0 +1,13 @@
+version=1.10.8
+release=1
+description="vectors and matrices, for GTK 4's renderer"
+depends="musl glib"
+makedepends="glib glib-gir gobject-introspection"
+dynamic=1
+source="https://download.gnome.org/sources/graphene/${version%.*}/graphene-$version.tar.xz"
+sha256=a37bb0e78a419dcbeaa9c7027bcff52f5ec2367c25ec859da31dfde2928f279a
+
+build() {
+    meson_build -Dgobject_types=true -Dintrospection=enabled \
+        -Dtests=false -Dinstalled_tests=false
+}

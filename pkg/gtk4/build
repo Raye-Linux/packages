@@ -1,0 +1,24 @@
+version=4.24.1
+release=1
+description="GTK 4, wayland only"
+depends="musl glib pango harfbuzz fribidi cairo gdk-pixbuf libpng libjpeg-turbo libtiff libepoxy graphene libxkbcommon wayland libdrm fontconfig freetype shared-mime-info hicolor-icon-theme adwaita-icon-theme"
+makedepends="glib pango harfbuzz fribidi cairo gdk-pixbuf libpng libjpeg-turbo libtiff libepoxy graphene libxkbcommon wayland wayland-protocols libdrm fontconfig freetype glib-gir pango-gir harfbuzz-gir gdk-pixbuf-gir gobject-introspection"
+dynamic=1
+source="https://download.gnome.org/sources/gtk/${version%.*}/gtk-$version.tar.xz"
+sha256=e98abe720e16129c8c0f50761dee0a2e9ae2478055e31018f6cf977fcf6513e9
+
+# For swaync and what libadwaita needs. Wayland and GL only: no X11, no
+# Vulkan renderer (that wants glslc to build), no GStreamer for video,
+# no printing. Its introspection data is what libadwaita's and
+# gtk4-layer-shell's Vala bindings are made from
+build() {
+    meson_build \
+        -Dx11-backend=false -Dwayland-backend=true -Dbroadway-backend=false \
+        -Dmedia-gstreamer=disabled -Dprint-cpdb=disabled -Dprint-cups=disabled \
+        -Dvulkan=disabled -Dcloudproviders=disabled -Dsysprof=disabled \
+        -Dtracker=disabled -Dcolord=disabled -Daccesskit=disabled \
+        -Dintrospection=enabled -Ddocumentation=false -Dscreenshots=false \
+        -Dman-pages=false -Dbuild-demos=false -Dbuild-testsuite=false \
+        -Dbuild-examples=false -Dbuild-tests=false
+    # the schemas get compiled by glib's hook, like GTK 3's
+}
