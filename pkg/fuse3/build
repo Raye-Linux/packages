@@ -1,14 +1,19 @@
 version=3.18.3
-release=1
+release=2
 description="filesystems in userspace, how Flatpak apps get at your files"
 depends="musl"
 dynamic=1
 source="https://github.com/libfuse/libfuse/releases/download/fuse-$version/fuse-$version.tar.gz"
 sha256=bcd19582c5e30f7fe45dd86a5540e998590aa01903afc7ebcbeea6c8ac5421ee
 
-# fusermount3 has to be setuid root, that's how a user mounts at all
+# fusermount3 has to be setuid root, that's how a user mounts at all.
+# useroot=false: the install script would otherwise chown it and mknod
+# /dev/fuse into the package, which an unprivileged build can't do and
+# nothing needs (devtmpfs makes the node at boot; removing the package
+# used to take the real one with it). The setuid bit goes
+# on here instead, and the tarball keeps it
 build() {
     meson_build -Dutils=true -Dexamples=false -Dtests=false \
-        -Dinitscriptdir= -Dudevrulesdir=/usr/lib/udev/rules.d
+        -Duseroot=false -Dinitscriptdir= -Dudevrulesdir=/usr/lib/udev/rules.d
     chmod 4755 "$pkg/usr/bin/fusermount3"
 }
