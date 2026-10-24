@@ -1,0 +1,15 @@
+version=2.78
+release=1
+description="POSIX capabilities, for bubblewrap and Flatpak"
+depends="musl"
+dynamic=1
+source="https://cdn.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-$version.tar.xz"
+sha256=0d621e562fd932ccf67b9660fb018e468a683d7b827541df27813228c996bb11
+
+build() {
+    make -j"$JOBS" CC="$CC" BUILD_CC=gcc prefix=/usr lib=lib \
+        GOLANG=no PAM_CAP=no RAISE_SETFCAP=no
+    make CC="$CC" BUILD_CC=gcc prefix=/usr lib=lib GOLANG=no PAM_CAP=no \
+        RAISE_SETFCAP=no DESTDIR="$pkg" install
+    rm -rf "$pkg/usr/sbin"
+}

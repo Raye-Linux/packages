@@ -1,0 +1,13 @@
+version=1.5.7
+release=1
+description="Zstandard compression library"
+depends="musl"
+dynamic=1
+source="https://github.com/facebook/zstd/releases/download/v$version/zstd-$version.tar.gz"
+sha256=eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3
+
+build() {
+    cd build/meson
+    meson_build -Dbin_programs=false -Dbin_contrib=false -Dbin_tests=false \
+        -Dzlib=disabled -Dlzma=disabled -Dlz4=disabled -Ddefault_library=shared
+}
