@@ -1,5 +1,5 @@
 version=0.15.0
-release=2
+release=3
 description="waybar, the status bar"
 depends="musl gcc-libs gtkmm3 gtk3 gtk-layer-shell glibmm libsigc++ jsoncpp spdlog fmt libxkbcommon wayland libinput eudev libevdev pipewire wireplumber"
 makedepends="gtkmm3 gtk3 gtk-layer-shell glibmm libsigc++ jsoncpp spdlog fmt libxkbcommon wayland wayland-protocols libinput eudev libevdev pipewire wireplumber"
@@ -17,6 +17,9 @@ build() {
         -Dmpd=disabled -Dsndio=disabled -Dlogind=disabled -Djack=disabled \
         -Dcava=disabled -Dgps=disabled -Dman-pages=disabled -Dtests=disabled
     # upstream's sample bar wants icon fonts and modules that aren't
-    # built here. The desktop package has one that fits
+    # built here, so Raye's goes in its place. Without swaync installed
+    # its notification dot just stays empty
     rm -r "$pkg/etc"
+    install -Dm644 "$files/config.jsonc" "$pkg/etc/xdg/waybar/config.jsonc"
+    install -Dm644 "$files/style.css" "$pkg/etc/xdg/waybar/style.css"
 }

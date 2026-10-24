@@ -1,5 +1,5 @@
-// Raye's default bar. Yours goes in ~/.config/waybar/ and replaces
-// this one, the style too.
+// Raye's bar. Yours goes in ~/.config/waybar/ and replaces this one,
+// the style too.
 //
 // Plain text instead of icons: the only font on the system is DejaVu.
 {
