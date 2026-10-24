@@ -1,0 +1,31 @@
+version=1.26.0
+release=1
+description="the wayland libraries, and wayland-scanner"
+depends="musl libffi expat"
+makedepends="libffi expat"
+dynamic=1
+source="https://gitlab.freedesktop.org/-/project/121/uploads/5f5d2e19a230e8b8250d9a7c2f280846/wayland-$version.tar.xz"
+sha256=64176eaa46e4969903e286f8e5ef8331affc17fdf03ac9b58381d2b23162b7a3
+
+# wayland-scanner has to run during the build to turn the protocol XML
+# into code, and a cross build only makes the musl one. So a scanner for
+# this machine first (host compiler, host expat), and a .pc pointing at
+# it. Everything after this uses the staged one through its wrapper.
+build() {
+    env -u CPPFLAGS -u LDFLAGS -u PKG_CONFIG_LIBDIR -u PKG_CONFIG_SYSROOT_DIR \
+        CC=gcc meson setup _native -Dlibraries=false -Dtests=false \
+        -Ddocumentation=false -Ddtd_validation=false
+    meson compile -C _native
+
+    mkdir -p _native/pc
+    cat > _native/pc/wayland-scanner.pc <<PC
+wayland_scanner=$PWD/_native/src/wayland-scanner
+Name: wayland-scanner
+Description: the scanner, for this machine
+Version: $version
+PC
+    printf "[properties]\npkg_config_libdir = ['%s']\nsys_root = '/'\n" \
+        "$PWD/_native/pc" > _native/native.ini
+    meson_build --native-file _native/native.ini \
+        -Ddocumentation=false -Ddtd_validation=false -Dtests=false
+}
