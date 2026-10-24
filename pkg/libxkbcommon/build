@@ -1,17 +1,18 @@
 version=1.13.2
 release=1
 description="keymaps for wayland: what each key means"
-depends="musl xkeyboard-config"
-makedepends="xkeyboard-config"
+depends="musl xkeyboard-config libxml2"
+makedepends="xkeyboard-config libxml2"
 dynamic=1
 source="git+https://github.com/xkbcommon/libxkbcommon#d1442aaa6b635551182e83c3b55037f4c118c962"
 
+# the registry (layout names and the like) is for waybar's language module
 build() {
     meson_build \
         -Dxkb-config-root=/usr/share/X11/xkb \
         -Denable-x11=false \
         -Denable-wayland=false \
-        -Denable-xkbregistry=false \
+        -Denable-xkbregistry=true \
         -Denable-tools=false \
         -Denable-docs=false
 }
