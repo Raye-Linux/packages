@@ -1,5 +1,5 @@
 version=6.6
-release=1
+release=2
 description="terminal library, for building against"
 source="https://mirrors.kernel.org/gnu/ncurses/ncurses-$version.tar.gz"
 sha256=355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11
@@ -21,6 +21,10 @@ build() {
 
     make -j"$JOBS"
     make DESTDIR="$pkg" install
+
+    # the .pc files remember the -static it was built with, which would
+    # turn anything dynamic that links ncurses static as a whole
+    sed -i 's/ -static//' "$pkg"/usr/lib/pkgconfig/*.pc
 
     for l in ncurses form panel menu; do
         ln -s "lib${l}w.a" "$pkg/usr/lib/lib$l.a"
