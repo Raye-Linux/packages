@@ -1,5 +1,7 @@
-# What every Raye system has: the shell and its tools, rpk, the kernel,
-# curl for fetching packages, and sudo. What base.tar on the live image is.
+# What every Raye system has: the boot scripts and /etc (raye-base), the
+# shell and its tools, rpk, the kernel, curl for fetching packages, and
+# sudo. What base.tar on the live image is.
+sys-apps/raye-base
 sys-apps/busybox
 sys-apps/rpk
 sys-kernel/linux
