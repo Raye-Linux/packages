@@ -1,0 +1,10 @@
+version=12.2.0
+release=1
+description="string formatting for C++, under spdlog"
+depends="musl gcc-libs"
+dynamic=1
+source="git+https://github.com/fmtlib/fmt#1be298e1bd68957e4cd352e1f676f00e07dcfb57"
+
+build() {
+    cmake_build -DBUILD_SHARED_LIBS=ON -DFMT_DOC=OFF -DFMT_TEST=OFF
+}

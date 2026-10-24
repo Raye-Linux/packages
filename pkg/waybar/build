@@ -1,0 +1,19 @@
+version=0.15.0
+release=1
+description="waybar, the status bar"
+depends="musl gcc-libs gtkmm3 gtk3 gtk-layer-shell glibmm libsigc++ jsoncpp spdlog fmt libxkbcommon wayland libinput eudev libevdev pipewire wireplumber"
+makedepends="gtkmm3 gtk3 gtk-layer-shell glibmm libsigc++ jsoncpp spdlog fmt libxkbcommon wayland wayland-protocols libinput eudev libevdev pipewire wireplumber"
+dynamic=1
+source="git+https://github.com/Alexays/Waybar#90b209add8937514d0a987aa842e701bd8f1232e"
+
+# sound goes through the WirePlumber module, there's no PulseAudio. No
+# tray menus (libdbusmenu), batteries come from sysfs without UPower
+build() {
+    meson_build \
+        -Dlibinput=enabled -Dlibudev=enabled -Dlibevdev=enabled \
+        -Dpipewire=enabled -Dwireplumber=enabled -Drfkill=enabled \
+        -Dlibnl=disabled -Dpulseaudio=disabled -Dupower_glib=disabled \
+        -Dmpris=disabled -Dsystemd=disabled -Ddbusmenu-gtk=disabled \
+        -Dmpd=disabled -Dsndio=disabled -Dlogind=disabled -Djack=disabled \
+        -Dcava=disabled -Dgps=disabled -Dman-pages=disabled -Dtests=disabled
+}
