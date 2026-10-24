@@ -22,9 +22,10 @@ Built against musl, and static unless a recipe says otherwise.
 | jq | JSON on the command line |
 | tree | directory listings as a tree |
 | terminfo | terminal descriptions (console, serial, xterm, kitty, tmux...) |
+| zlib | compression library, shared, for the dynamically linked packages |
 
-`zlib`, `openssl`, `ncurses` and `libevent` are build-only: curl and git link them in, they
-are never installed on their own.
+`openssl`, `ncurses` and `libevent` are build-only: curl, git and tmux
+link them in, they are never installed on their own.
 
 The built repo is published as the `repo` release of this repository,
 which is where `raye-update` fetches from.

@@ -1,12 +1,15 @@
 version=1.3.2
-release=1
-description="compression library, for building against"
+release=2
+description="compression library"
+depends="musl"
 source="https://zlib.net/zlib-$version.tar.xz"
 sha256=d7a0654783a4da529d1bb793b7ad9c3318020af77667bcae35f95d0e42a792f3
-buildonly=1
+dynamic=1
 
+# Both kinds: libz.so for the dynamic packages, and libz.a, which is what
+# the static ones (curl, git) still pick when they link with -static.
 build() {
-    ./configure --prefix=/usr --static
+    ./configure --prefix=/usr
     make -j"$JOBS"
     make DESTDIR="$pkg" install
 }
