@@ -1,0 +1,20 @@
+version=0.56.2
+release=1
+description="Hyprland, the tiling wayland compositor"
+depends="musl gcc-libs hyprwire aquamarine hyprlang hyprcursor hyprutils hyprgraphics libxkbcommon wayland cairo pango pixman libxcursor libdrm libinput libei mesa libglvnd glib re2 muparser lcms2 lua glslang"
+makedepends="hyprwire readline ncurses aquamarine hyprlang hyprcursor hyprutils hyprgraphics libxkbcommon wayland wayland-protocols cairo pango pixman libxcursor libdrm libinput libei mesa libglvnd glib re2 muparser lcms2 lua glslang glaze hyprwayland-scanner util-linux"
+dynamic=1
+source="https://github.com/hyprwm/Hyprland/releases/download/v$version/source-v$version.tar.gz"
+sha256=03ad3f5ef152ff44116ffd56fcf808486211ecabf4f0ba567108ee746ba5cd2e
+
+# No Xwayland and no systemd. hyprpm builds plugins from git at runtime,
+# which isn't how things get onto raye. libuuid comes in static from
+# util-linux.
+build() {
+    export PATH="$PATH:$stage/usr/bin"
+    cmake_build -DNO_XWAYLAND=ON -DNO_SYSTEMD=ON -DNO_UWSM=ON -DNO_HYPRPM=ON \
+        -DBUILD_TESTING=OFF
+    # 48M of default wallpapers, the rest of the package is 15. Hyprland
+    # copes without them, and hyprpaper is the way to set your own
+    rm -f "$pkg"/usr/share/hypr/wall*.png
+}
