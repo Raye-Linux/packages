@@ -292,6 +292,16 @@ build_pkg() (
         esac
     fi
 
+    # what an older build of this recipe staged goes first, or a changed
+    # recipe ends up building against its own leftovers (a new version
+    # linking the old one's library, say)
+    if [ -f "$stage/.files/$name" ]; then
+        while IFS= read -r f; do
+            rm -f "$stage/$f"
+        done < "$stage/.files/$name"
+        rm -f "$stage/.files/$name"
+    fi
+
     msg "building $name $version"
     if [ -n "$dynamic" ]; then
         export LDFLAGS="$ldflags"
@@ -328,13 +338,6 @@ build_pkg() (
     # .la files: they point libtool at /usr/lib, which here is the host's
     find "$pkg" -name '*.la' -delete
     mkdir -p "$stage/.built" "$stage/.files"
-    # what an older build of this recipe staged goes first, or a changed
-    # recipe ends up building against its own leftovers
-    if [ -f "$stage/.files/$name" ]; then
-        while IFS= read -r f; do
-            rm -f "$stage/$f"
-        done < "$stage/.files/$name"
-    fi
     cp -a "$pkg/." "$stage/"
     (cd "$pkg" && find . ! -type d) > "$stage/.files/$name"
     [ -z "$dynamic" ] || wrap_tools "$pkg"
