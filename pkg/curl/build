@@ -1,15 +1,18 @@
 version=8.23.0
-release=1
+release=2
 description="downloads over https and friends, the real way"
-depends="ca-certificates"
+depends="musl openssl zlib ca-certificates"
 makedepends="openssl zlib"
+dynamic=1
 source="https://curl.se/download/curl-$version.tar.xz"
 sha256=8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5
 
 build() {
+    # libcurl both ways: shared for Flatpak and friends, static for git
     ./configure \
+        --host="$TARGET" \
         --prefix=/usr \
-        --disable-shared \
+        --enable-shared \
         --enable-static \
         --with-openssl \
         --with-zlib \
@@ -25,7 +28,6 @@ build() {
         --disable-manual \
         --disable-docs
 
-    # libtool drops -static when it links programs (see util-linux)
-    make -j"$JOBS" LDFLAGS="$LDFLAGS -all-static"
-    make DESTDIR="$pkg" LDFLAGS="$LDFLAGS -all-static" install
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
 }

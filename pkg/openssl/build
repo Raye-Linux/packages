@@ -1,19 +1,22 @@
 version=3.5.9
 release=1
-description="TLS library, for building against"
+description="TLS and crypto library"
+depends="musl"
+dynamic=1
 source="https://github.com/openssl/openssl/releases/download/openssl-$version/openssl-$version.tar.gz"
 sha256=603f5602e2eef00d77fbd429d34dcd5822bb301757a1bc9cdb24c670f1eb859a
-buildonly=1
 
-# 3.5 is the current LTS. Only the libraries matter: curl and git link
-# them in, nothing on the system runs the openssl binary.
+# 3.5 is the current LTS. Shared for curl and Flatpak's stack, static as
+# well for git, which links everything in. Nothing runs the openssl
+# command, so that one stays out
 build() {
     ./Configure linux-x86_64 \
         --prefix=/usr \
         --libdir=lib \
         --openssldir=/etc/ssl \
-        no-shared no-tests no-docs
+        no-tests no-docs
 
     make -j"$JOBS"
     make DESTDIR="$pkg" install_sw
+    rm -rf "$pkg/usr/bin"
 }
