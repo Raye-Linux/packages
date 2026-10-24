@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# The system bus. Desktop sessions get their own bus on top of this,
+# with dbus-run-session.
+
+pidfile=/run/dbus/pid
+
+case $1 in
+    start)
+        # dbus-daemon drops to this user, which older installs don't have
+        grep -q '^messagebus:' /etc/passwd ||
+            adduser -S -D -H -h /run/dbus -s /bin/false messagebus
+        mkdir -p /run/dbus /var/lib/dbus
+        dbus-uuidgen --ensure
+        dbus-daemon --system
+        ;;
+    stop)
+        [ -f "$pidfile" ] && kill "$(cat "$pidfile")"
+        rm -f "$pidfile"
+        ;;
+    *)
+        echo "usage: $0 start|stop" >&2
+        exit 1
+        ;;
+esac

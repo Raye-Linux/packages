@@ -1,0 +1,26 @@
+version=1.16.2
+release=1
+description="the message bus desktop programs talk to each other over"
+depends="musl expat"
+makedepends="expat"
+dynamic=1
+source="https://dbus.freedesktop.org/releases/dbus/dbus-$version.tar.xz"
+sha256=0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2
+
+build() {
+    meson_build \
+        --localstatedir=/var \
+        -Druntime_dir=/run \
+        -Dsystem_socket=/run/dbus/system_bus_socket \
+        -Dsystemd=disabled \
+        -Dx11_autolaunch=disabled \
+        -Dselinux=disabled \
+        -Dapparmor=disabled \
+        -Dlibaudit=disabled \
+        -Duser_session=false \
+        -Dmodular_tests=disabled \
+        -Ddoxygen_docs=disabled \
+        -Dxml_docs=disabled \
+        -Dqt_help=disabled
+    install -Dm755 "$files/rc" "$pkg/etc/rc.d/dbus"
+}
