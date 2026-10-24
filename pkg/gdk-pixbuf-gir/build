@@ -1,0 +1,23 @@
+version=2.44.8
+release=1
+description="the introspection data of gdk-pixbuf"
+makedepends="glib libpng libjpeg-turbo shared-mime-info glib-gir gobject-introspection"
+dynamic=1
+buildonly=1
+source="https://download.gnome.org/sources/gdk-pixbuf/${version%.*}/gdk-pixbuf-$version.tar.xz"
+sha256=919f529512961a12e81cd4b4b466a48c3933469e7f9a310c6513cd4fb252ba3c
+
+# GTK 4's .gir includes this one. Same version as the gdk-pixbuf
+# package, built again with introspection, keeping only the .gir
+build() {
+    meson setup _build --cross-file "$MESON_CROSS" \
+        --native-file "$work/meson.native" \
+        -Dpng=enabled -Djpeg=enabled -Dgif=enabled -Dtiff=disabled \
+        -Dglycin=disabled -Dothers=disabled -Dbuiltin_loaders=png,jpeg,gif \
+        -Dintrospection=enabled -Dman=false -Ddocumentation=false \
+        -Dtests=false -Dinstalled_tests=false -Dthumbnailer=disabled
+    meson compile -C _build -j "$JOBS"
+    DESTDIR="$PWD/_inst" meson install -C _build --no-rebuild
+    mkdir -p "$pkg/usr/share"
+    cp -a _inst/usr/share/gir-1.0 "$pkg/usr/share/"
+}
