@@ -1,0 +1,38 @@
+version=3.13.17
+release=1
+description="Python, for scripts and for what's built with meson on raye"
+depends="sys-libs/musl sys-libs/zlib dev-libs/libffi dev-libs/expat app-arch/xz dev-libs/openssl"
+makedepends="sys-libs/zlib dev-libs/libffi dev-libs/expat app-arch/xz dev-libs/openssl"
+dynamic=1
+source="https://www.python.org/ftp/python/$version/Python-$version.tar.xz"
+sha256=6020bd10aff3bf4821be16f088ebb1591beb7b811dcd8fab1da8f7c22a7b27e7
+
+# Built on raye itself, Python is a plain configure && make. Built on
+# another machine it's a cross build, which takes a Python of the same
+# version there (python3.13) to run the build's own scripts, and the
+# answers configure can't find out without running something on raye
+# (musl's getaddrinfo is fine).
+# No readline, curses or uuid modules: those libraries are static only
+# (uuid's comes with util-linux), and the interpreter works without them
+build() {
+    set -- --prefix=/usr --enable-shared --with-system-expat \
+        --with-ensurepip=no --without-static-libpython --disable-test-modules \
+        py_cv_module_readline=n/a py_cv_module__curses=n/a \
+        py_cv_module__curses_panel=n/a py_cv_module__uuid=n/a
+    if [ -n "$cross" ]; then
+        command -v python3.13 >/dev/null ||
+            { echo "a cross build of Python needs python3.13 on this machine" >&2; exit 1; }
+        ac_cv_file__dev_ptmx=yes ac_cv_file__dev_ptc=no ac_cv_buggy_getaddrinfo=no \
+        ./configure --host="$TARGET" --build="$(./config.guess)" \
+            --with-build-python=python3.13 "$@"
+    else
+        ./configure "$@"
+    fi
+    make -j"$JOBS"
+    make DESTDIR="$pkg" install
+    # its own test suite and the idle editor take half the size
+    rm -rf "$pkg"/usr/lib/python3.13/test "$pkg"/usr/lib/python3.13/idlelib \
+        "$pkg"/usr/lib/python3.13/tkinter "$pkg"/usr/lib/python3.13/turtledemo
+    find "$pkg" -name __pycache__ -prune -exec rm -rf {} +
+    ln -sf python3 "$pkg/usr/bin/python"
+}
