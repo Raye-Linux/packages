@@ -357,6 +357,10 @@ build_pkg() (
     rm -rf "$pkg/usr/share/man" "$pkg/usr/share/info" "$pkg/usr/share/doc" \
            "$pkg/usr/share/aclocal" "$pkg/usr/include" "$pkg/usr/lib/pkgconfig" \
            "$pkg/usr/share/pkgconfig" "$pkg/usr/share/gtk-doc"
+    # introspection data and Vala bindings are for building against, and
+    # nothing on raye loads typelibs
+    rm -rf "$pkg/usr/share/gir-1.0" "$pkg/usr/lib/girepository-1.0" \
+           "$pkg/usr/share/vala" "$pkg/usr/share/vala-0.56"
     find "$pkg" -name '*.a' -delete
     # libraries keep the symbols other things link against
     find "$pkg" -type f -name '*.so*' -exec strip --strip-unneeded {} + 2>/dev/null || :
