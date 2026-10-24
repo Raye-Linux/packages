@@ -1,0 +1,12 @@
+version=2.3.1
+release=1
+description="D-Bus for C++, over basu"
+depends="musl gcc-libs basu"
+makedepends="basu"
+dynamic=1
+source="git+https://github.com/Kistler-Group/sdbus-cpp#ca073434d2c03c2b619f7e23f285cebbf32c7e46"
+
+build() {
+    cmake_build -DSDBUSCPP_SDBUS_LIB=basu -DSDBUSCPP_BUILD_DOCS=OFF \
+        -DSDBUSCPP_BUILD_CODEGEN=OFF -DSDBUSCPP_BUILD_TESTS=OFF
+}
