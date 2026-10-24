@@ -1,0 +1,11 @@
+version=1.16
+release=1
+description="small XML parser, for hyprwayland-scanner"
+source="git+https://github.com/zeux/pugixml#c8033ce9d039e7f9d134877c363397b3cfe20816"
+buildonly=1
+dynamic=1
+
+build() {
+    cmake_build -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DPUGIXML_BUILD_TESTS=OFF
+}

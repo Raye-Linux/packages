@@ -1,0 +1,13 @@
+version=0.4.0
+release=1
+description="reads what a monitor says about itself (EDID)"
+depends="musl"
+makedepends="hwdata"
+dynamic=1
+source="https://gitlab.freedesktop.org/-/project/14497/uploads/289d58230e2981b51f23d31faf25bef9/libdisplay-info-$version.tar.xz"
+sha256=43b180baa143e2035654759d84e2b2f5ee77d5fe817c423838c7fe59c0d68459
+
+build() {
+    meson_build
+    rm -rf "$pkg/usr/bin"
+}

@@ -1,0 +1,12 @@
+version=0.412
+release=1
+description="PCI, USB and display vendor IDs, for building against"
+source="git+https://github.com/vcrhonek/hwdata#816a9490ffcdad1929e0e53f79c500e1aeadd492"
+buildonly=1
+
+# libdisplay-info and aquamarine compile the display vendor names in, so
+# nothing needs the files at runtime
+build() {
+    ./configure --prefix=/usr --datadir=/usr/share
+    make DESTDIR="$pkg" install
+}
