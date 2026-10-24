@@ -279,7 +279,8 @@ fetch() {
         mkdir -p "${src%/*}"
         if [ ! -f "$src" ]; then
             msg "fetching $name $version"
-            curl -fL --retry 3 -o "$src.part" "$source"
+            # a dropped connection is worth another try too, not only a timeout
+            curl -fL --retry 3 --retry-all-errors -o "$src.part" "$source"
             mv "$src.part" "$src"
         fi
         [ "$(sha256sum "$src" | cut -d' ' -f1)" = "$sha256" ] ||
