@@ -1,0 +1,58 @@
+Package: plasma-desktop
+Format: 3.0 (quilt)
+Binary: plasma-desktop, plasma-desktop-data, plasma-desktop-dev, sddm-theme-breeze
+Architecture: any all
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Aurélien COUDERC <coucouf@debian.org>, Patrick Franz <deltaone@debian.org>, Scarlett Moore <sgmoore@kde.org>,
+Standards-Version: 4.7.0
+Build-Depends: cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-pkgkde-symbolshelper, extra-cmake-modules (>= 6.22.0~), gettext, kded6-dev (>= 6.22.0~), kscreenlocker-dev (>= 6.6.5~), kwin-dev (>= 4:6.6.6~), libaccounts-qt6-dev (>= 1.13~), libcanberra-dev, libfontconfig-dev, libfreetype-dev, libglib2.0-dev, libibus-1.0-dev (>= 1.5.0~), libicu-dev, libkf5runner-dev, libkf6attica-dev (>= 6.22.0~), libkf6auth-dev (>= 6.22.0~), libkf6baloo-dev (>= 6.22.0~), libkf6codecs-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6iconthemes-dev (>= 6.22.0~), libkf6itemmodels-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6kio-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6notifyconfig-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6sonnet-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkirigami-dev (>= 6.22.0~), libksysguard-dev (>= 4:6.6.5~), libpackagekitqt6-dev, libplasma-dev (>= 6.6.6~), libplasma5support-dev (>= 4:6.6.4~), libplasmaactivities-dev (>= 6.6.4~), libplasmaactivitiesstats-dev (>= 6.6.4~), libscim-dev, libsdl2-dev (>= 2.0.16~), libudev-dev, libwayland-dev (>= 1.22~), libx11-dev, libx11-xcb-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-record0-dev, libxcb-shm0-dev, libxcb-util-dev, libxcb-xinput-dev, libxcb-xkb-dev, libxcb1-dev, libxft-dev, libxkbregistry-dev, pkgconf, plasma-workspace-dev (>= 4:6.6.6~), qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0+dfsg~), qt6-base-private-dev, qt6-declarative-dev (>= 6.10.0+dfsg~), qt6-shadertools-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.44~), xdg-user-dirs, xserver-xorg-dev, xserver-xorg-input-libinput-dev
+Homepage: https://invent.kde.org/plasma/plasma-desktop
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/plasma-desktop
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/plasma-desktop
+Directory: pool/main/p/plasma-desktop
+Package-List:
+ plasma-desktop deb kde optional arch=any
+ plasma-desktop-data deb kde optional arch=all
+ plasma-desktop-dev deb devel optional arch=any
+ sddm-theme-breeze deb kde optional arch=any
+Checksums-Sha256:
+ f25d1bb441b9e7cc0f513b24be1705a4ce967495e9287425ae77a2e38f277216 3604 plasma-desktop_6.6.6-0ubuntu0.1+raye4.dsc
+ dbaf12ac8dcf8a12ba3ea097c11e71e846be4b36737ef62420e11cf37a4f638e 17080812 plasma-desktop_6.6.6.orig.tar.xz
+ 0664a73615913bb3436e87e46e0353514da5d491dd935b3f8caab783fe184315 52312 plasma-desktop_6.6.6-0ubuntu0.1+raye4.debian.tar.xz
+
+Package: plasma-workspace
+Format: 3.0 (quilt)
+Binary: libbatterycontrol6, libkfontinst6, libkfontinstui6, libklipper6, libklookandfeel6, libkmpris6, libkworkspace6-6, libnotificationmanager1, libtaskmanager6, plasma-session-wayland, plasma-session-x11, plasma-workspace, plasma-workspace-data, plasma-workspace-dev
+Architecture: any all
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Aurélien COUDERC <coucouf@debian.org>, Patrick Franz <deltaone@debian.org>,
+Standards-Version: 4.7.0
+Build-Depends: appmenu-gtk3-module, breeze-dev (>= 4:6.6.5~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-pkgkde-symbolshelper, dh-sequence-python3, dh-sequence-sodeps, extra-cmake-modules (>= 6.22.0~), kded6-dev (>= 6.22.0~), kirigami-addons-dev (>= 1.0.0~), knighttime-dev (>= 6.6.5~), kscreenlocker-dev (>= 6.6.5~), kwayland-dev (>= 4:6.6.4~), kwin-dev (>= 4:6.6.6~), libappstreamqt-dev (>= 1.0.0~), libcanberra-dev, libdbus-1-dev, libdrm-dev, libfontconfig-dev, libice-dev, libicu-dev, libkexiv2qt6-dev, libkf6archive-dev (>= 6.22.0~), libkf6auth-dev (>= 6.22.0~), libkf6baloo-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6holidays-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6iconthemes-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemmodels-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6kio-dev (>= 6.22.0~), libkf6networkmanagerqt-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6notifyconfig-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6parts-dev (>= 6.22.0~), libkf6prison-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6statusnotifieritem-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6texteditor-dev (>= 6.22.0~), libkf6textwidgets-dev (>= 6.22.0~), libkf6unitconversion-dev (>= 6.22.0~), libkf6userfeedback-dev (>= 6.22.0~), libkf6wallet-dev (>= 6.22.0~), libkirigami-dev (>= 6.22.0~), libkpipewire-dev (>= 6.6.4~), libkscreen-dev (>= 4:6.6.4~), libksysguard-dev (>= 4:6.6.5~), liblayershellqtinterface-dev (>= 6.6.4~), libphonon4qt6-dev (>= 4:4.6.60~), libphonon4qt6experimental-dev, libpipewire-0.3-dev, libplasma-dev (>= 6.6.6~), libplasma5support-dev (>= 4:6.6.4~), libplasmaactivities-dev (>= 6.6.4~), libplasmaactivitiesstats-dev (>= 6.6.4~), libpolkit-qt6-1-dev, libqalculate-dev (>= 2.0~), libquickcharts-dev (>= 6.22.0~), libsm-dev, libsystemd-dev, libudev-dev, libwayland-dev, libx11-dev, libxcb-composite0-dev, libxcb-cursor-dev, libxcb-damage0-dev, libxcb-image0-dev, libxcb-randr0-dev, libxcb-shape0-dev, libxcb-util-dev, libxcb-xfixes0-dev, libxcb1-dev, libxcursor-dev, libxfixes-dev, libxft-dev, libxrender-dev, libxtst-dev, pkgconf, plasma-wayland-protocols (>= 1.6~), qcoro-qt6-dev, qml6-module-org-kde-prison (>= 6.22.0~), qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-location-dev (>= 6.10.0~), qt6-positioning-dev (>= 6.10.0~), qt6-shadertools-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), systemd-dev, zlib1g-dev
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/plasma-workspace
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/plasma-workspace
+Directory: pool/main/p/plasma-workspace
+Package-List:
+ libbatterycontrol6 deb libs optional arch=any
+ libkfontinst6 deb libs optional arch=any
+ libkfontinstui6 deb libs optional arch=any
+ libklipper6 deb libs optional arch=any
+ libklookandfeel6 deb libs optional arch=any
+ libkmpris6 deb libs optional arch=any
+ libkworkspace6-6 deb libs optional arch=any
+ libnotificationmanager1 deb libs optional arch=any
+ libtaskmanager6 deb libs optional arch=any
+ plasma-session-wayland deb kde optional arch=any
+ plasma-session-x11 deb kde optional arch=any
+ plasma-workspace deb kde optional arch=any
+ plasma-workspace-data deb kde optional arch=all
+ plasma-workspace-dev deb libdevel optional arch=any
+Checksums-Sha256:
+ 6160515238a53e26421401c7d4615e49f8bfd4d154ea861a247afbfedee4da7c 5012 plasma-workspace_6.6.6-0ubuntu0.1+raye4.dsc
+ c9ffe4110b59e465ab2d5d431db2185fec6ea109fa39e4f3cac04c9553c28a7b 19353172 plasma-workspace_6.6.6.orig.tar.xz
+ e2c247c8864bab34be331c477b4e53035b18d9ca93127d0774b042d60ebc6664 88312 plasma-workspace_6.6.6-0ubuntu0.1+raye4.debian.tar.xz
+

@@ -1,0 +1,29 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Acquire-By-Hash: yes
+Architectures: amd64
+Codename: resolute
+Components: main
+Date: Fri, 13 Nov 2026 22:06:58 +0000
+Description: Raye Linux packages
+Label: Raye
+Origin: Raye
+Suite: resolute
+Version: 0.5-beta
+SHA256:
+ e0a897f05b7553acfb09021655e1158a7707b3ea92f156dd884df611605002ea            76079 main/binary-amd64/Packages
+ 103733b3c6c8964672235feeff0b47eef8ea79ae0b887598eb82775413307e68            17340 main/binary-amd64/Packages.gz
+ fc464c863446c2f6426a73c64377dc2e084a9e99a03ea7dd5bf62bb5ed02d26a            15916 main/binary-amd64/Packages.xz
+ ad317a1e49fee3dee14214f2762e47bfdb719a507c6e023f0b77a0344e33a72a               79 main/binary-amd64/Release
+ e1ce31b66f0b4951bae9eeaca5518ac3fd4fce54ee14755929546fd54304ffff               80 main/source/Release
+ 94439bfd05a8a7a6d90dfe68807b1b1f4b6b8a482a5d5865a7de839399384756             8168 main/source/Sources
+ 46eb0e15681b9be6beb652aaa1b17b5bd3de8f1581e0544a1a4869cee198f364             2138 main/source/Sources.gz
+ 1ec53936d71e637d881bf886c8a19ce071d16b69ea356b08139e6b0621ff4f2c             2108 main/source/Sources.xz
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQTgBRVTbROCxKuzFIWlsJpZ8F4NoAUCaveKAgAKCRClsJpZ8F4N
+oBFhAQDv+GXJd4Z5ipbMKxa7MP1WewUUClI8yE6FTSZlbsQ4/wEAqMQ3vFn6K01i
+H0EfwVldU7fZG/5nre6rr2MJn7aIOQw=
+=k4ml
+-----END PGP SIGNATURE-----
