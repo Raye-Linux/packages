@@ -1,0 +1,1201 @@
+Package: calamares-settings-raye
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: admin
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 861
+Depends: calamares (>= 3.3.14), qml6-module-org-raye-setup (= 0.5~beta1), raye-style | raye-theme, qml6-module-qtquick, qml6-module-qtquick-shapes, qml6-module-qtquick-effects, kwin-wayland, systemd, kdialog, plasma-workspace, plasma-nm, network-manager, plasma-keyboard, orca, x11-xserver-utils, efibootmgr, squashfs-tools, cryptsetup, keyutils, btrfs-progs, rsync, sudo, ntfs-3g, fdisk, dosfstools, e2fsprogs, os-prober
+Filename: pool/main/c/calamares-settings-raye/calamares-settings-raye_0.5~beta1_amd64.deb
+Size: 512770
+SHA256: 8b0aa34255c4fe4c4782ab1cbc17878eed303d063a8537e8a2192564e71f1115
+Description: Raye Linux installer
+ The setup that starts from the Raye Linux USB stick, one question per
+ page: language, country or region, keyboard, network, disk, device name,
+ account, privacy, then the install itself, in the Raye look. Also the
+ session that boots straight into setup with no desktop behind it, and the
+ small scripts the installer runs.
+ .
+ Live image only: the installer removes it from the new system.
+
+Package: qml6-module-org-raye-setup
+Architecture: amd64
+Version: 0.5~beta1
+Multi-Arch: same
+Priority: optional
+Section: libs
+Source: calamares-settings-raye
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 668
+Depends: raye-style | raye-theme, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-shapes, qml6-module-qtquick-effects
+Filename: pool/main/c/calamares-settings-raye/qml6-module-org-raye-setup_0.5~beta1_amd64.deb
+Size: 547560
+SHA256: cab88f30a97349fc7959f4f5ea30c018f1561ea2bd119328c2753f210b0c0713
+Description: Raye Linux setup look (QML module)
+ Buttons, fields, choice cards, progress ring and the illustrations
+ shared by the Raye installer and the welcome shown after the first
+ sign-in.
+
+Package: raye-first-run
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: admin
+Source: calamares-settings-raye
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 56
+Depends: qml6-module-org-raye-setup (= 0.5~beta1), qml6-module-qtquick, qml6-module-qtquick-window, qml6-module-qtquick-dialogs, qrencode, accountsservice, libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.6.0), libstdc++6 (>= 5)
+Filename: pool/main/c/calamares-settings-raye/raye-first-run_0.5~beta1_amd64.deb
+Size: 16714
+SHA256: 70339ea873f8dac44746cb97c4cae26ffcfef99b00bfb89bdb00c5a29297cb33
+Description: Raye Linux welcome after the first sign-in
+ Shown once per person after the first sign-in: save the disk recovery
+ key, privacy choices, dark or light look and the account picture. After
+ an upgrade to a new Raye version it shows what is new.
+
+Package: plasma-desktop-data
+Architecture: all
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Source: plasma-desktop
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 29417
+Provides: raye-desktop-layout
+Depends: python3:any
+Breaks: plasma-widgets-addons (<< 4:5.25.70~)
+Replaces: plasma-widgets-addons (<< 4:5.25.70~)
+Filename: pool/main/p/plasma-desktop/plasma-desktop-data_6.6.6-0ubuntu0.1+raye4_all.deb
+Size: 15456810
+SHA256: 08fd48ac3c90d836a558e05a3e6231fe4bde31303632f43b2a236b1a1cd9e0bc
+Homepage: https://invent.kde.org/plasma/plasma-desktop
+Description: Tools and widgets for the desktop data files
+ Plasma Desktop offers a beautiful looking desktop
+ that takes complete advantage of modern computing technology.
+ Through the use of visual effects and scalable graphics,
+ the desktop experience is not only smooth but also pleasant
+ to the eye. The looks of Plasma Desktop not only provide beauty,
+ they are also used to support and improve your computer
+ activities effectively, without being distracting.
+ .
+ This package is part of the KDE Plasma.
+ .
+ This package contains the data files
+
+Package: plasma-desktop-dev
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: devel
+Source: plasma-desktop
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 53
+Filename: pool/main/p/plasma-desktop/plasma-desktop-dev_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 13806
+SHA256: c88a9e21e86bc2ecc36673e4d06b2e75b8450b1e625d92ad987c5b10e185182e
+Homepage: https://invent.kde.org/plasma/plasma-desktop
+Description: Tools and widgets for the desktop
+ Plasma Desktop offers a beautiful looking desktop
+ that takes complete advantage of modern computing technology.
+ Through the use of visual effects and scalable graphics,
+ the desktop experience is not only smooth but also pleasant
+ to the eye. The looks of Plasma Desktop not only provide beauty,
+ they are also used to support and improve your computer
+ activities effectively, without being distracting.
+ .
+ This package is part of the KDE Plasma.
+
+Package: plasma-desktop
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 13693
+Depends: accountsservice, breeze (>= 4:6.2.90~), kactivitymanagerd (>= 6.1.0~), kde-cli-tools (>= 4:6.1.0~), kded6, kio6, layer-shell-qt (>= 6.1.0~), ocean-sound-theme (>= 6.1.0~), oxygen-sounds (>= 4:6.1.0~), plasma-desktop-data (= 4:6.6.6-0ubuntu0.1+raye4), plasma-desktoptheme, plasma-integration (>= 6.1.0~), plasma-workspace (>= 4:6.6.00~), polkit-kde-agent-1 (>= 4:6.1.0~), qml6-module-org-kde-activities, qml6-module-org-kde-baloo, qml6-module-org-kde-breeze, qml6-module-org-kde-config, qml6-module-org-kde-coreaddons, qml6-module-org-kde-desktop, qml6-module-org-kde-draganddrop, qml6-module-org-kde-graphicaleffects, qml6-module-org-kde-iconthemes, qml6-module-org-kde-kcmutils, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components, qml6-module-org-kde-kirigamiaddons-delegates, qml6-module-org-kde-kirigamiaddons-tableview, qml6-module-org-kde-kitemmodels, qml6-module-org-kde-kquickcontrols, qml6-module-org-kde-kquickcontrolsaddons, qml6-module-org-kde-ksvg, qml6-module-org-kde-kwindowsystem, qml6-module-org-kde-newstuff, qml6-module-org-kde-pipewire, qml6-module-qt-labs-platform, qml6-module-qt5compat-graphicaleffects, qml6-module-qtcore, qml6-module-qtqml, qml6-module-qtqml-models, qml6-module-qtqml-workerscript, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-effects, qml6-module-qtquick-layouts, qml6-module-qtquick-shapes, qml6-module-qtquick-templates, qml6-module-qtquick-window, xdg-user-dirs, libc6 (>= 2.38), libcanberra0 (>= 0.2), libglib2.0-0t64 (>= 2.80.0), libibus-1.0-5 (>= 1.5.1), libkf6authcore6 (>= 6.22.0~), libkf6baloo6 (>= 6.22.0~), libkf6bookmarks6 (>= 6.0.0), libkf6codecs6 (>= 6.22.0~), libkf6completion6 (>= 6.0.0), libkf6configcore6 (>= 6.22.0~), libkf6configgui6 (>= 6.22.0~), libkf6configwidgets6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6dbusaddons6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6guiaddons6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6iconwidgets6 (>= 6.22.0~), libkf6jobwidgets6 (>= 6.0.0), libkf6kcmutils6 (>= 6.22.0~), libkf6kcmutilscore6 (>= 6.22.0~), libkf6kcmutilsquick6 (>= 6.22.0~), libkf6kiocore6 (>= 6.22.0~), libkf6kiofilewidgets6 (>= 6.22.0~), libkf6kiogui6 (>= 6.22.0~), libkf6kiowidgets6 (>= 6.22.0~), libkf6newstuffcore6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6notifyconfig6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6runner6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6solid6 (>= 6.0.0), libkf6sonnetcore6 (>= 6.22.0~), libkf6sonnetui6 (>= 6.22.0~), libkf6svg6 (>= 6.22.0~), libkf6widgetsaddons6 (>= 6.22.0~), libkf6windowsystem6 (>= 6.0.0), libkf6xmlgui6 (>= 6.22.0~), libklookandfeel6 (>= 4:6.6.6~), libkworkspace6-6 (>= 4:6.6.6~), libnotificationmanager1 (>= 4:6.6.6~), libpackagekitqt6-2 (>= 1.1.1), libplasma7 (>= 6.6.6~), libplasmaactivities7 (>= 6.6.4~), libplasmaactivitiesstats1 (>= 6.6.4~), libplasmaquick7 (>= 6.6.6~), libprocesscore10 (>= 4:6.6.5~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0+dfsg~), libqt6gui6 (>= 6.10.0+dfsg~), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.10.0+dfsg~), libqt6quickwidgets6 (>= 6.10.0+dfsg~), libqt6sql6 (>= 6.10.0+dfsg~), libqt6waylandclient6 (>= 6.10.2), libqt6widgets6 (>= 6.10.0+dfsg~), libqt6xml6 (>= 6.10.0+dfsg~), libscim8v5 (>= 1.4), libsdl2-2.0-0 (>= 2.24.0), libstdc++6 (>= 13.1), libtaskmanager6 (>= 4:6.6.6~), libudev1 (>= 183), libwacom9 (>= 2.0.0), libwayland-client0 (>= 1.22~), libx11-6 (>= 2:1.2.99.901), libx11-xcb1, libxcb-keysyms1 (>= 0.4.1), libxcb-xkb1, libxcb1, libxcursor1 (>> 1.1.2), libxi6 (>= 2:1.2.99.4), libxkbcommon0 (>= 0.5.0), libxkbfile1 (>= 1:1.1.0), libxkbregistry0 (>= 1.0.0), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Recommends: bluedevil (>= 4:6.1.0~), breeze-gtk-theme (>= 6.1.0~), fonts-hack, fonts-noto-cjk, fonts-noto-hinted, fonts-noto-mono, fonts-noto-unhinted, ibus-data, kde-config-gtk-style (>= 4:6.1.0~), kde-config-screenlocker (>= 6.1.0~), kde-config-sddm (>= 4:6.1.0~), kde-style-oxygen-qt6 (>= 4:6.1.0~), kgamma (>= 6.1.0~), khelpcenter, kinfocenter (>= 4:6.1.0~), kio-extras, kmenuedit (>= 4:6.1.0~), kscreen (>= 4:6.1.0~), ksshaskpass (>= 4:6.1.0~), kwin-wayland (>= 4:6.1.0~) | kwin (>= 4:6.1.0~), kwrited (>= 4:6.1.0~), libkf6kcmutils-bin, libpam-kwallet5 (>= 6.1.0~), plasma-browser-integration (>= 6.1.0~), plasma-discover (>= 6.1.0~), plasma-disks (>= 6.1.0~), plasma-firewall (>= 6.1.0~), plasma-nm (>= 4:6.1.0~), plasma-pa (>= 4:6.1.0~), plasma-systemmonitor (>= 6.1.0~), plasma-thunderbolt (>= 6.1.0~), plasma-vault (>= 6.1.0~), powerdevil (>= 4:6.1.0~), systemsettings (>= 4:6.1.0~), xdg-desktop-portal-gtk, xdg-desktop-portal-kde (>= 6.1.0~)
+Suggests: kde-config-flatpak (>= 4:6.1.0~)
+Breaks: plasma-workspace (<< 4:6.1.0~), user-manager (<< 4:5.20)
+Replaces: plasma-workspace (<< 4:6.1.0~)
+Filename: pool/main/p/plasma-desktop/plasma-desktop_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 3009880
+SHA256: 1a497e2b0dcf4a2117f91d1caa2282aeec3d19f663eb5a622c0c77bc036d078f
+Homepage: https://invent.kde.org/plasma/plasma-desktop
+Description: Tools and widgets for the desktop
+ Plasma Desktop offers a beautiful looking desktop
+ that takes complete advantage of modern computing technology.
+ Through the use of visual effects and scalable graphics,
+ the desktop experience is not only smooth but also pleasant
+ to the eye. The looks of Plasma Desktop not only provide beauty,
+ they are also used to support and improve your computer
+ activities effectively, without being distracting.
+ .
+ This package is part of the KDE Plasma.
+
+Package: sddm-theme-breeze
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Source: plasma-desktop
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 760
+Provides: sddm-theme
+Depends: plasma-desktoptheme, plasma-workspace
+Recommends: sddm
+Filename: pool/main/p/plasma-desktop/sddm-theme-breeze_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 699968
+SHA256: 36957c56161e61fd5b79b9798da5dfc83890f3431fbb99d71a2cba9ece069de2
+Homepage: https://invent.kde.org/plasma/plasma-desktop
+Description: Breeze SDDM theme
+ Plasma Workspace for KF6. Workspaces provide
+ support for KDE Plasma Widgets, integrated search,
+ hardware management and a high degree of customizability.
+ Taskmanager library.
+ .
+ This package contains the files for the breeze SDDM theme.
+
+Package: libbatterycontrol6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 328
+Depends: libc6 (>= 2.14), libkf6i18n6 (>= 6.22.0~), libkf6solid6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Filename: pool/main/p/plasma-workspace/libbatterycontrol6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 80380
+SHA256: df7f922d4c5b81177f42a264295664dbbd23a5d234d876dc265542e0ea210c9c
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace battery control library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This package contains the battery control library files.
+
+Package: libkfontinst6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 315
+Depends: libc6 (>= 2.33), libfontconfig1 (>= 2.12.6), libkf6i18n6 (>= 6.22.0~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6xml6 (>= 6.10.0~), libstdc++6 (>= 5)
+Filename: pool/main/p/plasma-workspace/libkfontinst6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 83372
+SHA256: c21ebd1e6995cc80a3b83757af8f546f6c4970a71213c2eed78662afa89af455
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace fonts installation library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This package contains the fonts installation library files.
+
+Package: libkfontinstui6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 259
+Depends: libc6 (>= 2.14), libfontconfig1 (>= 2.12.6), libfreetype6 (>= 2.2.1), libkf6configcore6 (>= 6.0.0), libkf6i18n6 (>= 6.22.0~), libkfontinst6 (>= 4:6.6.6), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.10.0~), libstdc++6 (>= 5), libx11-6, libxft2 (>> 2.1.1), qt6-base-private-abi (= 6.10.2)
+Filename: pool/main/p/plasma-workspace/libkfontinstui6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 64470
+SHA256: a8770f2ebd1b366d3a079956e58ca99dce232639c1380c33ffab18c0b24fff59
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace UI components for fonts installation
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This library provides UI components to manage fonts installation
+ used in the fonts installation KCM configuration screen.
+ .
+ This package contains the library files for the fonts installation
+ UI components.
+
+Package: libklipper6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 644
+Depends: kio6, libc6 (>= 2.32), libkf6configcore6 (>= 6.3.0), libkf6configgui6 (>= 6.0.0), libkf6configwidgets6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6guiaddons6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6iconwidgets6 (>= 6.22.0~), libkf6jobwidgets6 (>= 6.0.0), libkf6kiocore6 (>= 6.22.0~), libkf6kiogui6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6widgetsaddons6 (>= 6.0.0), libkf6windowsystem6 (>= 6.0.0), libkf6xmlgui6 (>= 6.0.0), libkwaylandclient6 (>= 4:6.6.4~), libplasmaquick7 (>= 6.6.6~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6sql6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 5), libxcb-util1 (>= 0.4.0), libxcb1, qt6-base-private-abi (= 6.10.2)
+Filename: pool/main/p/plasma-workspace/libklipper6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 173318
+SHA256: 28d4bbf9927b789621065c4ec0ee144f1aeae775b987f6bf49e8d9542ce3099c
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspaces Klipper library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ Klipper is the Plasma clipboard utility. It stores clipboard
+ history, and allows you to link clipboard contents to application
+ actions.
+ .
+ This package contains the Klipper library files.
+
+Package: libklookandfeel6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 390
+Depends: libc6 (>= 2.38), libkf6colorscheme6 (>= 6.20.0), libkf6configcore6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6guiaddons6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6iconthemes6 (>= 6.22.0~), libkf6kiogui6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6widgets6 (>= 6.10.0~), libstdc++6 (>= 5), libx11-6, libxcursor1 (>> 1.1.2), libxfixes3, qt6-base-private-abi (= 6.10.2)
+Filename: pool/main/p/plasma-workspace/libklookandfeel6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 103264
+SHA256: 770c3efb1972d82dd8baaaebafd02e0f8b1e93736ed7434a0af723aa3194a50a
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspaces KLookAndFeel library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This package contains the KLookAndFeel library files.
+
+Package: libkmpris6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 503
+Depends: libc6 (>= 2.32), libkf6configcore6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libstdc++6 (>= 11), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Filename: pool/main/p/plasma-workspace/libkmpris6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 126518
+SHA256: 114d2f5328990bf599974ee0b87eba6c70900f1ed614f81fd27afae261cfdb91
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace MPRIS library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This library can be used to control Media Player Remote Interfacing
+ Specification-compatible media players.
+ .
+ This package contains Plasma Workspace MPRIS library files.
+
+Package: libkworkspace6-6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 496
+Depends: libc6 (>= 2.38), libkf6configcore6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6windowsystem6 (>= 6.0.0), libplasma7 (>= 6.6.6~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6waylandclient6 (>= 6.10.2), libstdc++6 (>= 13.1), libwayland-client0 (>= 1.20.0), libxau6 (>= 1:1.0.11), libxcb-randr0 (>= 1.3), libxcb1
+Filename: pool/main/p/plasma-workspace/libkworkspace6-6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 127254
+SHA256: f39575f09cbf32e5b854ce9aa3a17cbe8059aef0daf0d31ee44a3900f3421cec
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This library provides the core features of Plasma Workspace like
+ display, login and session management.
+ .
+ This package contains the main Plasma Workspace library files.
+
+Package: libnotificationmanager1
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 1032
+Depends: kio6, libc6 (>= 2.32), libcanberra0 (>= 0.2), libkf6configcore6 (>= 6.0.0), libkf6configgui6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6itemmodels6 (>= 6.22.0~), libkf6kiofilewidgets6 (>= 6.22.0~), libkf6kiogui6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6windowsystem6 (>= 6.19.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libstdc++6 (>= 5), libtaskmanager6 (>= 4:6.6.0)
+Filename: pool/main/p/plasma-workspace/libnotificationmanager1_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 261142
+SHA256: 80dc13efa2899d8faea38528fcfccec79042875e9e792c4ec90183b6fdae608f
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace notification manager library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This library is responsible for listing notifications, closing them
+ and interacting with them in Plasma.
+ .
+ This package contains the notification manager library files.
+
+Package: libtaskmanager6
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libs
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 1186
+Depends: libc6 (>= 2.32), libkf6configcore6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6itemmodels6 (>= 6.22.0~), libkf6jobwidgets6 (>= 6.0.0), libkf6kiogui6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6windowsystem6 (>= 6.0.0), libkworkspace6-6 (>= 4:6.1.0), libplasmaactivities7 (>= 6.6.4~), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6qml6 (>= 6.10.0~), libqt6quick6 (>= 6.10.0~), libqt6test6 (>= 6.10.0~), libqt6waylandclient6 (>= 6.10.2), libstdc++6 (>= 5), libwayland-client0 (>= 1.20.0)
+Filename: pool/main/p/plasma-workspace/libtaskmanager6_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 310248
+SHA256: 6e6e84a25c32844f5125deaa1f6509281f2adb6ca60ef23fcc7d58e594ff6bff
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace task manager library
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ The task manager library provides various abstractions for listing
+ windows, startup tasks and launcher jobs.
+ .
+ This package contains the task manager library files.
+
+Package: plasma-session-wayland
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 188
+Depends: kwin-wayland (>= 4:6.4.0~), plasma-workspace (= 4:6.6.6-0ubuntu0.1+raye4)
+Breaks: plasma-workspace (<< 4:6.4.3), plasma-workspace-wayland
+Replaces: plasma-workspace (<< 4:6.4.3), plasma-workspace-wayland
+Filename: pool/main/p/plasma-workspace/plasma-session-wayland_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 38780
+SHA256: 1bb9193dfe6b39e76a3bc72e4ab9e0bcdabb54bc04dd69d3f21bfcbac79aa21c
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace for KF6
+ Plasma Workspace for KF6. Workspaces provide
+ support for KDE Plasma Widgets, integrated search,
+ hardware management and a high degree of customizability.
+ .
+ This package contains the Wayland session files.
+
+Package: plasma-session-x11
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 331
+Depends: plasma-workspace (= 4:6.6.6-0ubuntu0.1+raye4), xorg, libc6 (>= 2.34), libcanberra0 (>= 0.2), libkf6configcore6 (>= 6.0.0), libkf6configgui6 (>= 6.0.0), libkf6dbusaddons6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libklookandfeel6 (>= 4:6.4.90), libknighttime0 (>= 6.6.5~), libkworkspace6-6 (>= 4:6.1.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libstdc++6 (>= 5), libx11-6
+Recommends: kwin-x11 (>= 4:6.4.0~)
+Breaks: plasma-workspace (<< 4:6.4.3)
+Replaces: plasma-workspace (<< 4:6.4.3)
+Filename: pool/main/p/plasma-workspace/plasma-session-x11_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 84636
+SHA256: 731d3d430d6f279c39ae76c38166c8b4dcae0fd226e8c5fa8bd21a1f809b0e17
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace for KF6
+ Plasma Workspace for KF6. Workspaces provide
+ support for KDE Plasma Widgets, integrated search,
+ hardware management and a high degree of customizability.
+ .
+ This package contains the X11 session files.
+
+Package: plasma-workspace-data
+Architecture: all
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 34223
+Breaks: breeze (<< 4:5.23.90~), plasma-desktop (<< 4:5.24.0~), plasma-desktop-data (<< 4:6.6.3~), plasma-workspace (<< 4:6.6.3~), xdg-desktop-portal-kde (<< 6.2.0~)
+Replaces: breeze (<< 4:5.23.90~), plasma-desktop (<< 4:5.24.0~), plasma-desktop-data (<< 4:6.3.90~), plasma-workspace (<< 4:6.6.3~), xdg-desktop-portal-kde (<< 6.2.0~)
+Filename: pool/main/p/plasma-workspace/plasma-workspace-data_6.6.6-0ubuntu0.1+raye4_all.deb
+Size: 16092574
+SHA256: 88fb659bbbb645dffd92509ebdabc464a947fa85e15c4518fe3cbf7d6d252899
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace data files
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This contains the data files for Plasma Workspace.
+
+Package: plasma-workspace-dev
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: libdevel
+Source: plasma-workspace
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 546
+Depends: libkf6itemmodels-dev (>= 6.22.0~), libplasma-dev (>= 6.6.6~), qt6-base-dev (>= 6.10.0~), qt6-declarative-dev (>= 6.10.0~), libbatterycontrol6 (= 4:6.6.6-0ubuntu0.1+raye4), libkfontinst6 (= 4:6.6.6-0ubuntu0.1+raye4), libkfontinstui6 (= 4:6.6.6-0ubuntu0.1+raye4), libklipper6 (= 4:6.6.6-0ubuntu0.1+raye4), libklookandfeel6 (= 4:6.6.6-0ubuntu0.1+raye4), libkworkspace6-6 (= 4:6.6.6-0ubuntu0.1+raye4), libnotificationmanager1 (= 4:6.6.6-0ubuntu0.1+raye4), libtaskmanager6 (= 4:6.6.6-0ubuntu0.1+raye4)
+Breaks: plasma-desktop-dev (<< 4:5.20)
+Replaces: plasma-desktop-dev (<< 4:5.20)
+Filename: pool/main/p/plasma-workspace/plasma-workspace-dev_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 79716
+SHA256: b39d8f5d9d5909e6588ba95c6bbdf59a68909845455fe0e2c77863b3e8145835
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace development files
+ Plasma Workspace is used as the base for Plasma Desktop, Mobile, and
+ Bigscreen. It contains shared KCM configuration screens, applets as
+ well as multiple libraries.
+ .
+ This package contains the development files for Plasma Workspace.
+
+Package: plasma-workspace
+Architecture: amd64
+Version: 4:6.6.6-0ubuntu0.1+raye4
+Priority: optional
+Section: kde
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Installed-Size: 25753
+Provides: notification-daemon, x-session-manager
+Depends: default-dbus-session-bus | dbus-session-bus, frameworkintegration6, gdb, iso-codes, kactivitymanagerd (>= 6.2.90~), kded6, kglobalacceld (>= 6.2.90~), knighttime (>= 6.5.0~), kwin-common (>= 4:6.2.90~), kwin-wayland (>= 4:6.2.90~), libgeoclue-2-0, libkf6config-bin, libqt6wlshellintegration6, milou (>= 4:6.2.90~), plasma-desktoptheme, plasma-integration (>= 6.2.90~), plasma-workspace-data (>= 4:6.6.6-0ubuntu0.1+raye4), python3:any, qdbus-qt6, qml6-module-org-kde-activities, qml6-module-org-kde-breeze, qml6-module-org-kde-config, qml6-module-org-kde-coreaddons, qml6-module-org-kde-draganddrop, qml6-module-org-kde-kcmutils, qml6-module-org-kde-kholidays, qml6-module-org-kde-kirigami, qml6-module-org-kde-kirigamiaddons-components, qml6-module-org-kde-kitemmodels, qml6-module-org-kde-kquickcontrols, qml6-module-org-kde-kquickcontrolsaddons, qml6-module-org-kde-ksvg, qml6-module-org-kde-ksysguard, qml6-module-org-kde-kwindowsystem, qml6-module-org-kde-newstuff, qml6-module-org-kde-notifications, qml6-module-org-kde-pipewire, qml6-module-org-kde-plasma-plasma5support, qml6-module-org-kde-prison, qml6-module-org-kde-quickcharts, qml6-module-org-kde-userfeedback, qml6-module-qt5compat-graphicaleffects, qml6-module-qtcore, qml6-module-qtpositioning, qml6-module-qtqml, qml6-module-qtqml-models, qml6-module-qtqml-workerscript, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-shapes, qml6-module-qtquick-templates, qml6-module-qtquick-virtualkeyboard, qml6-module-qtquick-window, qt6-base-dev-tools, qt6-svg-plugins, qt6-wayland, udisks2, x11-utils, x11-xserver-utils, kio6, kwallet6, libappstreamqt3 (>= 1.1.2), libbatterycontrol6 (>= 4:6.6.6), libc6 (>= 2.38), libcanberra0 (>= 0.2), libcrypt1 (>= 1:4.1.0), libdbus-1-3 (>= 1.10), libfontconfig1 (>= 2.12.6), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libice6 (>= 1:1.0.0), libicu78 (>= 78.1-1~), libkexiv2qt6-0 (>= 24.05.1), libkf6archive6 (>= 6.22.0~), libkf6authcore6 (>= 6.22.0~), libkf6baloo6 (>= 6.22.0~), libkf6bookmarks6 (>= 6.0.0), libkf6calendarevents6 (>= 6.22.0~), libkf6colorscheme6 (>= 6.20.0), libkf6completion6 (>= 6.0.0), libkf6configcore6 (>= 6.16.0), libkf6configgui6 (>= 6.3.0), libkf6configqml6 (>= 6.0.0), libkf6configwidgets6 (>= 6.0.0), libkf6coreaddons6 (>= 6.22.0~), libkf6crash6 (>= 6.22.0~), libkf6dbusaddons6 (>= 6.22.0~), libkf6globalaccel6 (>= 6.22.0~), libkf6guiaddons6 (>= 6.22.0~), libkf6holidays6 (>= 6.22.0~), libkf6i18n6 (>= 6.22.0~), libkf6i18nlocaledata6 (>= 6.22.0~), libkf6iconthemes6 (>= 6.22.0~), libkf6idletime6 (>= 6.22.0~), libkf6jobwidgets6 (>= 6.0.0), libkf6kcmutils6 (>= 6.22.0~), libkf6kcmutilscore6 (>= 6.22.0~), libkf6kcmutilsquick6 (>= 6.22.0~), libkf6kiocore6 (>= 6.22.0~), libkf6kiofilewidgets6 (>= 6.22.0~), libkf6kiogui6 (>= 6.22.0~), libkf6kiowidgets6 (>= 6.22.0~), libkf6networkmanagerqt6 (>= 6.22.0~), libkf6newstuffcore6 (>= 6.22.0~), libkf6newstuffwidgets6 (>= 6.22.0~), libkf6notifications6 (>= 6.22.0~), libkf6package6 (>= 6.22.0~), libkf6parts6 (>= 6.22.0~), libkf6runner6 (>= 6.22.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6solid6 (>= 6.11.0), libkf6statusnotifieritem6 (>= 6.22.0~), libkf6svg6 (>= 6.22.0~), libkf6texteditor-bin (>= 6.22.0~), libkf6texteditor6 (>= 6.22.0~), libkf6textwidgets6 (>= 6.22.0~), libkf6userfeedbackcore6 (>= 6.22.0~), libkf6wallet6 (>= 6.22.0~), libkf6widgetsaddons6 (>= 6.0.0), libkf6windowsystem6 (>= 6.19.0), libkf6xmlgui6 (>= 6.0.0), libkfontinst6 (>= 4:6.6.6), libkfontinstui6 (>= 4:6.6.6), libklipper6 (>= 4:6.4.90), libklookandfeel6 (>= 4:6.6.0), libkmpris6 (>= 4:6.6.6), libknighttime0 (>= 6.6.5~), libkscreenlocker6 (>= 6.6.5~), libksysguardsensorfaces2 (>= 4:6.6.5~), libkwaylandclient6 (>= 4:6.6.4~), libkworkspace6-6 (>= 4:6.1.0), liblayershellqtinterface6 (>= 6.6.4~), libnotificationmanager1 (>= 4:6.1.0), libpackagekitqt6-2 (>= 1.1.1), libplasma7 (>= 6.6.6~), libplasmaactivities7 (>= 6.6.4~), libplasmaactivitiesstats1 (>= 6.6.4~), libplasmaquick7 (>= 6.6.6~), libpolkit-qt6-1-1 (>= 0.200.0), libprocesscore10 (>= 4:6.6.5~), libqalculate23 (>= 5.9.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libqt6network6 (>= 6.10.0~), libqt6positioning6 (>= 6.10.0~), libqt6printsupport6 (>= 6.10.0~), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.10.0~), libqt6sql6 (>= 6.10.0~), libqt6svg6 (>= 6.10.0~), libqt6waylandclient6 (>= 6.10.2), libqt6widgets6 (>= 6.10.0~), libqt6xml6 (>= 6.10.0~), libsm6 (>= 2:1.2.6), libstdc++6 (>= 13.1), libsystemd0, libtaskmanager6 (>= 4:6.6.0), libudev1 (>= 183), libwayland-client0 (>= 1.20.0), libx11-6, libxcb-composite0, libxcb-cursor0 (>= 0.0.99), libxcb-damage0, libxcb-image0 (>= 0.2), libxcb-shape0, libxcb-util1 (>= 0.4.0), libxcb1 (>= 1.6), libxcursor1 (>> 1.1.2), libxfixes3, libxft2 (>> 2.1.1), libxtst6 (>= 2:1.2.5), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2), zlib1g (>= 1:1.1.4)
+Recommends: appmenu-gtk3-module, kde-cli-tools (>= 4:6.2.90~), kio-extras, kio-fuse, ksystemstats (>= 6.2.90~), plasma-session-wayland, powerdevil (>= 4:6.2.90~), systemsettings
+Breaks: breeze (<< 4:5.23.90~), plasma-desktop (<< 4:6.3.90~), plasma-desktop-data (<< 4:5.22.90~), plasma-workspace-data (<< 4:6.6.3~), plasma-workspace-wayland
+Replaces: breeze (<< 4:5.23.90~), plasma-desktop (<< 4:6.3.90~), plasma-desktop-data (<< 4:5.22.90~), plasma-workspace-data (<< 4:6.6.3~), plasma-workspace-wayland
+Filename: pool/main/p/plasma-workspace/plasma-workspace_6.6.6-0ubuntu0.1+raye4_amd64.deb
+Size: 5629754
+SHA256: c5e0b70c5ded6fd484863afb995add8e3ef436fdbffcd1d526ac8a2a72a1328f
+Homepage: https://invent.kde.org/plasma/plasma-workspace
+Description: Plasma Workspace for KF6
+ Plasma Workspace for KF6. Workspaces provide
+ support for KDE Plasma Widgets, integrated search,
+ hardware management and a high degree of customizability.
+
+Package: raye-app-identity
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Source: raye-apps
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 36
+Depends: python3
+Filename: pool/main/r/raye-apps/raye-app-identity_0.5~beta1_all.deb
+Size: 8514
+SHA256: 053e8205a9f992edb4ee7dc88fcb76dfc2ab8a660a504397691f255518e77d0c
+Description: Raye Linux names and icons for the stock apps
+ Gives the apps that come with Raye plain names and matching icons in
+ Start, search and Open with: Terminal, Calculator, Photos, Music. It
+ also keeps technical tools out of Start. Package updates cannot undo
+ this, and removing the package brings the usual names back.
+
+Package: raye-calendar
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Source: raye-apps
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 872
+Depends: raye-style, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-window, qml6-module-qtquick-templates, qml6-module-qtquick-dialogs, qml6-module-qtcore, systemd, libc6 (>= 2.38), libkf6dbusaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.1.2), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Filename: pool/main/r/raye-apps/raye-calendar_0.5~beta1_amd64.deb
+Size: 244194
+SHA256: 568288597ec740fa49f39b2655afb7a16c157b841ec7401c08829e24218cdec2
+Description: Raye Linux Calendar
+ Note the dates that matter, birthdays, appointments and trips, and get a
+ reminder on time, with Later and Dismiss. Day, week, month and agenda
+ views, simple repeats, colours, public holidays if wanted, and .ics
+ import and export. The events stay in one file on this computer, and
+ nothing runs in the background between two reminders.
+
+Package: raye-controlpanel
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Source: raye-apps
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 357
+Depends: raye-settings, raye-style, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-window, qml6-module-qtcore, qml6-module-org-kde-kirigami, libc6 (>= 2.34), libkf6dbusaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Recommends: raye-taskmanager, raye-regedit
+Filename: pool/main/r/raye-apps/raye-controlpanel_0.5~beta1_amd64.deb
+Size: 98888
+SHA256: f46c4babd8347c358198ed830ba24fb34c47f78d859bcf13e600913fd3937b5a
+Description: Raye Linux Control Panel
+ Every setting of the PC by category, or as one list of large or small
+ icons, the way the classic Control Panel shows them: Programs and
+ Features, User Accounts, Network and Sharing Centre, Sound, Power
+ Options, Devices and Printers, Fonts and the rest. Each one opens its
+ page in Raye Settings. System Tools gathers the Task Manager, the
+ Registry Editor and the other tools for people who look after the PC.
+
+Package: raye-regedit
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Source: raye-apps
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 647
+Depends: raye-style, dconf-service, pkexec, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-window, qml6-module-qtquick-dialogs, qml6-module-qtqml-models, qml6-module-qtcore, libc6 (>= 2.34), libdconf1 (>= 0.14.0), libglib2.0-0t64 (>= 2.24.0), libkf6dbusaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Filename: pool/main/r/raye-apps/raye-regedit_0.5~beta1_amd64.deb
+Size: 191324
+SHA256: 116b993409428a5736d03398308caf0e0e08bc39dd4d5c28e12157927abadd5b
+Description: Raye Linux Registry Editor
+ Shows the settings files of the apps and of the system as one tree of
+ keys and values, as the Registry Editor does: the user's files in
+ ~/.config, the desktop database (dconf), the defaults in /etc/xdg and
+ a chosen list of system files. Values can be changed, added, deleted,
+ searched, exported and imported. Each change touches only the line of
+ its value, keeps a copy of the file first and can be undone; system
+ files need root access.
+
+Package: raye-taskmanager
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Source: raye-apps
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 1161
+Depends: raye-style, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-window, qml6-module-qtcore, qml6-module-org-kde-kirigami, libc6 (>= 2.38), libkf6dbusaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.8.2), libqt6gui6 (>= 6.1.2), libqt6network6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Recommends: pkexec, pci.ids, kde-cli-tools
+Filename: pool/main/r/raye-apps/raye-taskmanager_0.5~beta1_amd64.deb
+Size: 331890
+SHA256: d12a802fe8042608ba2444fc4457399ce6cdb7ab6e077989834039a2927e6236
+Description: Raye Linux Task Manager
+ See what the machine is doing and take a hand in it: the apps and
+ background processes with their processor, memory and disk use, live
+ graphs of the processor, memory, disks, network and graphics card, the
+ apps that start at sign-in, the people signed in, every process with its
+ priority, and the system's services. End a program that has stopped
+ answering, or hold one back so the rest of the machine keeps up.
+
+Package: xdg-desktop-portal-raye
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Source: raye-apps
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 1280
+Depends: raye-style, xdg-desktop-portal, xdg-desktop-portal-kde, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-layouts, qml6-module-qtquick-window, libc6 (>= 2.34), libkf6configcore6 (>= 6.0.0), libkf6coreaddons6 (>= 6.0.0), libkf6crash6 (>= 6.0.0), libkf6guiaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libkf6notifications6 (>= 6.0.0), libkf6statusnotifieritem6 (>= 6.14.0), libkf6windowsystem6 (>= 6.0.0), libkwaylandclient6 (>= 4:6.1.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.8.2), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.7.2), libqt6waylandclient6 (>= 6.10.2), libqt6widgets6 (>= 6.3.0), libstdc++6 (>= 5), libwayland-client0 (>= 1.20.0), qt6-declarative-private-abi (= 6.10.2)
+Recommends: pipewire
+Filename: pool/main/r/raye-apps/xdg-desktop-portal-raye_0.5~beta1_amd64.deb
+Size: 329538
+SHA256: 9cc628521309a7ff8924d6d667ee067ae2d10647dd00424214d3be0f009ba5d7
+Description: Raye Linux screen sharing
+ Lets apps share your screen or a window, after you choose what to
+ share, and shows while something is shared so you can stop it. Other
+ requests of apps keep the desktop's usual handling.
+
+Package: libraye-archive-dev
+Architecture: amd64
+Version: 0.5~beta1
+Multi-Arch: same
+Priority: optional
+Section: libdevel
+Source: raye-archive
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 38
+Depends: libraye-archive0 (= 0.5~beta1)
+Filename: pool/main/r/raye-archive/libraye-archive-dev_0.5~beta1_amd64.deb
+Size: 8984
+SHA256: dc7bee292095eecb4472349cbb6429d4277b5b3d795655c715bdd2667a94c986
+Description: Raye archive engine (development files)
+ Headers and pkg-config file of the Raye archive engine.
+
+Package: libraye-archive0
+Architecture: amd64
+Version: 0.5~beta1
+Multi-Arch: same
+Priority: optional
+Section: libs
+Source: raye-archive
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 1315
+Depends: libbrotli1 (>= 1.0.0), libbz2-1.0, libc6 (>= 2.38), libgcc-s1 (>= 3.3.1), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.4.0), libssl3t64 (>= 3.0.0), libstdc++6 (>= 13), libzstd1 (>= 1.5.5), zlib1g (>= 1:1.2.11)
+Filename: pool/main/r/raye-archive/libraye-archive0_0.5~beta1_amd64.deb
+Size: 519850
+SHA256: f8ccdc404804131fca2fda422ef8a10f1e1dd7d04bc75188fd67c7402b384f97
+Description: Raye archive engine (library)
+ Opens, tests and extracts ZIP, 7z, RAR, tar and many more archives, and
+ creates 7z, ZIP and tar archives. Detection is by content, extraction
+ never writes outside the destination folder.
+
+Package: raye-archive
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: utils
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 74
+Depends: libraye-archive0 (= 0.5~beta1), libc6 (>= 2.38), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 13.1)
+Filename: pool/main/r/raye-archive/raye-archive_0.5~beta1_amd64.deb
+Size: 26474
+SHA256: 12e01240354452e0589952499b43d768454d9f9d9a2e6ac1ec48373f9920dbfb
+Description: Raye archive engine (command line tool)
+ raye-archive lists, extracts, tests, creates and updates archives from a
+ terminal: 7z, ZIP, RAR (read only), tar and its compressed forms, ISO,
+ CAB and more.
+
+Package: raye-archive-keyring
+Architecture: all
+Version: 0.5~beta1
+Multi-Arch: foreign
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 22
+Filename: pool/main/r/raye-base/raye-archive-keyring_0.5~beta1_all.deb
+Size: 7900
+SHA256: 474dc2bc5bde2739286961061d68b2ecf350bc5a44cedbf6d85da1bef684daab
+Description: OpenPGP key of the Raye Linux package archive
+ The public key apt uses to check packages from the Raye Linux archive,
+ the apt source that points to it and the list of its mirrors
+ (rayelinux.com first, GitHub second).
+
+Package: raye-desktop
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 134
+Depends: raye-system, raye-theme, raye-style, raye-icon-theme, raye-cursor-theme, raye-sound-theme, papirus-icon-theme, sound-theme-freedesktop, raye-first-run, plasma-desktop, plasma-workspace, plasma-session-wayland, kwin-wayland, sddm, sddm-theme-raye, kde-config-sddm, libpam-kwallet5, breeze, breeze-gtk-theme, kde-config-gtk-style, plasma-nm, plasma-pa, bluedevil, powerdevil, kscreen, kinfocenter, systemsettings, btrfs-assistant, raye-settings, raye-update, raye-store, raye-gaming, raye-calendar, raye-controlpanel, raye-regedit, kmenuedit, kde-cli-tools, milou, kactivitymanagerd, ksystemstats, polkit-kde-agent-1, kde-config-screenlocker, plasma-integration, frameworkintegration6, qml6-module-org-kde-breeze, qml6-module-org-kde-desktop, xdg-desktop-portal-kde, xdg-desktop-portal-gtk, xdg-user-dirs, xdg-utils, pipewire, pipewire-audio, wireplumber, gstreamer1.0-pipewire, alsa-utils, libspa-0.2-bluetooth, cups, cups-filters, print-manager, openprinting-ppds, foomatic-db-compressed-ppds, printer-driver-gutenprint, ipp-usb, sane-airscan, skanpage, fonts-inter, fonts-noto-core, fonts-noto-color-emoji, fonts-noto-cjk, fonts-liberation, fonts-dejavu-core, fonts-cascadia-code, raye-files, raye-archive, konsole, fastfetch, kate, gwenview, okular, kcalc, kde-spectacle, haruna, elisa, partitionmanager, plasma-disks, kwalletmanager, konsole-kpart, kclock, krecorder, kolourpaint, kcharselect, krdc, ksystemlog, hunspell-en-us, hunspell-fr, tesseract-ocr-eng, tesseract-ocr-fra, ffmpeg, kio-extras, kio-admin, kio-fuse, ffmpegthumbs, kdegraphics-thumbnailers, kimageformat6-plugins, qt6-image-formats-plugins, flatpak, libfuse2t64, firefox, firefox-l10n-fr, mesa-vulkan-drivers, va-driver-all, mesa-va-drivers, gstreamer1.0-libav, ubuntu-drivers-common, switcheroo-control, iio-sensor-proxy, language-selector-common, at-spi2-core, orca, systemd-coredump, raye-polkit-agent, raye-app-identity, raye-taskmanager, spice-vdagent, init-system-helpers (>= 1.52)
+Filename: pool/main/r/raye-base/raye-desktop_0.5~beta1_all.deb
+Size: 30924
+SHA256: fa2d72fb87a88fe071cdff7dbba72039c6f0acfb047dfaf17a3b970638b69e9d
+Description: Raye Linux desktop
+ The Plasma desktop as Raye Linux ships it, with the everyday apps,
+ printing, audio and Bluetooth. Nothing else.
+
+Package: raye-gaming
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 25
+Provides: libgdk-pixbuf2.0-0 (= 2.44.5)
+Depends: raye-windows-apps, winetricks, cabextract, gamemode, mangohud, gamescope, vulkan-tools, steam-devices, libgdk-pixbuf-2.0-0, raye-scx
+Filename: pool/main/r/raye-base/raye-gaming_0.5~beta1_all.deb
+Size: 8200
+SHA256: 78a1ce7fcb28e20bf86b6ab1557d2a1c9e2b8145e3fb509df5412a8d7620b3f5
+Description: Raye Linux games and Windows apps
+ Raye's layer for Windows programs, with the kernel's ntsync for games,
+ GameMode to give games the whole machine while they run, MangoHud for
+ the frame rate overlay, gamescope for upscaling. Steam
+ and the game launchers are offered in the Store, they come with their
+ own licence.
+
+Package: raye-kernel
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 48
+Depends: mokutil, shim-signed
+Filename: pool/main/r/raye-base/raye-kernel_0.5~beta1_all.deb
+Size: 15140
+SHA256: 8b83bb12fbe16dcbc0167bbe8a5865c8eb80b3a47e22b8aa5738101f47122a7e
+Description: Switch to the Raye kernel safely
+ The Raye kernel is Ubuntu's kernel with the Raye crash screen, signed
+ with the Raye key. This package holds the public key and the steps
+ that enroll it before the kernel is installed, so Secure Boot never
+ meets a kernel it does not know. Ubuntu's signed kernel stays as the
+ fallback.
+
+Package: raye-release
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 52
+Depends: raye-archive-keyring, base-files
+Filename: pool/main/r/raye-base/raye-release_0.5~beta1_all.deb
+Size: 11620
+SHA256: 76a487eb67a30cef7dbea1772dfc5aed7ab63196d111e95ff2028255fee388e2
+Description: Raye Linux release files
+ Identifies the system as Raye Linux (os-release, lsb-release, issue)
+ and sets up apt the Raye way: snaps are blocked, Firefox comes from
+ Mozilla's own archive as a regular package, and the crash reporters
+ and advertising hooks of the base system are kept out.
+ .
+ Raye Linux is based on Ubuntu. It is not affiliated with or endorsed
+ by Canonical Ltd.
+
+Package: raye-system
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 235
+Depends: raye-release, linux-generic-hwe-26.04, linux-firmware, intel-microcode, amd64-microcode, shim-signed, grub-efi-amd64-signed, grub-efi-amd64-bin, efibootmgr, os-prober, grub-theme-raye, raye-kernel, initramfs-tools, zstd, plymouth, plymouth-label, sudo, locales, tzdata, keyboard-configuration, console-setup, systemd-zram-generator, network-manager, netplan.io, wpasupplicant, iw, rfkill, systemd-resolved, systemd-timesyncd, cryptsetup, cryptsetup-initramfs, btrfs-progs, dosfstools, ntfs-3g, exfatprogs, clevis, clevis-tpm2, clevis-luks, clevis-initramfs, fwupd, fwupd-signed, udisks2, upower, power-profiles-daemon, policykit-1 | polkitd, pkexec, bluez, avahi-daemon, avahi-utils, libnss-mdns, libmtp-runtime, fprintd, libpam-fprintd, nano, less, curl, ca-certificates, zip, unzip, bash-completion, whiptail, unattended-upgrades, snapper, tpm2-tools
+Filename: pool/main/r/raye-base/raye-system_0.5~beta1_amd64.deb
+Size: 49144
+SHA256: 3592f77a5ccc352f37dbbf8c7609a307603d04389689a1c99e13a5efb310e6e8
+Description: Raye Linux base system
+ Kernel, firmware, boot chain and the core services every Raye Linux
+ machine runs. Uses the signed kernel, so Secure Boot keeps working.
+
+Package: raye-windows-apps
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: misc
+Source: raye-base
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 217
+Depends: raye-wine, raye-wine-compat | wine, raye-windows-ui, winetricks, cabextract, unzip, zstd, kdialog, util-linux, xvfb, xauth, libnotify-bin, fonts-liberation, fonts-crosextra-carlito, fonts-crosextra-caladea, osslsigncode, kio-extras, init-system-helpers (>= 1.52)
+Filename: pool/main/r/raye-base/raye-windows-apps_0.5~beta1_all.deb
+Size: 43320
+SHA256: 4a778c9f3c6346d4c36569eaccbf84a390529449937b0c215d8692609a54f3b3
+Description: Open Windows programs with a double click
+ Double-clicking an .exe or .msi file opens it, each program in
+ its own space so one cannot break the others. Every space starts from a
+ ready one, prepared in the background after login with the pieces most
+ programs and games expect (core fonts, DXVK, vkd3d-proton),
+ so a program opens at once and nothing asks a question.
+
+Package: raye-files
+Architecture: amd64
+Version: 25.12.3+raye5
+Priority: optional
+Section: kde
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 16075
+Provides: dolphin (= 4:25.12.3-0ubuntu1), dolphin-data (= 4:25.12.3-0ubuntu1)
+Depends: baloo6, qml6-module-org-kde-kirigami, qml6-module-org-kde-purpose, qml6-module-qtmultimedia, kio6, libc6 (>= 2.34), libdolphinvcs6 (>= 4:25.12.3~), libgcc-s1 (>= 3.3.1), libkf6baloo6 (>= 6.9.0~), libkf6baloowidgets6 (>= 4:25.12.3~), libkf6bookmarks6 (>= 6.9.0~), libkf6bookmarkswidgets6 (>= 6.9.0~), libkf6codecs6 (>= 6.9.0~), libkf6colorscheme6 (>= 6.9.0~), libkf6completion6 (>= 6.9.0~), libkf6configcore6 (>= 6.9.0~), libkf6configgui6 (>= 6.9.0~), libkf6configwidgets6 (>= 6.9.0), libkf6coreaddons6 (>= 6.9.0~), libkf6crash6 (>= 6.9.0~), libkf6dbusaddons6 (>= 6.9.0~), libkf6filemetadata3 (>= 6.9.0~), libkf6guiaddons6 (>= 6.9.0~), libkf6i18n6 (>= 6.9.0~), libkf6iconthemes6 (>= 6.9.0~), libkf6jobwidgets6 (>= 6.0.0), libkf6kcmutils6 (>= 6.9.0~), libkf6kcmutilscore6 (>= 6.9.0~), libkf6kiocore6 (>= 6.9.0~), libkf6kiofilewidgets6 (>= 6.14.0), libkf6kiogui6 (>= 6.9.0~), libkf6kiowidgets6 (>= 6.17.0), libkf6newstuffwidgets6 (>= 6.9.0~), libkf6notifications6 (>= 6.9.0~), libkf6parts6 (>= 6.9.0~), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6solid6 (>= 6.9.0~), libkf6textwidgets6 (>= 6.9.0~), libkf6userfeedbackcore6 (>= 6.9.0~), libkf6userfeedbackwidgets6 (>= 6.9.0~), libkf6widgetsaddons6 (>= 6.9.0~), libkf6windowsystem6 (>= 6.9.0~), libkf6xmlgui6 (>= 6.0.0), libpackagekitqt6-2 (>= 1.1.1), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.8.2), libqt6gui6 (>= 6.9.1), libqt6multimedia6 (>= 6.6.1), libqt6multimediawidgets6 (>= 6.6.1), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.6.0), libqt6quickwidgets6 (>= 6.9.1), libqt6widgets6 (>= 6.10.2), libqt6xml6 (>= 6.4.0~), libraye-archive0 (>= 0.5~beta1), libstdc++6 (>= 14), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Recommends: ffmpegthumbs, kdegraphics-thumbnailers, kdenetwork-filesharing, kimageformat6-plugins, kio-extras (>= 4:25.12.2~), qt6-image-formats-plugins
+Suggests: dolphin-plugins, kio-admin
+Conflicts: dolphin, dolphin-data
+Replaces: dolphin, dolphin-data
+Filename: pool/main/r/raye-files/raye-files_25.12.3+raye5_amd64.deb
+Size: 3150128
+SHA256: 31841291b95001923642ee1beb76bd29b3f49d73c6247344201cea404c97772b
+Homepage: https://github.com/techoraye
+Description: Files, the Raye file explorer
+ Files is where you keep your documents, pictures, downloads and drives.
+ It opens on Home, with the folders you use most and the files you had
+ open last, and it shows your drives and network places the way the rest
+ of Raye does.
+ .
+ Tabs across the top, an address bar you can type a path into, a command
+ bar with the actions that fit what you picked, a details pane and a
+ preview pane, and archives that open like folders.
+
+Package: raye-scx
+Architecture: amd64
+Version: 1.1.4-1
+Priority: optional
+Section: admin
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 16449
+Depends: libc6 (>= 2.39), libelf1t64 (>= 0.144), libgcc-s1 (>= 4.2), zlib1g (>= 1:1.2.3.4)
+Filename: pool/main/r/raye-scx/raye-scx_1.1.4-1_amd64.deb
+Size: 3265870
+SHA256: 50aaa171500a7fb6bd566f0a4e76e47299749abdec8508f0560df6d8f0613d29
+Description: sched_ext CPU schedulers used while a game runs
+ Two CPU schedulers written in BPF that the kernel loads at run time
+ and drops by itself if they stop answering:
+  - scx_lavd, which keeps frame times steady in games (the 1 % lows)
+    when the game competes with downloads, a browser or shader
+    compilation;
+  - scx_bpfland, tuned for a responsive desktop under load.
+ Nothing starts them on its own: Raye's Game mode turns one on while a
+ game runs and off when it ends.
+
+Package: raye-settings
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: kde
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 15574
+Depends: qml6-module-org-kde-kirigami, qml6-module-qtquick-layouts, qml6-module-qtquick-controls, qml6-module-qtmultimedia, qml6-module-org-kde-kcmutils, qml6-module-org-kde-layershell, systemsettings, kde-cli-tools, libkf6kcmutils-bin, raye-update, bluedevil, plasma-nm, power-profiles-daemon, accountsservice, kinfocenter, print-manager, kdeconnect, krdp, kaccounts-integration, kde-config-flatpak, kde-config-tablet, plasma-firewall, ufw, fwupd, packagekit, debsums, python3, openssl, iproute2, kio6, libc6 (>= 2.38), libcrypt1 (>= 1:4.1.0), libflatpak0 (>= 1.2), libglib2.0-0t64 (>= 2.40.0), libkf6bluezqt6 (>= 6.0.0), libkf6configcore6 (>= 6.0.0), libkf6configgui6 (>= 6.0.0), libkf6coreaddons6 (>= 6.0.0), libkf6dbusaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libkf6kcmutilscore6 (>= 6.0.0), libkf6kcmutilsquick6 (>= 6.0.0), libkf6kiocore6 (>= 6.0.0), libkf6networkmanagerqt6 (>= 6.10.0), libkf6pulseaudioqt5 (>= 1.6.0), libkf6screen8 (>= 4:6.1.0), libkf6windowsystem6 (>= 6.0.0), libkscreen-bin, libpackagekitqt6-2 (>= 1.1.1), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.8.2), libqt6gui6 (>= 6.4.0), libqt6multimedia6 (>= 6.6.1), libqt6network6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.6.0), libqt6widgets6 (>= 6.1.2), libstdc++6 (>= 5.2), qt6-declarative-private-abi (= 6.10.2)
+Recommends: fprintd, snapper, orca, avahi-utils
+Filename: pool/main/r/raye-settings/raye-settings_0.5~beta1_amd64.deb
+Size: 3294434
+SHA256: eb62c0aba0679d79565db2c6a8c1f3d62827a4691b60ecf0051cb009eb067532
+Description: Raye Linux settings
+ One window for the whole system: the categories on the launch screen,
+ the pages on the right, and changes that apply as you make them. It
+ answers for the settings links of the desktop, so every setting opens
+ in the same place.
+
+Package: raye-store
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: admin
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 3987
+Depends: flatpak, packagekit, appstream, polkitd, kio-extras, kde-cli-tools, raye-style, qml6-module-org-kde-kirigami, qml6-module-qtquick-layouts, qml6-module-qtquick-controls, qml6-module-qtquick-effects, qml6-module-org-kde-kirigamiaddons-components, qml6-module-org-kde-kirigamiaddons-formcard, qt6-image-formats-plugins, libappstream5 (>= 1.0.0), libappstreamqt3 (>= 1.1.2), libc6 (>= 2.34), libflatpak0 (>= 1.8), libglib2.0-0t64 (>= 2.40.0), libkf6coreaddons6 (>= 6.0.0), libkf6dbusaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libkf6notifications6 (>= 6.0.0), libkf6windowsystem6 (>= 6.0.0), libpackagekitqt6-2 (>= 1.1.1), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.3.0), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.6.0), libqt6widgets6 (>= 6.1.2), libstdc++6 (>= 5.2), qt6-base-private-abi (= 6.10.2), qt6-declarative-private-abi (= 6.10.2)
+Conflicts: plasma-discover
+Filename: pool/main/r/raye-store/raye-store_0.5~beta1_amd64.deb
+Size: 975326
+SHA256: 94c48c9d281fdcd22567717e321b1eb4ca74edd4712afe718ea4707764fc9b3b
+Description: Raye Linux app store
+ Finds, installs, removes and updates apps: Flathub apps and the
+ system's own packages in one list, with their descriptions and
+ screenshots. App updates live here, system updates in Raye Update.
+
+Package: raye-windows-ui
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: admin
+Source: raye-store
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 278
+Depends: raye-store (= 0.5~beta1), libc6 (>= 2.34), libqt6core6t64 (>= 6.10.2), libqt6gui6 (>= 6.2.0), libstdc++6 (>= 9)
+Filename: pool/main/r/raye-store/raye-windows-ui_0.5~beta1_amd64.deb
+Size: 109124
+SHA256: abc4a5c09e7fa54c0ae84e406a5aebb2c219879daaf6b6486b07c7dee0304f36
+Description: Windows programs on Raye Linux: windows and tools
+ What a Windows program shows around itself on Raye Linux: the window
+ while its space is set up, the window while it is removed, the one
+ that says it closed unexpectedly, and the raye-windows tool that lists
+ and uninstalls installed Windows programs.
+
+Package: grub-theme-raye
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 337
+Depends: grub-common
+Filename: pool/main/r/raye-theme/grub-theme-raye_0.5~beta1_all.deb
+Size: 143160
+SHA256: e2ceb6d9a30b9b2f381de2306533a5d2d7cecdb0f5824c74a8cca3a69b3a9c82
+Description: Raye Linux boot menu
+ The Raye look for the boot menu, which only shows up when another
+ system such as Windows is installed next to Raye.
+
+Package: plymouth-theme-raye
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 649
+Depends: fonts-inter, plymouth, plymouth-label
+Filename: pool/main/r/raye-theme/plymouth-theme-raye_0.5~beta1_all.deb
+Size: 565906
+SHA256: 987a75cf96499448742e62fd42c3a81b739d420d04ebc84860c84aa02d9d498f
+Description: Raye Linux boot screen
+ The Raye eye on the night background while the computer starts, with a
+ password prompt for encrypted disks.
+
+Package: raye-cursor-theme
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 29096
+Filename: pool/main/r/raye-theme/raye-cursor-theme_0.5~beta1_all.deb
+Size: 903966
+SHA256: c4d721b22a77a7c2a19f8ed78ca298daff07780176d078c471ebfbe4941c0e28
+Description: Raye Linux mouse pointers
+ The Raye pointers: a white arrow with a dark outline, a violet busy
+ ring, and the resize, text and hand shapes that go with them, at every
+ size a high resolution screen needs.
+
+Package: raye-icon-theme
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 12770
+Depends: breeze-icon-theme, hicolor-icon-theme, papirus-icon-theme
+Filename: pool/main/r/raye-theme/raye-icon-theme_0.5~beta1_all.deb
+Size: 237258
+SHA256: 8d2adb13ab3b20b4c7bb807497ebca5751129065db88f2884146ee1fe46c973a
+Description: Raye Linux icons
+ The Raye icon set: folders and places, file types, drives, applications,
+ the Settings categories and the small monoline icons in the taskbar
+ tray. A light and a dark variant.
+
+Package: raye-polkit-agent
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 220
+Depends: fonts-inter, qml6-module-qtquick, qml6-module-qtquick-templates, raye-theme, libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libglib2.0-0t64 (>= 2.80.0), liblayershellqtinterface6 (>= 6.6.0), libpolkit-agent-1-0 (>= 0.99), libpolkit-gobject-1-0 (>= 0.94), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.1.2), libqt6gui6 (>= 6.1.2), libqt6qml6 (>= 6.6.0), libqt6quick6 (>= 6.6.0), libstdc++6 (>= 11)
+Filename: pool/main/r/raye-theme/raye-polkit-agent_0.5~beta1_amd64.deb
+Size: 81042
+SHA256: c6a0abeba042e70f74ff352338d0dfc7f5af41de0c93c365d1f0f176a3e4c1f4
+Description: Raye Linux root access prompt
+ The window that asks for permission when an application wants to change
+ the system as root: it names the application and who made it, and asks
+ for the password of a sudo user before anything happens.
+
+Package: raye-shell
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 5234
+Depends: plasma-workspace (>= 4:6.6), plasma-nm, plasma-pa, libcanberra-pulse, bluedevil, powerdevil, kwin-wayland, raye-style, qml6-module-qtcore, kio6, libc6 (>= 2.34), libepoxy0 (>= 1.0), libkf6configcore6 (>= 6.0.0), libkf6configgui6 (>= 6.0.0), libkf6coreaddons6 (>= 6.0.0), libkf6globalaccel6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libkf6i18nqml6 (>= 6.24.0), libkf6jobwidgets6 (>= 6.0.0), libkf6kiocore6 (>= 6.0.0), libkf6kiofilewidgets6 (>= 6.0.0), libkf6kiogui6 (>= 6.0.0), libkf6kiowidgets6 (>= 6.0.0), libkf6screen8 (>= 4:6.1.0), libkf6service-bin, libkf6service6 (>= 6.0.0), libkf6solid6 (>= 6.0.0), libkf6windowsystem6 (>= 6.0.0), libkscreen-bin, libkwin6 (>= 4:6.6.6), liblayershellqtinterface6 (>= 6.6.0), libnotificationmanager1 (>= 4:6.1.0), libplasma7 (>= 6.1.0), libplasmaactivities7 (>= 6.4.91), libplasmaactivitiesstats1 (>= 6.1.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.8.2), libqt6gui6 (>= 6.2.0), libqt6qml6 (>= 6.10.2), libqt6quick6 (>= 6.6.0), libqt6svg6 (>= 6.6.0), libqt6waylandclient6 (>= 6.10.2), libqt6widgets6 (>= 6.1.2), libstdc++6 (>= 5), libwayland-client0 (>= 1.20.0), qt6-declarative-private-abi (= 6.10.2)
+Breaks: kwin-wayland (>= 4:6.7~), plasma-desktop (>= 4:6.7~), plasma-workspace (>= 4:6.7~)
+Filename: pool/main/r/raye-theme/raye-shell_0.5~beta1_amd64.deb
+Size: 1060678
+SHA256: 497f114b6f5d71be38bb640e62f9ec43b9e96ac2ee35fd704134c79a971a8b52
+Description: Raye Linux desktop shell
+ The taskbar, the Start menu, quick settings, the clock and its
+ notifications, the window switcher and the on-screen displays for
+ volume and brightness.
+
+Package: raye-sound-theme
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 209
+Depends: sound-theme-freedesktop
+Filename: pool/main/r/raye-theme/raye-sound-theme_0.5~beta1_all.deb
+Size: 87010
+SHA256: e992915577b2dc19ab9d06b0daea251e4b711cdde8c0d5f0054401cd66a4e2b4
+Description: Raye Linux sounds
+ The short sounds Raye plays: signing in, a notification, plugging a
+ drive in or out, a low battery, an error, the volume changing and
+ emptying the bin. Nothing plays while the computer starts.
+
+Package: raye-style
+Architecture: amd64
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 1234
+Depends: qml6-module-org-kde-kirigami, libc6 (>= 2.34), libkdecorations3-6 (>= 4:6.4.90), libkf6colorscheme6 (>= 6.20.0), libkf6configcore6 (>= 6.0.0), libkf6configgui6 (>= 6.0.0), libkf6coreaddons6 (>= 6.0.0), libkf6guiaddons6 (>= 6.0.0), libkf6i18n6 (>= 6.0.0), libkf6iconthemes6 (>= 6.0.0), libkf6kcmutils6 (>= 6.0.0), libkf6kcmutilscore6 (>= 6.0.0), libkf6style6 (>= 6.0.0), libkf6widgetsaddons6 (>= 6.0.0), libkf6windowsystem6 (>= 6.0.0), libkirigamiplatform6 (>= 6.0.0), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.4.0), libqt6gui6 (>= 6.9.1), libqt6qml6 (>= 6.6.0), libqt6quick6 (>= 6.6.0), libqt6widgets6 (>= 6.4.0), libstdc++6 (>= 5)
+Filename: pool/main/r/raye-theme/raye-style_0.5~beta1_amd64.deb
+Size: 354268
+SHA256: 80004ae9638c3b692cd09ed53ec55d5462e7d49da7fd7787f2765051fd780163
+Description: Raye Linux widget style and window decoration
+ The way buttons, fields, menus, scroll bars and title bars are drawn in
+ Raye: rounded corners, thin strokes, soft shadows and short animations,
+ on the Raye colours.
+ .
+ It also holds the Raye building blocks that Raye's own windows are made
+ of, so every Raye application looks the same.
+
+Package: raye-theme
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 6924
+Depends: breeze, fonts-cascadia-code, fonts-inter, libglib2.0-bin, plasma-workspace, plymouth-theme-raye, python3, qml6-module-org-kde-plasma-plasma5support, qml6-module-qtcore, qml6-module-qtmultimedia, raye-desktop-layout, raye-shell
+Filename: pool/main/r/raye-theme/raye-theme_0.5~beta1_all.deb
+Size: 5741322
+SHA256: 4bbfa049dc676cbf0404737f87a3ae406e7ce67001fc86e3578d47f59f76354b
+Description: Raye Linux desktop look
+ The Raye look for Plasma: dark colours with a violet accent, the Inter
+ font, six wallpapers and two animated ones, the eye logo on the Start
+ button, a centred taskbar, the login splash and the login screen
+ background.
+ .
+ It carries the Raye Night and Raye Day colour schemes, which every
+ other piece of the desktop follows.
+
+Package: sddm-theme-raye
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: x11
+Source: raye-theme
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 254
+Depends: fonts-inter, qml6-module-qtquick-controls, qml6-module-qtquick-effects, qml6-module-qtquick-layouts, qml6-module-qtquick-virtualkeyboard, raye-theme, sddm
+Filename: pool/main/r/raye-theme/sddm-theme-raye_0.5~beta1_all.deb
+Size: 210042
+SHA256: b12b1adaf46758c9dbf8638800ad613947c05f530626578568d79e78069b664e
+Description: Raye Linux sign-in screen
+ The Raye lock and sign-in screen shown when the computer starts: the
+ time on the night picture, then the account picture, the password
+ field and the buttons to change user, keyboard and network.
+
+Package: raye-update
+Architecture: all
+Version: 0.5~beta1
+Priority: optional
+Section: admin
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 144
+Depends: python3, apt, network-manager, libnotify-bin, polkitd, pkexec, libglib2.0-bin, init-system-helpers (>= 1.52)
+Recommends: fwupd, plymouth
+Filename: pool/main/r/raye-update/raye-update_0.5~beta1_all.deb
+Size: 40644
+SHA256: d87da4e60e4ad3f3a6d04aab6ccf5fc760303673594766f5517327afa0a558ab
+Description: Raye Linux system updates
+ Looks for system and firmware updates in the background and downloads
+ them, waiting while on a low battery, a metered connection or during a
+ game. They are installed at the next start-up only after you pick
+ "Update and restart" or "Update and shut down", with the progress on the
+ boot screen and a snapshot taken right before, so nothing installs on
+ its own. Updates can be paused for up to five weeks, and the PC never
+ restarts on its own during your active hours.
+
+Package: raye-wine-compat
+Architecture: all
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Source: raye-wine
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 8
+Provides: wine
+Depends: raye-wine
+Filename: pool/main/r/raye-wine/raye-wine-compat_11.21-1~raye4_all.deb
+Size: 2186
+SHA256: 3b02094d1342021cee005a1fe1908ecba9df238780cb2a0206c893d0d7fdefaa
+Description: Raye's layer for Windows programs: the name other packages ask for
+ Lets packages that need "wine", such as winetricks, install on top of
+ raye-wine. It holds no files.
+
+Package: raye-wine-extras
+Architecture: amd64
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Source: raye-wine
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 84872
+Breaks: raye-wine (<< 11.21-1~raye4)
+Replaces: raye-wine (<< 11.21-1~raye4)
+Filename: pool/main/r/raye-wine/raye-wine-extras_11.21-1~raye4_amd64.deb
+Size: 21812532
+SHA256: ada43e551e5d5948bceefab4ce0a84427c254e951607dff1f867515c64314278
+Description: Raye's layer for Windows programs: Direct3D on Vulkan
+ DXVK, VKD3D-Proton and the NVIDIA API layer that every new space gets,
+ for 64-bit and 32-bit programs. Part of raye-wine.
+
+Package: raye-wine-gecko-i386
+Architecture: amd64
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Source: raye-wine
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 106745
+Breaks: raye-wine (<< 11.21-1~raye4)
+Replaces: raye-wine (<< 11.21-1~raye4)
+Filename: pool/main/r/raye-wine/raye-wine-gecko-i386_11.21-1~raye4_amd64.deb
+Size: 44004076
+SHA256: b38dbf3fc90e217463cc79323b201c890d812c042ca1c06d5351370a6c2061b1
+Description: Raye's layer for Windows programs: web views for 32-bit programs
+ The engine behind the web views of 32-bit Windows programs. Part of
+ raye-wine.
+
+Package: raye-wine-gecko
+Architecture: amd64
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Source: raye-wine
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 105462
+Breaks: raye-wine (<< 11.21-1~raye4)
+Replaces: raye-wine (<< 11.21-1~raye4)
+Filename: pool/main/r/raye-wine/raye-wine-gecko_11.21-1~raye4_amd64.deb
+Size: 42697662
+SHA256: 211216d4f1508ae0947c3317d6aea943cafc5de5387476bf5eb8e70af5197671
+Description: Raye's layer for Windows programs: web views
+ The engine behind the web views of 64-bit Windows programs (help pages,
+ sign-in windows, built-in browsers). Part of raye-wine.
+
+Package: raye-wine-i386
+Architecture: amd64
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Source: raye-wine
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 176320
+Breaks: raye-wine (<< 11.21-1~raye4)
+Replaces: raye-wine (<< 11.21-1~raye4)
+Filename: pool/main/r/raye-wine/raye-wine-i386_11.21-1~raye4_amd64.deb
+Size: 28176882
+SHA256: e5d88fec963da931126494befeb7637bbe37252ba7871f51278d8c351bd63cdc
+Description: Raye's layer for Windows programs: 32-bit side
+ The libraries 32-bit Windows programs run on. Part of raye-wine.
+
+Package: raye-wine-mono
+Architecture: amd64
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Source: raye-wine
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 225852
+Breaks: raye-wine (<< 11.21-1~raye4)
+Replaces: raye-wine (<< 11.21-1~raye4)
+Filename: pool/main/r/raye-wine/raye-wine-mono_11.21-1~raye4_amd64.deb
+Size: 61875390
+SHA256: da2278488007c219bf83d6b4dc0585f4abed945d5bb0a2c0b4a1e57554020902
+Description: Raye's layer for Windows programs: .NET runtime
+ The .NET Framework every new space gets, so programs written for .NET
+ start without downloading anything. Part of raye-wine.
+
+Package: raye-wine
+Architecture: amd64
+Version: 11.21-1~raye4
+Priority: optional
+Section: otherosfs
+Maintainer: techoraye <190692880+techoraye@users.noreply.github.com>
+Installed-Size: 214945
+Depends: libasound2t64 (>= 1.0.16), libavcodec62 (>= 7:8.0.1), libavformat62 (>= 7:8.0.1), libavutil60 (>= 7:8.0.1), libc6 (>= 2.38), libgcc-s1 (>= 3.0), libglib2.0-0t64 (>= 2.80.0), libgphoto2-6t64 (>= 2.5.10), libgphoto2-port12t64 (>= 2.5.10), libgssapi-krb5-2 (>= 1.17), libgstreamer-plugins-base1.0-0 (>= 1.18.0), libgstreamer1.0-0 (>= 1.14.0), libkrb5-3 (>= 1.8+dfsg), libpcap0.8t64 (>= 1.10.0), libpcsclite1 (>= 1.3.3), libpipewire-0.3-0t64 (>= 0.3.1), libpulse0 (>= 0.99.1), libsane1 (>= 1.0.27), libudev1 (>= 183), libusb-1.0-0 (>= 2:1.0.21), libwayland-client0 (>= 1.23.0), libwayland-egl1 (>= 1.15.0), libx11-6, libxext6, libxkbcommon0 (>= 1.0.0), libxkbregistry0 (>= 1.0.0), ocl-icd-libopencl1 | libopencl1, ocl-icd-libopencl1 (>= 1.0) | libopencl-1.2-1, raye-wine-i386 (= 11.21-1~raye4), raye-wine-mono (= 11.21-1~raye4), raye-wine-gecko (= 11.21-1~raye4), raye-wine-gecko-i386 (= 11.21-1~raye4), raye-wine-extras (= 11.21-1~raye4), libcups2t64, libdbus-1-3, libegl1, libfontconfig1, libfreetype6, libgl1, libgnutls30t64, libv4l-0t64, libva2, libva-drm2, libvulkan1, libxcomposite1, libxcursor1, libxfixes3, libxi6, libxinerama1, libxrandr2, libxrender1, libxxf86vm1, pipewire-jack, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-ugly, gstreamer1.0-libav
+Recommends: mesa-vulkan-drivers, pipewire-pulse, libsdl2-2.0-0, fonts-liberation
+Filename: pool/main/r/raye-wine/raye-wine_11.21-1~raye4_amd64.deb
+Size: 39403068
+SHA256: bb4e94291a5d96435d4050b088a6bd1a5eba45835f1e3b1df6220c768cc36d9d
+Description: Raye's layer for Windows programs
+ The layer that runs Windows programs on Raye, kept in /opt/raye-wine so
+ it never clashes with another one on the system. 64-bit and 32-bit
+ programs run without any 32-bit system library.
+ .
+ Every new space gets Direct3D 8 to 12 on Vulkan (DXVK and VKD3D-Proton),
+ with the builtin OpenGL renderer when the computer has no usable Vulkan,
+ .NET and web views built in, sound through PipeWire, and
+ the kernel's ntsync. Nothing is downloaded when a program starts.
+ Programs that read the screen (DXGI duplication, GDI) get the desktop
+ through the Raye share picker and PipeWire.
+

@@ -1,0 +1,19 @@
+Acquire-By-Hash: yes
+Architectures: amd64
+Codename: resolute
+Components: main
+Date: Sat, 21 Nov 2026 05:30:32 +0000
+Description: Raye Linux packages
+Label: Raye
+Origin: Raye
+Suite: resolute
+Version: 1.0-beta
+SHA256:
+ bfdd2116450f920a822962c2c3bf5bb11010db04f05f8d56fc55b6f286ab2e99            82136 main/binary-amd64/Packages
+ dc34b66eb6ab171ed7114a5e9597b469f1fd490b0ac76868cecf36095d7a6ec1            18764 main/binary-amd64/Packages.gz
+ bd07e177532af1dd8f2829b5f86c6dfaa443323065da24678d47805d09ed5ba9            17176 main/binary-amd64/Packages.xz
+ ad317a1e49fee3dee14214f2762e47bfdb719a507c6e023f0b77a0344e33a72a               79 main/binary-amd64/Release
+ e1ce31b66f0b4951bae9eeaca5518ac3fd4fce54ee14755929546fd54304ffff               80 main/source/Release
+ 3eed4d71d41725f8449ac18cbf9f16900a05bbfacc2438cee2b0c1b2e3ab2ed0             8168 main/source/Sources
+ b3665e6ac629cbed99216a8da4da866d3bfb2da74e33ce1c594ce176f8a0b426             2142 main/source/Sources.gz
+ c9bea5747d5a61f4168912d884aec01b450ff7eecd1a16d5d86358842dbf9620             2120 main/source/Sources.xz
